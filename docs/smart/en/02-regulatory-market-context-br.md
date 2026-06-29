@@ -86,7 +86,7 @@ Unlike Europe (FCR/aFRR open to residential aggregators), in Brazil:
 - **INMETRO** — compulsory certification of PV equipment (modules, **inverters**, charge controllers, batteries) under **Ordinance 140/2022**, amended by **515/2023** (emergency disconnection device); scope ≤ 75 kW; since **2-May-2025**, only inverters **> 10 kW** compliant with 140/2022 may be made/imported. *(Applies to the **inverter**, not the Smart Gateway/Meter — see [06](06-hardware-specification.md).)*
 - **ANATEL** — mandatory homologation of any RF product (Wi-Fi/BT/4G) — applies to **Smart hardware**.
 - **EV / storage:** **NBR IEC 61851** (EV conductive charging) and **62196** (connectors); ESS regulation **under construction** `[TO VERIFY]`.
-- **Metering:** DG requires a **bidirectional meter**; free market requires **CCEE-grade** metering `[TO VERIFY]`.
+- **Metering:** DG requires a **bidirectional meter** differentiating **consumed** vs **injected** energy (**PRODIST Module 5**, REN 956/2021). A **billing** meter needs an **INMETRO-approved model** (RTM **Ordinance 587/2012** — classes D 0.2% / C 0.5% / B 1.0% / A 2.0%). The **free market** requires **SMF/CCEE-grade** metering (mass memory 5–60 min for ≥ 32 days, RTC sync to GMT-3, ABNT/IEC) `[TO VERIFY by size]`.
 
 ---
 

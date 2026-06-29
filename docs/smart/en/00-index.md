@@ -26,6 +26,7 @@
 | 12 | [Roadmap & Phasing](12-roadmap-and-phasing.md) | MVP → dynamic tariff/EV → grid services/VPP, make-vs-buy |
 | 13 | [Gaps, Risks & Decisions](13-gaps-risks-and-decisions.md) | Confirmed decisions, gaps, risks, open questions |
 | 14 | [Glossary](14-glossary.md) | EN/PT-BR terms |
+| 15 | [Business Model & Pricing](15-business-model-and-pricing.md) | Revenue, tiers and go-to-market proposal |
 
 ---
 

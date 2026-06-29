@@ -82,13 +82,15 @@ flowchart TB
 |---|---|
 | **Função** | medir energia/potência/tensão/corrente (bidirecional) no ponto de conexão |
 | **Local** | **quadro de entrada** ou **QGBT** |
-| **Exatidão** | **< 1% de desvio** (alvo classe 1 ou melhor) `[VERIFICAR classe regulatória aplicável]` |
+| **Exatidão (medição EMS)** | **< 1% de desvio** — alvo **classe 1 (IEC 62053-21/22)**, recomendado **0,5S** de folga (≈ INMETRO classe C/B) |
 | **Fornecimento** | **commodity** — proprietário **ou** OEM/ODM de mercado |
 | **Medição** | monofásico / bifásico / trifásico conforme a UC; entradas CT |
 | **Comunicação** | **RS485 (Modbus-RTU)** para o Gateway; opções Modbus-TCP/M-Bus `[PREMISSA]` |
 | **Observação** | quando a topologia é **T2 (integrado)**, esta função vive **dentro** do Gateway |
 
 > Para níveis que exigem **peak shaving / zero-export / grid services** ([10](10-modos-de-operacao-e-features.md)), recomenda-se **Smart Meter dedicado** (T1) ou variante **integrada** (T2) — não depender só do medidor interno do inversor.
+
+> **Medição EMS vs faturamento.** Por padrão o Smart Meter é um **medidor de EMS** (controle: peak shaving, zero-export, autoconsumo); o **medidor de faturamento oficial** continua sendo o da **distribuidora** (GD bidirecional, **PRODIST Módulo 5** / REN 956/2021) ou o do **SMF** (mercado livre). Se o Smart Meter for usado para **faturamento/liquidação**, precisa de **modelo aprovado pelo INMETRO** (RTM **Portaria 587/2012** — classes D 0,2% / C 0,5% / B 1,0% / A 2,0%) e atender **PRODIST Módulo 5** (bidirecional; diferenciar energia consumida e injetada) e os requisitos de **SMF** (memória de massa em intervalos de 5–60 min por ≥ 32 dias, relógio sincronizável a GMT-3, conformidade ABNT/IEC). `[VERIFICAR classe exigida por uso]`
 
 ---
 

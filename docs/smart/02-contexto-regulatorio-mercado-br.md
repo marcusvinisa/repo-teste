@@ -114,7 +114,7 @@ Diferente da Europa (FCR/aFRR com mercados abertos a agregadores residenciais), 
 - **Armazenamento (baterias/ESS):** regulação específica em **construção** no Brasil; aplicar normas IEC/ABNT de segurança de baterias e seguir consultas/REN da ANEEL `[VERIFICAR]`.
 
 ### Medição
-- GD exige **medidor bidirecional** (registra energia consumida e injetada). Para mercado livre, medição apta à **liquidação na CCEE** (SMF) `[VERIFICAR requisitos por porte]`.
+- GD exige **medidor bidirecional** que diferencie energia **consumida** e **injetada** (**PRODIST Módulo 5**, REN 956/2021). Medidor de **faturamento** deve ter **modelo aprovado pelo INMETRO** (RTM **Portaria 587/2012** — classes D 0,2% / C 0,5% / B 1,0% / A 2,0%). Para **mercado livre**, medição apta ao **SMF/CCEE** (memória de massa 5–60 min por ≥ 32 dias, relógio sincronizável GMT-3, ABNT/IEC). `[VERIFICAR requisitos por porte]`
 
 ---
 

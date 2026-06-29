@@ -41,7 +41,7 @@ Regulatory (flexibility/DR delay → N5 as technical capability; focus captive/D
 
 ## 5. Open questions
 
-1. Business model/pricing (subscription per CU + hardware + service fee?).
-2. Target metrological class of the Smart Meter for billing use.
+1. Business model/pricing — proposal in [15](15-business-model-and-pricing.md); you still decide HW (sale/lease/HaaS), price ranges, R3/R4 and channel.
+2. Metrological class — proposal: EMS = class 1 / 0.5S (≤ 1%); billing = INMETRO RTM 587 + PRODIST M5 + SMF. Confirm?
 3. Depth of generated artifacts to expand (full OpenAPI, per-asset JSON Schema?).
 4. External integration project — when official maps arrive, run [`../integracao/PROMPT-projeto-externo.md`](../integracao/PROMPT-projeto-externo.md) in another session and merge.

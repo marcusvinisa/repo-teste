@@ -32,6 +32,7 @@ Documentação completa de produto e engenharia para construir o Smart: visão e
 | 12 | [Roadmap e Faseamento](12-roadmap-e-faseamento.md) | Fases MVP → tarifa dinâmica/EV → grid services/VPP, make-vs-buy |
 | 13 | [Gaps, Riscos e Decisões](13-gaps-riscos-e-decisoes.md) | Decisões assumidas, divergências, gaps, riscos, perguntas abertas |
 | 14 | [Glossário](14-glossario.md) | Termos PT-BR/EN |
+| 15 | [Modelo de Negócio e Precificação](15-modelo-de-negocio-e-precificacao.md) | Proposta de receita, tiers e go-to-market |
 
 ---
 

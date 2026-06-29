@@ -80,13 +80,15 @@ flowchart TB
 |---|---|
 | **Function** | measure energy/power/voltage/current (bidirectional) at the connection point |
 | **Location** | **entrance board** or **QGBT** |
-| **Accuracy** | **< 1% deviation** (target class 1 or better) `[TO VERIFY regulatory class]` |
+| **Accuracy (EMS metering)** | **< 1% deviation** — target **class 1 (IEC 62053-21/22)**, recommended **0.5S** headroom (≈ INMETRO class C/B) |
 | **Supply** | **commodity** — proprietary **or** market OEM/ODM |
 | **Phases** | single/split/three-phase per CU; CT inputs |
 | **Comms** | **RS485 (Modbus-RTU)** to the Gateway; optional Modbus-TCP/M-Bus |
 | **Note** | in **T2 (integrated)** topology this function lives **inside** the Gateway |
 
 > For levels requiring **peak shaving / zero-export / grid services** ([10](10-operation-modes-and-features.md)), use a **dedicated Smart Meter** (T1) or the **integrated** variant (T2) — don't rely solely on the inverter's internal meter.
+
+> **EMS metering vs billing.** By default the Smart Meter is an **EMS meter** (control: peak shaving, zero-export, self-consumption); the **official billing meter** remains the **DisCo's** (bidirectional DG, **PRODIST Module 5** / REN 956/2021) or the **SMF** meter (free market). If the Smart Meter is used for **billing/settlement**, it needs an **INMETRO-approved model** (RTM **Ordinance 587/2012** — classes D 0.2% / C 0.5% / B 1.0% / A 2.0%) and must meet **PRODIST Module 5** (bidirectional; differentiate consumed vs injected energy) and **SMF** requirements (mass memory at 5–60 min intervals for ≥ 32 days, RTC synchronizable to GMT-3, ABNT/IEC compliance). `[TO VERIFY class required per use]`
 
 ---
 

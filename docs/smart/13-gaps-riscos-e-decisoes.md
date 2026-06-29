@@ -41,11 +41,11 @@ Itens antes marcados `[VERIFICAR]` agora **confirmados** com fontes públicas (v
 | **Mapas Modbus/SunSpec proprietários por modelo** | Drivers locais | Idem D9 — usuário recebe os mapas oficiais por e-mail e popula os templates |
 | **Regulamentação infralegal do mercado livre BT** | Detalhes de medição/contratação do arranjo C | Acompanhar ANEEL (horizonte 2027) |
 | **Regras finais de remuneração de flexibilidade/DR em BT** | Monetização do N5 | Construir capacidade; ativar receita conforme sandbox/regras evoluem |
-| **Classe metrológica exigida do Smart Meter** para uso faturável | Certificação do medidor ([06](06-especificacao-hardware.md)) | Confirmar portaria de medidores / uso |
+| **Classe metrológica do Smart Meter** | Certificação do medidor ([06](06-especificacao-hardware.md)) | **Proposto:** EMS = classe 1 / 0,5S (≤1%); faturamento = INMETRO RTM 587 + PRODIST M5 + SMF. `[VERIFICAR por uso]` |
 | **Custos/prazos de ANATEL e ensaios EMC** | Caminho crítico do hardware | Engenharia de certificação; módulos pré-certificados |
 | **Viabilidade regulatória/comercial de V2G no BR** | Modo #9 ([10](10-modos-de-operacao-e-features.md)) | Tratar como futuro `[VERIFICAR]` |
 | **Regulação de armazenamento (ESS) no BR** | Modos com bateria | Acompanhar REN/consultas ANEEL |
-| **Modelo de negócio e precificação** | Empacotamento/tiers ([01](01-visao-e-prd.md)) | Decisão de negócio do usuário |
+| **Modelo de negócio e precificação** | Empacotamento/tiers ([01](01-visao-e-prd.md)) | **Proposta** em [15](15-modelo-de-negocio-e-precificacao.md); aguarda decisão do usuário |
 | **Requisitos LGPD** (consentimento, retenção, titularidade) | Plataforma/dados ([08](08-plataforma-cloud-e-apis.md)) | Avaliação jurídica |
 | **Requisitos específicos por distribuidora** (parecer de acesso) | Comissionamento/conexão | Base de regras por concessionária |
 
@@ -77,8 +77,8 @@ Itens antes marcados `[VERIFICAR]` agora **confirmados** com fontes públicas (v
 
 ## 6. Perguntas abertas restantes
 
-1. **Modelo de negócio/precificação** (assinatura por UC + hardware + fee de serviços?) — sua definição.
-2. **Classe metrológica** alvo do Smart Meter para uso faturável (depende do uso pretendido).
+1. **Modelo de negócio/precificação** — proposta em [15](15-modelo-de-negocio-e-precificacao.md); falta decidir HW (venda/locação/HaaS), faixas de preço, R3/R4 e canal.
+2. **Classe metrológica** — proposta: EMS = classe 1 / 0,5S (≤ 1%); faturamento = INMETRO RTM 587 + PRODIST M5 + SMF. Confirma?
 3. **Prioridade dos artefatos extra** já gerados — quer aprofundar algum (ex.: OpenAPI completo, JSON Schema por tipo de ativo)?
 4. **Projeto externo de integração** — quando tiver os mapas oficiais, rodamos o prompt de `docs/smart/integracao/PROMPT-projeto-externo.md` em outra sessão e fazemos o merge.
 
