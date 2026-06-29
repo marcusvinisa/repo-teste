@@ -1,5 +1,11 @@
 # Prompt — Projeto Externo de Ingestão de Mapas (Modbus + APIs)
 
+> **Atualização (D9 evoluída):** o projeto externo foi **dividido em dois repositórios/serviços standalone**, cada um com seu `SPEC.md` e `BOOTSTRAP-PROMPT.md` (sementes em [`/repos`](../../../repos/README.md)):
+> - **[`energy-connectors`](../../../repos/energy-connectors/)** — conectores **cloud-to-cloud** (APIs de fabricantes → API normalizada).
+> - **[`energy-device-maps`](../../../repos/energy-device-maps/)** — registro de **perfis Modbus/SunSpec** (registrador → canônico) + lib + CLI (markitdown).
+>
+> Use o `BOOTSTRAP-PROMPT.md` de cada repo em sessões dedicadas. O prompt genérico abaixo permanece como referência da **tarefa de ingestão dos mapas oficiais** (vale para os dois).
+
 > Cole o conteúdo abaixo como **prompt inicial** numa sessão dedicada (outro repositório/sessão), com os documentos oficiais dos fabricantes disponíveis. O objetivo é **popular** os [templates por fabricante](00-modelo-de-abstracao.md) e a [matriz de compatibilidade](matriz-compatibilidade.md) a partir dos mapas oficiais, e depois **mesclar** o resultado de volta em `docs/smart/integracao/`.
 
 ---
