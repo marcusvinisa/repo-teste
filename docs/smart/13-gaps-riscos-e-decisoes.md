@@ -11,12 +11,13 @@
 | D1 | **Escopo da documentação** | ✅ **Suite completa** + artefatos técnicos (OpenAPI, JSON Schema, mapa canônico, checklist de certificação, diagrama de cenários) |
 | D2 | **Hardware** | ✅ **Smart Gateway** (cérebro + controle por **sinal**; aciona contator/disjuntor/ATS **externos**, não chaveia potência) + **Smart Meter** (*commodity*, exatidão **< 1%**, no quadro/QGBT). Topologias: **T1 separada** ou **T2 integrada**. **Sem** SKU "Controller". Nível OEM/ODM. Ver [06](06-especificacao-hardware.md) |
 | D3 | **Integração** | ✅ **Híbrida** local + cloud-to-cloud ([05](05-integracao-e-conectividade.md)) |
-| D4 | **Personas** | ✅ **4 personas** com roles/atribuições: morador + instalador (primárias), agregador + gestor GD (avançadas). RBAC em [08](08-plataforma-cloud-e-apis.md) |
+| D4 | **Personas** | ✅ **4 personas** com roles/atribuições: morador + instalador (primárias), agregador + gestor GD (avançadas). RBAC em [08](08-plataforma-cloud-e-apis.md). **Proposta de expansão p/ 7 personas** (CON/INT/COM/AGG/GER/DSO/ORQ) do EOS-DENO — ver [absorção §4](referencias/00-absorcao-e-ajustes.md) `[A CONFIRMAR]` |
 | D5 | **Cenários** | ✅ **Grade completa de 18** (3 arranjos × 6 níveis), N0 incluídos como cenários plenos ([11](11-matriz-de-cenarios.md)) |
 | D6 | **Idioma** | ✅ **PT-BR + EN** (espelho em `docs/smart/en/`) |
 | D7 | **Conectores prioritários** | ✅ **GoodWe, Deye, Sungrow, Growatt, Huawei, Solis** ([05](05-integracao-e-conectividade.md)) |
 | D8 | **Marca** | ✅ **"Smart"** é nome definitivo |
 | D9 | **Mapa de integração** | ✅ Mapa **canônico** (superset de capacidades) + **modelo de abstração** + **templates por fabricante** + **matriz de compatibilidade** + **prompt de projeto externo** (ingestão via *markitdown*). Ver `docs/smart/integracao/` |
+| D10 | **Estudos absorvidos + repos** | ✅ EOS-DENO + Discovery HEMS BR absorvidos ([referências](referencias/00-absorcao-e-ajustes.md)); ajustes aplicados (REN 1.098/2024, INMETRO 657/2025, medidores OEM, SoC, Quectel, OSS build/fork/buy, stack de telemetria). Dois repos-seed: `energy-connectors` + `energy-device-maps`. GoodWe = 1º conector (openapi.goodwe.com) |
 
 ---
 
