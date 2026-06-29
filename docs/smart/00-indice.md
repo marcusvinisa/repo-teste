@@ -35,6 +35,32 @@ Documentação completa de produto e engenharia para construir o Smart: visão e
 
 ---
 
+## Projeto de Integração (multimarca)
+
+Base viva para mapear ativos de qualquer fabricante (Modbus/SunSpec e APIs), em `docs/smart/integracao/`:
+
+| Arquivo | Conteúdo |
+|---|---|
+| [Modelo de Abstração](integracao/00-modelo-de-abstracao.md) | Como representar dispositivos e adicionar mapas por fabricante |
+| [Mapa Canônico de Capacidades](integracao/mapa-canonico-capacidades.md) | Superset de capacidades (geração, armazenamento e demais ativos) |
+| [Template — Modbus/SunSpec](integracao/template-fabricante-modbus.md) | Modelo `.md` para mapa local por fabricante |
+| [Template — API](integracao/template-fabricante-api.md) | Modelo `.md` para mapa de API cloud por fabricante |
+| [Matriz de Compatibilidade](integracao/matriz-compatibilidade.md) | Banco marca × modelo × tipo × capacidade |
+| [Prompt — Projeto Externo](integracao/PROMPT-projeto-externo.md) | Prompt para ingestão dos mapas oficiais (via markitdown) em outra sessão |
+
+## Artefatos técnicos
+
+Em `docs/smart/artefatos/`:
+
+| Arquivo | Conteúdo |
+|---|---|
+| [openapi.yaml](artefatos/openapi.yaml) | Contrato REST (rascunho) da API pública |
+| [modelo-canonico.schema.json](artefatos/modelo-canonico.schema.json) | JSON Schema do modelo canônico (telemetria/dispositivos/comandos) |
+| [checklist-certificacao-br.md](artefatos/checklist-certificacao-br.md) | Checklist de certificação/conformidade no Brasil |
+| [diagrama-tarifas-cenarios.md](artefatos/diagrama-tarifas-cenarios.md) | Diagramas de tarifas, sinais de preço e alavancas de valor |
+
+---
+
 ## Ordem de leitura recomendada
 
 - **Executivo / negócio:** 01 → 11 → 12 → 13
