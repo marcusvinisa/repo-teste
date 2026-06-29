@@ -85,6 +85,8 @@ Quando **não há acesso local** (ou como redundância), o Smart integra a **nuv
 | — | Enphase — Enlighten API | Sim | Limitado | microinversores |
 | — | Tesla — Fleet/Powerwall API | Sim | Parcial | Powerwall |
 
+> **GoodWe Open-API tem 3 tipos** (referência do produto): **(1) OpenAPI** — dados de negócio processados pelo SEMS, HTTPS, limite ~3600 req/h; **(2) Real-time Data** — dados *raw* dos dispositivos (raw/Kafka), aberto a terceiros, **sem controle remoto**; **(3) Batch Remote Control** — controle remoto via **Kafka**, usado junto à Real-time Data para suportar **VPP/microgrid**. O conector GoodWe do [`energy-connectors`](../../repos/energy-connectors/) deve cobrir os três — doc oficial: **https://openapi.goodwe.com/#/api/doc-10a71afe72c271**. `[VERIFICAR contra doc oficial / parceria]`
+
 > Os detalhes reais de cada API (campos, limites de controle) são levantados no **projeto de integração** (templates por fabricante e matriz de compatibilidade) — ver [`docs/smart/integracao/`](integracao/00-modelo-de-abstracao.md). Todos os campos marcados `[VERIFICAR]` até a ingestão dos docs oficiais.
 
 > **Regra de produto:** controle determinístico crítico **deve** preferir o caminho **local**; conectores cloud servem para **monitoramento universal** e para **controle onde o fabricante o permite**. Limitações conhecidas devem ser explicitadas ao usuário (ex.: "este inversor só permite monitoramento via nuvem").

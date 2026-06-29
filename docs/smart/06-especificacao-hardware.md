@@ -56,12 +56,12 @@ flowchart TB
 
 | Item | Smart Gateway |
 |---|---|
-| **SoC aplicação** | ARM Cortex-A (classe i.MX8M / RK3568), Linux |
+| **SoC aplicação** | ARM Cortex-A + Linux — candidatos: **NXP i.MX8M**, **TI Sitara AM62x**, **ST STM32MP2** (Cortex-A35 + Cortex-M33 de *safety* no mesmo chip), RK3568. **Dois domínios** (Cortex-A aplicação + Cortex-M tempo-real/safety) é o padrão para o laço crítico de zero-export |
 | **Co-processador** | MCU Cortex-M para I/O e controle determinístico |
 | **Memória** | ≥ 1 GB RAM, ≥ 8–16 GB eMMC `[PREMISSA]` |
 | **Segurança** | Secure Element/TPM, secure boot, X.509 por dispositivo |
 | **Comunicação ativos** | RS485 isolado ×4–6, CAN ×1–2, Modbus RTU/TCP, SunSpec |
-| **Rede (WAN/LAN)** | Ethernet, Wi-Fi 2.4/5 GHz, BT 5.x, **4G/LTE opcional** (sites sem internet fixa) |
+| **Rede (WAN/LAN)** | Ethernet, Wi-Fi 2.4/5 GHz, BT 5.x, **4G/LTE opcional** (sites sem internet fixa) — módulo candidato **Quectel EG915U-LA** (LTE Cat 1, variante LatAm, com homologação ANATEL) `[VERIFICAR status no painel ANATEL]` |
 | **Casa inteligente** | Zigbee/Matter (opcional), smart plugs Wi-Fi |
 | **Controle (saídas)** | **DO / relé de SINAL ×4** (contato seco) → comanda **contator / disjuntor motorizado / ATS externos**; **não** chaveia potência |
 | **Entradas** | DI ×8, AI ×2–4 |
@@ -89,6 +89,8 @@ flowchart TB
 | **Observação** | quando a topologia é **T2 (integrado)**, esta função vive **dentro** do Gateway |
 
 > Para níveis que exigem **peak shaving / zero-export / grid services** ([10](10-modos-de-operacao-e-features.md)), recomenda-se **Smart Meter dedicado** (T1) ou variante **integrada** (T2) — não depender só do medidor interno do inversor.
+
+> **Candidatos OEM de Smart Meter** (*commodity*, ~R$100 CIF, Modbus-RTU, adequados ao split-phase BR): **Eastron SDM630** (trifásico, classe **0,5S**, bidirecional, versão CT) e **SDM120** (monofásico, classe 1); **Acrel ADL200** (mono) e **ADL400** (trifásico, classe 0,5, suporta split-phase). Atendem IEC 62053-21/22. Com a **Portaria INMETRO 657/2025** (Declaração de Conformidade), usar medidor OEM certificado fica mais simples. `[VERIFICAR cobertura 127/254V por região e DC INMETRO]`
 
 > **Medição EMS vs faturamento.** Por padrão o Smart Meter é um **medidor de EMS** (controle: peak shaving, zero-export, autoconsumo); o **medidor de faturamento oficial** continua sendo o da **distribuidora** (GD bidirecional, **PRODIST Módulo 5** / REN 956/2021) ou o do **SMF** (mercado livre). Se o Smart Meter for usado para **faturamento/liquidação**, precisa de **modelo aprovado pelo INMETRO** (RTM **Portaria 587/2012** — classes D 0,2% / C 0,5% / B 1,0% / A 2,0%) e atender **PRODIST Módulo 5** (bidirecional; diferenciar energia consumida e injetada) e os requisitos de **SMF** (memória de massa em intervalos de 5–60 min por ≥ 32 dias, relógio sincronizável a GMT-3, conformidade ABNT/IEC). `[VERIFICAR classe exigida por uso]`
 

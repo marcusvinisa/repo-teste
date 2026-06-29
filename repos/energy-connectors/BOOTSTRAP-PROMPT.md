@@ -41,7 +41,7 @@ Fase 1 — Fundação
   T2. api/: esqueleto Fastify + erro padrão + /v1/vendors (estático) + OpenAPI gen. Aceite: GET /v1/vendors responde; openapi.yaml gerado. Verify: pnpm test (rota), pnpm openapi:gen.
   T3. testes de contrato reutilizáveis (suite que qualquer conector deve passar). Aceite: suite roda contra um conector fake. 
   CHECKPOINT: build limpo, contrato definido, OpenAPI válido.
-Fase 2 — Primeiro conector vertical (GoodWe)
+Fase 2 — Primeiro conector vertical (GoodWe) — doc oficial: https://openapi.goodwe.com/#/api/doc-10a71afe72c271 (cobrir OpenAPI + Real-time Data + Batch Remote Control)
   T4. connectors/goodwe: authenticate + listDevices (canônico). Aceite: lista devices de fixture. Verify: unit + contrato.
   T5. goodwe readTelemetry + map.ts (pv.power, bat.soc, meter.*). Aceite: fixtures → canônico corretos. Verify: unit.
   T6. goodwe writeCommand onde permitido + capabilities(model). Aceite: comando suportado→202; não suportado→Unsupported. 

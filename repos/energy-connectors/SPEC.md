@@ -17,6 +17,8 @@ Construir um serviço/biblioteca que:
 ## Fabricantes-alvo (ordem de prioridade)
 GoodWe (SEMS Open-API) · Deye/Solarman · Sungrow (iSolarCloud) · Growatt · Huawei (FusionSolar) · Solis (SolisCloud). Demais (SolarEdge, Fronius, Enphase, Tesla) em fase posterior. Capacidade real de **controle** varia — declarar por conector (muitos só leem).
 
+> **Primeiro conector = GoodWe.** Referência oficial: **https://openapi.goodwe.com/#/api/doc-10a71afe72c271** (GoodWe Developer Platform). Cobrir os **3 tipos**: **OpenAPI** (dados de negócio, HTTPS, ~3600 req/h), **Real-time Data** (raw/Kafka, sem controle) e **Batch Remote Control** (Kafka, controle → VPP/microgrid). A doc é uma SPA — extrair endpoints/campos na sessão de build a partir da página oficial.
+
 ## Tech Stack `[a confirmar na sessão de build]`
 - **TypeScript + Node 20 + Fastify** (API + tipagem forte + OpenAPI nativo). Alternativa: Python/FastAPI.
 - **Zod** para validação de entrada/saída (inclusive **respostas de fabricantes = dados não confiáveis**).

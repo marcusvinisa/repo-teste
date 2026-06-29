@@ -46,7 +46,7 @@ A **Lei 14.300/2022** instituiu o *Marco Legal da Microgeração e Minigeração
 | **EMUC** | Empreendimento com múltiplas UCs (ex.: condomínios) | Gestão coletiva por condomínio |
 
 ### SCEE, créditos e "Fio B"
-- Energia injetada gera **créditos** (kWh) usados para abater o consumo, com validade (tipicamente 60 meses).
+- Energia injetada gera **créditos** (kWh) usados para abater o consumo, com **validade de 60 meses** (REN 1.059/2023, Art. 655-L).
 - A **Lei 14.300** encerrou a gratuidade integral do uso da rede. Para quem se conectou **a partir de 7/jan/2023 (GD II)**, há **cobrança gradual do TUSD Fio B** sobre a **energia injetada/compensada**, em rampa anual: **15% (2023) · 30% (2024) · 45% (2025) · 60% (2026) · 75% (2027) · 90% (2028)**; a partir de **2029** a ANEEL **revisa a metodologia** (diretrizes do CNPE) — **não** é automaticamente 100%. Quem protocolou acesso **até 6/jan/2023 (GD I)** mantém **direito adquirido** (isenção do Fio B) **até 2045**. O **autoconsumo instantâneo** (gerar e consumir no mesmo instante) **não** é tarifado pelo Fio B — só a energia **injetada**.
 
 **Impacto no produto:** o motor de economia precisa modelar (a) crédito de energia por UC, (b) custo de Fio B incidente, (c) validade/rateio de créditos e (d) o trade-off injetar-agora vs autoconsumir/armazenar. Ver [04 — modelo de tarifa/crédito](04-modelo-de-dominio-e-dados.md) e [10 — modos](10-modos-de-operacao-e-features.md).
@@ -70,7 +70,7 @@ A **Lei 14.300/2022** instituiu o *Marco Legal da Microgeração e Minigeração
 | **TUSD** | Tarifa de Uso do Sistema de Distribuição (fio) | Compõe custo; base do Fio B na GD |
 | **TE** | Tarifa de Energia | Compõe custo da energia consumida |
 | **Tarifa convencional** | Monômia, preço único de energia (R$/kWh) | Baseline de economia |
-| **Tarifa Branca** | **ToU** opcional do Grupo B com 3 postos: **ponta**, **intermediário**, **fora-ponta** | Habilita **load shifting** e carga inteligente |
+| **Tarifa Branca** | **ToU** opcional do Grupo B, 3 postos: **ponta** (~18–21h, varia por distribuidora), **intermediário** (1h antes e 1h depois da ponta) e **fora-ponta** | Habilita **load shifting** e carga inteligente |
 | **Bandeiras tarifárias** | Adicional **verde/amarela/vermelha 1 e 2** conforme custo de geração | Sinal de preço de curto prazo para otimização |
 
 > No mercado cativo, **não há tarifa dinâmica horária de mercado** como na Europa; o sinal de preço disponível é **tarifa branca + bandeiras**. A "tarifa dinâmica" plena só aparece no **mercado livre** (preço de contrato/PLD). O motor de otimização deve suportar **ambos os mundos** — ver [08](08-plataforma-cloud-e-apis.md) e [10](10-modos-de-operacao-e-features.md).
@@ -94,6 +94,7 @@ Diferente da Europa (FCR/aFRR com mercados abertos a agregadores residenciais), 
 
 ### Conexão de GD à rede (PRODIST)
 - **PRODIST Módulo 3** — procedimentos de **acesso e conexão** de micro/minigeração à distribuição (solicitação de acesso, parecer, requisitos de proteção, medição).
+- **REN ANEEL 1.098/2024** — **dispensa a análise de inversão de fluxo** em três casos, incluindo **micro/minigeração que não injeta na rede ("grid zero" / zero-export)** e autoconsumo local até 7,5 kW. **Favorável ao Smart**: a topologia zero-export simplifica a conexão. `[VERIFICAR aplicabilidade por distribuidora]`
 
 ### Inversores e sistema FV (ABNT)
 | Norma | Escopo |
@@ -115,6 +116,8 @@ Diferente da Europa (FCR/aFRR com mercados abertos a agregadores residenciais), 
 
 ### Medição
 - GD exige **medidor bidirecional** que diferencie energia **consumida** e **injetada** (**PRODIST Módulo 5**, REN 956/2021). Medidor de **faturamento** deve ter **modelo aprovado pelo INMETRO** (RTM **Portaria 587/2012** — classes D 0,2% / C 0,5% / B 1,0% / A 2,0%). Para **mercado livre**, medição apta ao **SMF/CCEE** (memória de massa 5–60 min por ≥ 32 dias, relógio sincronizável GMT-3, ABNT/IEC). `[VERIFICAR requisitos por porte]`
+- **INMETRO Portaria 657/2025** (vigência **01/01/2026**) — substitui a *verificação inicial* pela **Declaração de Conformidade** do fabricante/importador autorizado para instrumentos de medição (inclui medidores de energia); verificações periódicas/pós-reparo permanecem. **Favorece medidor OEM** já certificado (ver [06](06-especificacao-hardware.md)). `[VERIFICAR autorização para emitir DC]`
+- **Troca nacional de medidores de BT até ~2035** (Portaria Normativa 126/2026, meta ~2%/ano por distribuidora) — amplia a base de **medição inteligente**, habilitador de dados para o Smart. `[VERIFICAR]`
 
 ---
 

@@ -60,6 +60,10 @@ flowchart TB
 | **API pública** | REST/GraphQL/Webhooks/streaming p/ parceiros | `[SW]` |
 | **Observabilidade** | métricas, logs, tracing, alertas de plataforma | `[SW]` |
 
+> **Fundações OSS (build/fork/buy) — ver [absorção dos estudos](referencias/00-absorcao-e-ajustes.md):** *fork/build-on* nas commodities (**OpenEMS** p/ EMS, **ThingsBoard** p/ ingestão/multi-tenant, **EMHASS/PyPSA/OR-Tools/HiGHS** p/ otimização, **Keycloak/Kong** p/ IAM/API, **Prometheus/Grafana/OTel/MLflow/Vault** p/ infra) e **build puro** nos diferenciadores (**CCEE/BR** e **agent-fabric AI-native**). Não reescrever o que o OSS já resolve.
+
+> **Stack de telemetria `[VERIFICAR]`:** o **Amazon Timestream for LiveAnalytics fechou para novos clientes (20/06/2025)** — para produto novo, usar **Timestream for InfluxDB** ou **TimescaleDB** (PostgreSQL + hypertables). Ingestão: regra IoT Core → DB (baixo volume) ou **Greengrass stream manager** (store-and-forward, alto volume). Confirmar disponibilidade regional (sa-east-1).
+
 ---
 
 ## 2. Motor de otimização e forecast
