@@ -10,7 +10,7 @@
 
 Documentação completa de produto e engenharia para construir o Smart: visão e PRD, contexto regulatório brasileiro, arquitetura de sistema, modelo de dados, integração multimarca, hardware, firmware/edge, plataforma de nuvem, apps/UX, catálogo de modos de operação, matriz de cenários, roadmap, e o registro de gaps/decisões.
 
-> ⚠️ **Decisões pendentes de confirmação.** Por uma indisponibilidade da ferramenta de perguntas interativas, quatro decisões de escopo foram assumidas como *defaults* (suite completa; hardware em família OEM Gateway+Controller; integração híbrida local+cloud; 4 personas). Há também uma divergência na contagem de cenários (**15 informados vs 18 da grade completa**). Tudo está consolidado em **[13 — Gaps, Riscos e Decisões](13-gaps-riscos-e-decisoes.md)** para sua confirmação.
+> ✅ **Decisões confirmadas.** Escopo: suite completa. Hardware: **Smart Gateway** (controle por **sinal**) + **Smart Meter** (*commodity* < 1%), topologia separada ou integrada. Integração: **híbrida** local + cloud. **4 personas** com roles e atribuições. Cenários: **grade completa de 18**. Idioma: **PT-BR + EN** (espelho em `en/`). Conectores prioritários: **GoodWe, Deye, Sungrow, Growatt, Huawei, Solis**. Pendências e itens `[VERIFICAR]` em **[13 — Gaps, Riscos e Decisões](13-gaps-riscos-e-decisoes.md)**.
 
 ---
 
@@ -23,7 +23,7 @@ Documentação completa de produto e engenharia para construir o Smart: visão e
 | 03 | [Arquitetura de Sistema](03-arquitetura-de-sistema.md) | Camadas edge/cloud/apps, topologias mistas, fluxos, NFRs, segurança |
 | 04 | [Modelo de Domínio e Dados](04-modelo-de-dominio-e-dados.md) | Entidades, modelo canônico de telemetria, modelo de tarifa |
 | 05 | [Integração e Conectividade](05-integracao-e-conectividade.md) | DAL, drivers locais, conectores cloud-to-cloud, matriz de vendors |
-| 06 | [Especificação de Hardware](06-especificacao-hardware.md) | Família Smart Gateway + Smart Controller, blocos, I/O, certificações BR |
+| 06 | [Especificação de Hardware](06-especificacao-hardware.md) | Família Smart Gateway + Smart Meter, blocos, I/O, certificações BR |
 | 07 | [Especificação de Firmware / Edge](07-especificacao-firmware-edge.md) | Stack, módulos, modos no edge, fail-safe/offline, OTA, segurança |
 | 08 | [Plataforma Cloud e APIs](08-plataforma-cloud-e-apis.md) | Microsserviços, time-series, otimização/forecast, VPP, billing, API pública |
 | 09 | [Apps Web/Mobile e UX](09-apps-web-mobile-e-ux.md) | Mapa de apps por persona, fluxos, telas, white-label |

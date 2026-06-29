@@ -77,8 +77,8 @@ O empacotamento acompanha **nível de ativos** (N0–N5) e **persona**. Hardware
 |---|---|---|---|
 | **Smart Lite** `[SW]` | Cativo/GD só consumo ou só PV | Nenhum (via API/nuvem do fabricante) | Monitoramento, contas, relatórios, alarmes |
 | **Smart Home** `[SW+HW]` | +Bateria, +EV, +cargas | **Smart Gateway** | Autoconsumo, backup, EV smart charging, automações, tarifa branca/ToU |
-| **Smart Home+** `[SW+HW]` | +Load shifting + tarifa dinâmica | Gateway ou **Controller** | Otimização por preço + forecast, medição própria, peak shaving |
-| **Smart Grid** `[SW+HW]` | +Grid services / VPP / mercado livre | **Smart Controller** | Despacho de flexibilidade, agregação, controle de reativo, billing |
+| **Smart Home+** `[SW+HW]` | +Load shifting + tarifa dinâmica | **Gateway + Smart Meter** | Otimização por preço + forecast, medição própria, peak shaving |
+| **Smart Grid** `[SW+HW]` | +Grid services / VPP / mercado livre | **Gateway + Smart Meter** | Despacho de flexibilidade, agregação, controle de reativo, billing |
 | **Smart Pro / Fleet** `[SW]` | Instalador/agregador | — | Comissionamento, frota, OTA, O&M, API, white-label |
 | **Smart GD** `[SW]` | Gestor de GD compartilhada | — | Rateio, conciliação, multi-UC, faturamento de créditos |
 

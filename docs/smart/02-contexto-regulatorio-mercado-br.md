@@ -47,7 +47,7 @@ A **Lei 14.300/2022** instituiu o *Marco Legal da Microgeração e Minigeração
 
 ### SCEE, créditos e "Fio B"
 - Energia injetada gera **créditos** (kWh) usados para abater o consumo, com validade (tipicamente 60 meses).
-- A **Lei 14.300** encerrou a gratuidade integral do uso da rede: passou a haver **cobrança gradual do TUSD Fio B** sobre a energia compensada para novos conectados, em rampa anual crescente até **100% (≈2029)** `[VERIFICAR percentuais e datas]`. Sistemas com solicitação de acesso protocolada antes do corte (≈ jan/2023) têm **direito adquirido** (regra antiga) até **2045** `[VERIFICAR]`.
+- A **Lei 14.300** encerrou a gratuidade integral do uso da rede. Para quem se conectou **a partir de 7/jan/2023 (GD II)**, há **cobrança gradual do TUSD Fio B** sobre a **energia injetada/compensada**, em rampa anual: **15% (2023) · 30% (2024) · 45% (2025) · 60% (2026) · 75% (2027) · 90% (2028)**; a partir de **2029** a ANEEL **revisa a metodologia** (diretrizes do CNPE) — **não** é automaticamente 100%. Quem protocolou acesso **até 6/jan/2023 (GD I)** mantém **direito adquirido** (isenção do Fio B) **até 2045**. O **autoconsumo instantâneo** (gerar e consumir no mesmo instante) **não** é tarifado pelo Fio B — só a energia **injetada**.
 
 **Impacto no produto:** o motor de economia precisa modelar (a) crédito de energia por UC, (b) custo de Fio B incidente, (c) validade/rateio de créditos e (d) o trade-off injetar-agora vs autoconsumir/armazenar. Ver [04 — modelo de tarifa/crédito](04-modelo-de-dominio-e-dados.md) e [10 — modos](10-modos-de-operacao-e-features.md).
 
@@ -57,7 +57,7 @@ A **Lei 14.300/2022** instituiu o *Marco Legal da Microgeração e Minigeração
 
 - O mercado brasileiro divide-se em **ACR** (Ambiente de Contratação Regulada, tarifa da distribuidora) e **ACL** (Ambiente de Contratação Livre).
 - Desde **jan/2024**, **todo consumidor do Grupo A** (alta/média tensão) pode migrar ao ACL, podendo ser atendido por **comercializador varejista**.
-- A **abertura para o Grupo B (baixa tensão / residencial)** está em discussão regulatória (MME/CCEE), com cronograma ainda **não consolidado** — estimativas apontam janelas a partir de **2026–2028** `[VERIFICAR cronograma oficial]`.
+- **Abertura da baixa tensão — agora com marco legal:** a **Lei nº 15.269/2025 (24/11/2025)** iniciou a abertura do mercado livre para a BT. Cronograma anunciado: até **nov/2027** para consumidores **comerciais e industriais** de BT, e até **nov/2028** para **residenciais**. A lei cria o **Supridor de Última Instância (SUI)** para garantir fornecimento em situações excepcionais. A ANEEL conduz o **aprimoramento regulatório** (medição, contratação) com horizonte **2027**. `[VERIFICAR regulamentação infralegal em construção]`
 
 **Impacto no produto:** o "arranjo C" deve ser desenhado para entrar em produção **quando a BT abrir**, exigindo: medição compatível para liquidação na CCEE, modelagem de **contrato/PLD** em vez de tarifa regulada, e fluxos de **migração**. Tratar como **roadmap Fase 2** ([12](12-roadmap-e-faseamento.md)) e marcar dependência regulatória em [13](13-gaps-riscos-e-decisoes.md).
 
@@ -82,8 +82,9 @@ A **Lei 14.300/2022** instituiu o *Marco Legal da Microgeração e Minigeração
 Diferente da Europa (FCR/aFRR com mercados abertos a agregadores residenciais), no Brasil:
 
 - **Serviços ancilares** são contratados pelo **ONS** (controle de frequência, reserva de potência operativa, suporte de reativos, restabelecimento) — historicamente de **grandes geradores**, não de DERs residenciais.
-- **Resposta da demanda (demand response):** houve **projetos-piloto e chamadas** ANEEL/ONS, mas **ainda não há um mercado consolidado e remunerado para flexibilidade residencial em BT** `[VERIFICAR status atual]`.
-- **Agregação / VPP de DERs em BT:** **incipiente**; remuneração de flexibilidade do consumidor de baixa tensão é majoritariamente **futuro/regulatório**.
+- **Resposta da demanda / serviços ancilares — avanços recentes (2025–2026):** a ANEEL criou um **sandbox regulatório** para testar **contratação competitiva de serviços ancilares** (primeiros projetos em subestações de MG) e **autorizou o ONS a contratar serviços ancilares de controle de tensão** (out/2025; TSA 2026 ≈ R$ 10,41/Mvar-h). A **agenda regulatória** inclui requisitos de **observabilidade, operabilidade e controlabilidade de RED** (Recursos Energéticos Distribuídos).
+- **Medição inteligente em BT:** a **Consulta Pública nº 001/2026** da ANEEL trata da **modernização dos sistemas de medição / medidores inteligentes** em BT — habilitador-chave para grid services e para o mercado livre residencial.
+- **Armazenamento + revenue stacking:** a ANEEL reconhece o potencial do **armazenamento distribuído** com *revenue stacking* (arbitragem, resposta da demanda, suporte de tensão). Ainda assim, um **mercado amplo e remunerado para flexibilidade residencial em BT** está **em construção** — o N5 deve nascer como **capacidade técnica pronta**, monetizando conforme a regulação evolui. `[VERIFICAR regras finais]`
 
 **Impacto no produto:** o nível **N5 (grid services)** deve ser construído como **capacidade técnica pronta** (medição, telemetria, despacho, agregação — ver [08](08-plataforma-cloud-e-apis.md)) porém com **monetização condicionada à evolução regulatória**. No curto prazo, o "grid service" viável é mais **local/contratual** (ex.: limitação de injeção/curtailment por ordem da distribuidora, controle de reativo, gestão de demanda contratada) — análogo funcional ao **§14a alemão** citado pelas fontes, mas adaptado ao Brasil. Detalhe em [10](10-modos-de-operacao-e-features.md) e [11](11-matriz-de-cenarios.md).
 
@@ -104,7 +105,7 @@ Diferente da Europa (FCR/aFRR com mercados abertos a agregadores residenciais), 
 | **ABNT NBR 16690** | Instalações elétricas de arranjos FV |
 
 ### Certificação compulsória e homologação
-- **INMETRO** — etiquetagem/certificação compulsória de **inversores e módulos** (Programa Brasileiro de Etiquetagem) `[VERIFICAR portaria vigente]`.
+- **INMETRO** — certificação compulsória de equipamentos FV (módulos, **inversores**, controladores de carga e baterias) consolidada na **Portaria nº 140/2022**, alterada pela **Portaria nº 515/2023** (inclui **dispositivo de desconexão de emergência**). Escopo cobre inversores até **75 kW**; desde **02/05/2025** só se fabrica/importa inversores **> 10 kW** conforme a 140/2022. *(Aplica-se ao **inversor**, não ao gateway Smart — ver [06](06-especificacao-hardware.md).)*
 - **ANATEL** — **homologação obrigatória** de qualquer produto com radiofrequência (Wi-Fi, Bluetooth, celular 4G/LTE) — aplica-se ao **hardware Smart** (ver [06](06-especificacao-hardware.md)).
 - **Segurança elétrica** — conformidade com ABNT/NBR aplicáveis ao equipamento eletroeletrônico e instalação (ex.: NBR 5410 para instalações de BT) `[VERIFICAR]`.
 

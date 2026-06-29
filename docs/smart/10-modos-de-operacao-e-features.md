@@ -44,12 +44,12 @@
 
 ### 3. Backup / UPS / ilhamento intencional `[HW]`
 - **Descrição:** na falta de rede, alimenta cargas essenciais a partir de bateria/PV (ilhamento **intencional**).
-- **Por quê edge:** transição imediata, local; coordena **transferência** ([06](06-especificacao-hardware.md) Controller) respeitando **anti-ilhamento** do inversor ([02](02-contexto-regulatorio-mercado-br.md)).
+- **Por quê edge:** transição imediata, local; coordena **transferência** (sinal → ATS/contator externo, ver [06](06-especificacao-hardware.md)) respeitando **anti-ilhamento** do inversor ([02](02-contexto-regulatorio-mercado-br.md)).
 - **Ativos:** bateria + inversor híbrido. **Cenários:** N2+.
 
 ### 4. Peak shaving / limite de demanda `[HW]`
 - **Descrição:** evita ultrapassar um limite de potência/demanda, descarregando bateria ou cortando carga.
-- **Por quê edge:** exige **medir e atuar em segundos** (CT no Controller).
+- **Por quê edge:** exige **medir e atuar em segundos** (Smart Meter ou Gateway com metrologia integrada).
 - **Regulatório:** relevante onde há **demanda contratada**/custo de ponta. **Cenários:** N2+/N4+.
 
 ### 5. Zero-export / limite de injeção `[HW]`

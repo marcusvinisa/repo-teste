@@ -17,7 +17,7 @@ gantt
   section Fase 1 - Otimizacao
   Otimizacao + forecast + tarifa    :f1a, 2027-01, 5M
   EV (OCPP) + bateria + load shift  :f1b, 2027-02, 5M
-  Smart Controller (eng.)           :f1c, 2027-03, 7M
+  Smart Meter + Gateway integrado   :f1c, 2027-03, 7M
   section Fase 2 - Mercado
   VPP / grid services               :f2a, 2027-09, 6M
   Billing / rateio GD               :f2b, 2027-08, 5M
@@ -37,7 +37,7 @@ gantt
 
 ### Fase 1 — Otimização (tarifa + EV + cargas)
 - **Cenários:** N3–N4 (A/B), preparação de C.
-- **Entregas:** motor de **otimização + forecast**; serviço de **tarifa** (branca/bandeiras + dinâmica); **EV smart charging (OCPP)**; **load shifting**; bomba **SG-Ready**; gestão de cargas; **Smart Controller** (medição/relés/backup/4G).
+- **Entregas:** motor de **otimização + forecast**; serviço de **tarifa** (branca/bandeiras + dinâmica); **EV smart charging (OCPP)**; **load shifting**; bomba **SG-Ready**; gestão de cargas; **Smart Meter** + variante de Gateway com metrologia/4G.
 - **Critério de saída:** economia comprovada vs baseline em piloto; modulação de EV por excedente; agendas executando no edge.
 
 ### Fase 2 — Mercado (grid services, VPP, livre, GD billing)
@@ -51,7 +51,7 @@ gantt
 
 | Componente | Recomendação | Racional |
 |---|---|---|
-| **Hardware (Gateway/Controller)** | **Buy/ODM** o módulo (SoC, rádios), **make** o firmware e a integração | rádios pré-certificados aceleram ANATEL ([06](06-especificacao-hardware.md)) |
+| **Hardware (Gateway + Smart Meter)** | **Buy/ODM** o módulo (SoC, rádios) e o medidor *commodity*, **make** o firmware e a integração | rádios pré-certificados aceleram ANATEL ([06](06-especificacao-hardware.md)) |
 | **Conectores cloud** | **Make** (núcleo do diferencial agnóstico) | controle da matriz de compatibilidade ([05](05-integracao-e-conectividade.md)) |
 | **Motor de otimização/forecast** | **Make** núcleo; **buy** dados meteorológicos/preço | IP central de valor |
 | **TSDB / infra** | **Buy** (gerenciado) | foco no produto |

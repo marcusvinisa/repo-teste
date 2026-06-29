@@ -1,48 +1,55 @@
 # 13 — Gaps, Riscos e Decisões
 
-> Registro honesto do que foi **assumido**, do que **diverge**, do que **falta** e do que pode **dar errado**. É o documento para você revisar e corrigir antes de avançar.
+> Registro das **decisões confirmadas**, do que ainda **falta** e do que pode **dar errado**. Atualizado após a rodada de confirmações com o usuário e a pesquisa regulatória.
 
 ---
 
-## 1. Decisões assumidas como *default* (a confirmar)
+## 1. Decisões confirmadas
 
-A ferramenta de perguntas interativas ficou indisponível na sessão; estas quatro decisões foram tomadas como *default* (todas alinhadas ao seu briefing). **Confirme ou ajuste cada uma:**
-
-| # | Decisão | Default adotado | Alternativas |
-|---|---|---|---|
-| D1 | **Escopo da documentação** | Suite completa (14 docs) | Núcleo técnico (~6) · Conceito executivo (1–2) |
-| D2 | **Estratégia de hardware** | Família OEM/ODM: **Gateway + Controller**, spec + diagrama de blocos + BOM-classe ([06](06-especificacao-hardware.md)) | Design clean-sheet completo · SKU único |
-| D3 | **Integração** | **Híbrida** local + cloud-to-cloud ([05](05-integracao-e-conectividade.md)) | Edge-first · API-first |
-| D4 | **Personas** | 4 (morador + instalador primárias; agregador + gestor GD avançadas) ([01](01-visao-e-prd.md)) | Subconjunto |
-
-Outros *defaults* menores: **idioma PT-BR**; saída em **.md** no diretório `docs/smart/`; **commit/push** na branch de trabalho.
-
----
-
-## 2. Divergência de contagem de cenários (15 vs 18)
-
-- A grade completa é **3 arranjos × 6 níveis = 18**; você indicou **15**.
-- **Reconciliação proposta:** os 15 núcleo são **N1–N5 × {Cativo, GD compartilhada, Mercado livre}** (5 × 3 = 15); as **3 células N0** ("só consumo", sem ativo a controlar) são baseline de visibilidade/billing, fora dos 15.
-- **Ação:** confirme se é essa a intenção (ver [11](11-matriz-de-cenarios.md) §2). Se quiser os N0 como cenários plenos, adotamos 18.
+| # | Tema | Decisão final |
+|---|---|---|
+| D1 | **Escopo da documentação** | ✅ **Suite completa** + artefatos técnicos (OpenAPI, JSON Schema, mapa canônico, checklist de certificação, diagrama de cenários) |
+| D2 | **Hardware** | ✅ **Smart Gateway** (cérebro + controle por **sinal**; aciona contator/disjuntor/ATS **externos**, não chaveia potência) + **Smart Meter** (*commodity*, exatidão **< 1%**, no quadro/QGBT). Topologias: **T1 separada** ou **T2 integrada**. **Sem** SKU "Controller". Nível OEM/ODM. Ver [06](06-especificacao-hardware.md) |
+| D3 | **Integração** | ✅ **Híbrida** local + cloud-to-cloud ([05](05-integracao-e-conectividade.md)) |
+| D4 | **Personas** | ✅ **4 personas** com roles/atribuições: morador + instalador (primárias), agregador + gestor GD (avançadas). RBAC em [08](08-plataforma-cloud-e-apis.md) |
+| D5 | **Cenários** | ✅ **Grade completa de 18** (3 arranjos × 6 níveis), N0 incluídos como cenários plenos ([11](11-matriz-de-cenarios.md)) |
+| D6 | **Idioma** | ✅ **PT-BR + EN** (espelho em `docs/smart/en/`) |
+| D7 | **Conectores prioritários** | ✅ **GoodWe, Deye, Sungrow, Growatt, Huawei, Solis** ([05](05-integracao-e-conectividade.md)) |
+| D8 | **Marca** | ✅ **"Smart"** é nome definitivo |
+| D9 | **Mapa de integração** | ✅ Mapa **canônico** (superset de capacidades) + **modelo de abstração** + **templates por fabricante** + **matriz de compatibilidade** + **prompt de projeto externo** (ingestão via *markitdown*). Ver `docs/smart/integracao/` |
 
 ---
 
-## 3. Gaps de contexto (podem limitar/impedir partes)
+## 2. Itens regulatórios validados na pesquisa (jun/2026)
+
+Itens antes marcados `[VERIFICAR]` agora **confirmados** com fontes públicas (ver [02](02-contexto-regulatorio-mercado-br.md)):
+
+| Tema | Situação confirmada |
+|---|---|
+| **Fio B (Lei 14.300)** | Rampa **15/30/45/60/75/90%** (2023→2028); **2029** = ANEEL revisa metodologia (CNPE). GD I (≤6/jan/2023) isenta até **2045**. Autoconsumo instantâneo isento |
+| **Mercado livre BT** | **Lei nº 15.269/2025**: BT comercial/industrial até **nov/2027**, residencial até **nov/2028**; cria **Supridor de Última Instância (SUI)** |
+| **INMETRO inversores** | **Portaria 140/2022** + **515/2023** (desconexão de emergência); escopo ≤ 75 kW; aplica-se ao inversor, não ao Gateway/Meter |
+| **Grid services / RED** | ANEEL: **sandbox** de serviços ancilares; ONS autorizado a contratar **controle de tensão** (2025); agenda de **observabilidade/operabilidade/controlabilidade de RED**; **CP 001/2026** sobre medidores inteligentes em BT |
+
+---
+
+## 3. Gaps remanescentes
 
 | Gap | Impacto | Encaminhamento |
 |---|---|---|
-| **Specs reais das APIs de fabricantes** (campos, limites de controle, contratos de parceria — GoodWe Open-API e outros) | Define o que dá para **controlar** via nuvem ([05](05-integracao-e-conectividade.md)) | Obter docs oficiais + parcerias; marcado `[VERIFICAR]` |
-| **Status real de grid services/DR remunerado em BT no Brasil** | Define monetização do **N5** ([02](02-contexto-regulatorio-mercado-br.md)) | Confirmar com ANEEL/ONS/CCEE; construir capacidade, ativar receita depois |
-| **Cronograma da abertura do mercado livre BT** | Habilita o **arranjo C** pleno | Acompanhar MME/CCEE; desacoplar no roadmap ([12](12-roadmap-e-faseamento.md)) |
-| **Regras/custos de certificação INMETRO/ANATEL/ABNT** | Caminho crítico do hardware ([06](06-especificacao-hardware.md)) | Engenharia de certificação; módulos pré-certificados |
+| **Specs reais das APIs de fabricantes** (campos, limites de controle, contratos) — GoodWe, Deye/Solarman, Sungrow, Growatt, Huawei, Solis | Define o que dá para **controlar** via nuvem ([05](05-integracao-e-conectividade.md)) | **Projeto externo** (D9): ingerir docs oficiais via *markitdown* e popular a matriz; marcado `[VERIFICAR]` |
+| **Mapas Modbus/SunSpec proprietários por modelo** | Drivers locais | Idem D9 — usuário recebe os mapas oficiais por e-mail e popula os templates |
+| **Regulamentação infralegal do mercado livre BT** | Detalhes de medição/contratação do arranjo C | Acompanhar ANEEL (horizonte 2027) |
+| **Regras finais de remuneração de flexibilidade/DR em BT** | Monetização do N5 | Construir capacidade; ativar receita conforme sandbox/regras evoluem |
+| **Classe metrológica exigida do Smart Meter** para uso faturável | Certificação do medidor ([06](06-especificacao-hardware.md)) | Confirmar portaria de medidores / uso |
+| **Custos/prazos de ANATEL e ensaios EMC** | Caminho crítico do hardware | Engenharia de certificação; módulos pré-certificados |
 | **Viabilidade regulatória/comercial de V2G no BR** | Modo #9 ([10](10-modos-de-operacao-e-features.md)) | Tratar como futuro `[VERIFICAR]` |
-| **Regulação de armazenamento (ESS) no BR** | Modos com bateria/peak shaving | Acompanhar REN/consultas ANEEL |
+| **Regulação de armazenamento (ESS) no BR** | Modos com bateria | Acompanhar REN/consultas ANEEL |
 | **Modelo de negócio e precificação** | Empacotamento/tiers ([01](01-visao-e-prd.md)) | Decisão de negócio do usuário |
-| **Identidade de marca "Smart"** (logo, nome final, conflitos de marca) | Branding/white-label | Decisão do usuário / verificação de marca |
-| **Requisitos específicos por distribuidora** (parecer de acesso, proteções) | Comissionamento/conexão ([02](02-contexto-regulatorio-mercado-br.md)) | Base de regras por concessionária |
-| **Requisitos LGPD** (consentimento, retenção, titularidade dos dados) | Plataforma/dados ([08](08-plataforma-cloud-e-apis.md)) | Avaliação jurídica |
+| **Requisitos LGPD** (consentimento, retenção, titularidade) | Plataforma/dados ([08](08-plataforma-cloud-e-apis.md)) | Avaliação jurídica |
+| **Requisitos específicos por distribuidora** (parecer de acesso) | Comissionamento/conexão | Base de regras por concessionária |
 
-> **Nenhum gap impede começar** (Fase 0/MVP é viável já). Eles condicionam principalmente **N5, mercado livre e controle via nuvem de certos fabricantes**.
+> **Nenhum gap impede começar** — a Fase 0/MVP é viável já. Eles condicionam principalmente **N5, mercado livre pleno e controle via nuvem de certos fabricantes**.
 
 ---
 
@@ -50,12 +57,12 @@ Outros *defaults* menores: **idioma PT-BR**; saída em **.md** no diretório `do
 
 | Categoria | Risco | Mitigação |
 |---|---|---|
-| **Regulatório** | Mercado de flexibilidade/DR não se materializar em BT | N5 como capacidade técnica; receita opcional; foco em valor cativo/GD |
-| **Regulatório** | Mudança nas regras de GD/Fio B | Modelo de tarifa/crédito parametrizável ([04](04-modelo-de-dominio-e-dados.md)) |
+| **Regulatório** | Remuneração de flexibilidade/DR em BT demorar | N5 como capacidade técnica; foco em valor cativo/GD/controle de tensão |
+| **Regulatório** | Mudanças em GD/Fio B | Modelo de tarifa/crédito parametrizável ([04](04-modelo-de-dominio-e-dados.md)) |
 | **Técnico** | Fabricante sem controle local nem via API | Preferir local; sinalizar incompatibilidade; ampliar matriz ([05](05-integracao-e-conectividade.md)) |
 | **Técnico** | Segurança (comando indevido) | Validação local de limites + mTLS + assinatura ([03](03-arquitetura-de-sistema.md)/[07](07-especificacao-firmware-edge.md)) |
 | **Técnico** | Confiabilidade offline | Edge-first com fail-safe ([07](07-especificacao-firmware-edge.md)) |
-| **Comercial** | Custo do hardware vs valor percebido | Tiers; modo só-nuvem em N0–N1 ([01](01-visao-e-prd.md)) |
+| **Comercial** | Custo do hardware vs valor | Tiers; modo só-nuvem em N0–N1 ([01](01-visao-e-prd.md)) |
 | **Fornecimento** | Disponibilidade de SoC/rádios | Multi-fornecedor; módulos padrão ([06](06-especificacao-hardware.md)) |
 | **Cronograma** | Homologações atrasarem | Iniciar cedo; pré-certificados ([12](12-roadmap-e-faseamento.md)) |
 
@@ -64,18 +71,15 @@ Outros *defaults* menores: **idioma PT-BR**; saída em **.md** no diretório `do
 ## 5. Premissas `[PREMISSA]` e itens `[VERIFICAR]` consolidados
 
 - **[PREMISSA]** NFRs (latências, escala, retenção), escolhas de SoC/BOM, datas do roadmap, modelo de receita.
-- **[VERIFICAR]** percentuais/datas do Fio B; versões vigentes de REN; cronograma de abertura BT; portarias INMETRO; requisitos ANATEL; status de DR/grid services remunerado; viabilidade de V2G; classe de exatidão de medição exigida; requisitos LGPD.
+- **[VERIFICAR]** regulamentação infralegal do mercado livre BT; regras finais de DR/flexibilidade; classe metrológica do Smart Meter; requisitos ANATEL/EMC; viabilidade de V2G; regulação de ESS; LGPD; mapas Modbus/API por fabricante (projeto externo D9).
 
 ---
 
-## 6. Perguntas abertas ao usuário
+## 6. Perguntas abertas restantes
 
-1. Confirma os *defaults* **D1–D4** (§1)?
-2. Confirma a reconciliação **15 = N1–N5 × 3 arranjos** (§2)?
-3. Idioma final só **PT-BR** ou também **EN** (para fabricantes/investidores)?
-4. Profundidade do hardware: mantém **nível OEM/ODM** ou quer **clean-sheet** (esquemático/BOM detalhada)?
-5. Prioridade de **fabricantes/ecossistemas** para os primeiros conectores (além de GoodWe)?
-6. Há **marca/identidade** definida para "Smart" (ou é nome de trabalho)?
-7. Quer que eu gere artefatos extra: **OpenAPI** da API pública, **mapa Modbus/SunSpec** de referência, **checklist de certificação**, ou **modelo de dados** em JSON Schema?
+1. **Modelo de negócio/precificação** (assinatura por UC + hardware + fee de serviços?) — sua definição.
+2. **Classe metrológica** alvo do Smart Meter para uso faturável (depende do uso pretendido).
+3. **Prioridade dos artefatos extra** já gerados — quer aprofundar algum (ex.: OpenAPI completo, JSON Schema por tipo de ativo)?
+4. **Projeto externo de integração** — quando tiver os mapas oficiais, rodamos o prompt de `docs/smart/integracao/PROMPT-projeto-externo.md` em outra sessão e fazemos o merge.
 
-> Responda aqui e eu atualizo a suite e faço novo commit.
+> Responda e eu atualizo a suite + novo commit.

@@ -11,7 +11,7 @@ flowchart TB
   user[Morador / Instalador / Agregador / Gestor GD]
   apps[Apps Smart\nWeb Pro + Mobile + Portal GD]
   cloud[Plataforma Smart Cloud]
-  edge[Hardware Smart\nGateway / Controller]
+  edge[Hardware Smart\nSmart Gateway + Smart Meter]
   assets[Ativos de energia\nInversor, Bateria, EV, Bomba, Cargas, Medidor]
   mfc[Nuvens de fabricantes\nGoodWe, Huawei, Sungrow, ...]
   grid[Distribuidora / ONS / CCEE / Comercializador]
@@ -75,8 +75,8 @@ O produto suporta três topologias, combináveis por UC conforme o cenário ([11
 | Topologia | Quando | Caminho de dados/controle | Camada |
 |---|---|---|---|
 | **Só-nuvem (sem hardware Smart)** | N0–N1 simples; ativo já tem nuvem com API | App ↔ Smart Cloud ↔ nuvem do fabricante ↔ ativo | `[SW]` |
-| **Edge + nuvem (recomendada)** | N2–N4; precisa de controle local e cargas multimarca | App ↔ Cloud ↔ **Gateway/Controller** ↔ ativos (local) | `[SW+HW]` |
-| **Edge autônomo (offline-capaz)** | N2–N5 com requisito de operação sem internet | **Gateway/Controller** ↔ ativos; nuvem sincroniza quando volta | `[HW]` |
+| **Edge + nuvem (recomendada)** | N2–N4; precisa de controle local e cargas multimarca | App ↔ Cloud ↔ **Smart Gateway** ↔ ativos (local) | `[SW+HW]` |
+| **Edge autônomo (offline-capaz)** | N2–N5 com requisito de operação sem internet | **Smart Gateway** ↔ ativos; nuvem sincroniza quando volta | `[HW]` |
 
 ```mermaid
 flowchart TB

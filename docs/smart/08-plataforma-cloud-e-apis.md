@@ -9,7 +9,7 @@
 ```mermaid
 flowchart TB
   subgraph EDGE[Edge Smart]
-    e[Gateway/Controller]
+    e[Smart Gateway]
   end
   subgraph PLAT[Smart Cloud]
     ing[Ingestão MQTT/Sparkplug]
@@ -113,18 +113,38 @@ flowchart LR
 
 ## 5. Multi-tenant e IAM/RBAC
 
-Herda e estende a hierarquia do SEMS (até 5 níveis) com papéis adicionais:
+Herda e estende a hierarquia do SEMS (até 5 níveis). As **4 personas** ([01](01-visao-e-prd.md)) materializam-se em **roles** com **atribuições** (permissões) explícitas.
 
-| Papel | Escopo típico |
-|---|---|
-| **Admin/Distribuidor** | topo da organização |
-| **Instalador/Integrador** | frota de UCs que instala/opera |
-| **Técnico / Marketer** | subconjunto operacional |
-| **Proprietário (morador)** | sua(s) UC(s) |
-| **Agregador (VPP)** | portfólio de flexibilidade |
-| **Gestor de GD** | programa(s) de GD e UCs participantes |
+### Roles e escopo
 
-Isolamento lógico por tenant/UC; **compartilhamento** de usina com permissões e prazo (recurso presente no SEMS); auditoria/logs.
+| Persona | Role | Escopo |
+|---|---|---|
+| Morador | **Proprietário** | sua(s) UC(s) |
+| Morador | **Visitante** | UC compartilhada (somente leitura/limitado) |
+| Instalador/integrador | **Admin de organização** | toda a organização/frota |
+| Instalador/integrador | **Instalador** | UCs que instala/opera |
+| Instalador/integrador | **Técnico** | subconjunto operacional (O&M) |
+| Comercializadora/agregador | **Agregador (VPP)** | portfólio de flexibilidade (multi-UC, multi-org) |
+| Gestor de GD | **Gestor de GD** | programa(s) de GD e UCs participantes |
+| (todos) | **Suporte/Auditor** | leitura ampla + logs (sem controle) |
+
+### Matriz de atribuições (permissões)
+
+| Atribuição \ Role | Proprietário | Visitante | Admin org | Instalador | Técnico | Agregador | Gestor GD |
+|---|---|---|---|---|---|---|---|
+| Ver telemetria/relatórios | ✅ (sua UC) | 👁️ limitado | ✅ frota | ✅ suas UCs | ✅ | ✅ portfólio | ✅ UCs do programa |
+| Controlar modo/setpoint | ✅ | — | ✅ | ✅ | ⚙️ supervisionado | ✅ despacho | — |
+| Comissionar / configurar parâmetros | — | — | ✅ | ✅ | ✅ | — | — |
+| OTA (dispositivo/frota) | — | — | ✅ | ✅ | ⚙️ | — | — |
+| Gerir tarifa/contrato da UC | ✅ | — | ✅ | ✅ | — | — | ✅ (rateio) |
+| Billing / rateio de GD | 👁️ sua UC | — | — | — | — | — | ✅ |
+| Despacho VPP / grid services | — | — | — | — | — | ✅ | — |
+| Gerir usuários/organização | — | — | ✅ | parcial | — | parcial | parcial |
+| Acesso à API pública | — | — | ✅ | ✅ | — | ✅ | ✅ |
+
+Legenda: ✅ permitido · ⚙️ permitido com supervisão/aprovação · 👁️ somente leitura · — não permitido.
+
+> Isolamento lógico por tenant/UC; **compartilhamento** de usina com permissões e prazo (recurso presente no SEMS); **auditoria/logs** de todo comando e mudança de config. Roles são compostas por **atribuições atômicas** (princípio de menor privilégio), permitindo papéis customizados por organização (white-label/parceiros).
 
 ---
 

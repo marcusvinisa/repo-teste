@@ -1,23 +1,37 @@
 # 06 — Especificação de Hardware (família Smart)
 
-> Especificação, em nível **OEM/ODM** (pronta para fabricar com módulos/SoC de mercado, sem PCB do zero), da **família de hardware proprietário** do Smart. Dois SKUs cobrem do retrofit simples ao controle completo com medição e backup. Toda a comunicação física habilita os [drivers locais](05-integracao-e-conectividade.md), e o software embarcado está em [07](07-especificacao-firmware-edge.md).
+> Especificação, em nível **OEM/ODM** (montável com SoC/módulos de mercado, sem PCB do zero), do hardware proprietário do Smart. A família tem **dois elementos** — o **Smart Gateway** (o HEMS/cérebro, que controla por **sinal**) e o **Smart Meter** (medição *commodity*) — que podem ser **separados** ou **integrados no mesmo aparelho**. A comunicação física habilita os [drivers locais](05-integracao-e-conectividade.md); o software embarcado está em [07](07-especificacao-firmware-edge.md).
 
-> Faixas e escolhas de componente marcadas `[PREMISSA]`; certificações marcadas `[VERIFICAR]` (dependem de homologação/ensaio).
-
----
-
-## 1. Famílias e posicionamento
-
-| SKU | Posição | Inspirado em | Cenários ([11](11-matriz-de-cenarios.md)) |
-|---|---|---|---|
-| **Smart Gateway** | Gateway de borda *plug & play* para **retrofit** | classe EzManager3000 (fonte) | N1–N4, foco residencial |
-| **Smart Controller** | Controlador completo com **medição + relés + backup + 4G** | EMS de borda tipo gridX/Kiwigrid | N2–N5, grid services/VPP, GD |
-
-Ambos rodam o **mesmo firmware base** ([07](07-especificacao-firmware-edge.md)) com módulos habilitados por capacidade de hardware.
+> Faixas/escolhas de componente marcadas `[PREMISSA]`; certificações marcadas `[VERIFICAR]`.
 
 ---
 
-## 2. Smart Gateway — diagrama de blocos
+## 1. Princípios de hardware (decisões travadas)
+
+1. **Gateway = controller (um aparelho só).** Não há SKU "Controller" separado: o **Smart Gateway** é o cérebro do HEMS e também o controlador.
+2. **Controle por SINAL, não por potência.** O Gateway aciona cargas/transferência via **relé/IO em nível de sinal** (contato seco / nível lógico). **Quem chaveia potência é externo**: contator, disjuntor motorizado ou **ATS** de terceiros. O Gateway nunca conduz a corrente de carga.
+3. **Medição é commodity.** O **Smart Meter** pode ser proprietário ou OEM/ODM; requisito essencial é **exatidão < 1% de desvio**, instalado no **quadro de entrada ou no QGBT**.
+4. **Duas topologias** (a escolha é por projeto/UC):
+   - **T1 — Separados:** Smart Gateway + Smart Meter (medidor no quadro; Gateway o lê por RS485/Modbus).
+   - **T2 — Integrado:** medição **embutida** no mesmo hardware do Gateway (metrologia interna + gateway/controller num só box).
+
+```mermaid
+flowchart LR
+  subgraph T1[T1 - Separados]
+    g1[Smart Gateway\ncérebro + controle por sinal] -- RS485/Modbus --> m1[Smart Meter\nno quadro/QGBT <1%]
+    g1 -- sinal --> ext1[Contator / disjuntor / ATS externos]
+    g1 -- Modbus/SunSpec/OCPP/... --> a1[Ativos]
+  end
+  subgraph T2[T2 - Integrado]
+    g2[Smart Gateway + metrologia embutida] -- CT/PT --> q2[Quadro de entrada/QGBT]
+    g2 -- sinal --> ext2[Contator / disjuntor / ATS externos]
+    g2 -- Modbus/SunSpec/OCPP/... --> a2[Ativos]
+  end
+```
+
+---
+
+## 2. Smart Gateway (o HEMS) — diagrama de blocos
 
 ```mermaid
 flowchart TB
@@ -27,84 +41,66 @@ flowchart TB
   soc --- se[Secure Element / TPM\nsecure boot]
   soc --- net[Ethernet RJ45]
   soc --- wifi[Wi-Fi 2.4/5GHz + BT 5.x]
-  soc --- usb[USB 2.0 + LED status]
-  mcu --- rs485[RS485 isolado x4]
-  mcu --- can[CAN x1]
-  mcu --- dio[DI x4 / DO x2]
-  mcu --- ai[AI x1]
-  mcu --- dcout[Saída 12V aux]
-  zig[Zigbee/Matter opcional] --- soc
+  soc --- cell[Modem 4G/LTE opcional + SIM/eSIM]
+  soc --- usb[USB 2.0 + LED status + display opcional]
+  soc --- zig[Zigbee/Matter opcional]
+  mcu --- rs485[RS485 isolado x4-6]
+  mcu --- can[CAN x1-2]
+  mcu --- do[DO / relé de SINAL x4 -> contator/ATS externo]
+  mcu --- di[DI x8]
+  mcu --- ai[AI x2-4]
+  mcu --- met[Front-end de metrologia\nentradas CT/PT - somente variante integrada T2]
 ```
 
 ### Especificação (alvo) `[PREMISSA]`
 
 | Item | Smart Gateway |
 |---|---|
-| **SoC aplicação** | ARM Cortex-A (classe i.MX8M / Rockchip RK3568), Linux | 
+| **SoC aplicação** | ARM Cortex-A (classe i.MX8M / RK3568), Linux |
 | **Co-processador** | MCU Cortex-M para I/O e controle determinístico |
-| **Memória** | ≥ 1 GB RAM, ≥ 8 GB eMMC `[PREMISSA]` |
+| **Memória** | ≥ 1 GB RAM, ≥ 8–16 GB eMMC `[PREMISSA]` |
 | **Segurança** | Secure Element/TPM, secure boot, X.509 por dispositivo |
-| **Comunicação ativos** | RS485 isolado ×4, CAN ×1, Modbus RTU/TCP, SunSpec |
-| **Rede** | Ethernet ×1, Wi-Fi 2.4/5 GHz, Bluetooth 5.x |
+| **Comunicação ativos** | RS485 isolado ×4–6, CAN ×1–2, Modbus RTU/TCP, SunSpec |
+| **Rede (WAN/LAN)** | Ethernet, Wi-Fi 2.4/5 GHz, BT 5.x, **4G/LTE opcional** (sites sem internet fixa) |
 | **Casa inteligente** | Zigbee/Matter (opcional), smart plugs Wi-Fi |
-| **I/O** | DI ×4, DO ×2, AI ×1, saída 12 V aux |
-| **Capacidade de gestão** | múltiplos inversores/baterias, EV, bomba SG-Ready, dezenas de smart plugs (supera limites fixos do EzManager) `[PREMISSA]` |
-| **UI** | LEDs de status, USB 2.0 (serviço) |
+| **Controle (saídas)** | **DO / relé de SINAL ×4** (contato seco) → comanda **contator / disjuntor motorizado / ATS externos**; **não** chaveia potência |
+| **Entradas** | DI ×8, AI ×2–4 |
+| **Metrologia** | **somente na variante integrada (T2)**: entradas **CT/PT**, exatidão **< 1%** |
+| **Capacidade** | múltiplos inversores/baterias, EV, bomba SG-Ready, dezenas de smart plugs (supera limites fixos do EzManager) `[PREMISSA]` |
+| **UI** | LEDs de status, USB 2.0, display opcional |
 | **Alimentação** | AC 100–240 V 50/60 Hz → 12 V DC; consumo ≤ ~7–10 W |
-| **Mecânica** | DIN / parede / mesa; classe ~100×86×71 mm |
-| **Ambiental** | −25…+60 °C, 0–95% UR sem condensação, IP20 (interno/quadro) |
+| **Mecânica** | DIN / parede / mesa |
+| **Ambiental** | −25…+60 °C, 0–95% UR sem condensação, IP20 (quadro/interno) |
+
+> O **backup/ilhamento** é coordenado pelo Gateway **comandando** a transferência (sinal → ATS/contator externo) e dialogando com o inversor híbrido; o Gateway **respeita o anti-ilhamento do inversor** ([02](02-contexto-regulatorio-mercado-br.md)/[07](07-especificacao-firmware-edge.md)).
 
 ---
 
-## 3. Smart Controller — diagrama de blocos
+## 3. Smart Meter (medição) — *commodity*
 
-```mermaid
-flowchart TB
-  psu[Fonte AC/DC] --> soc
-  soc[SoC aplicação\nCortex-A quad + Linux] --- mcu[MCU tempo-real\ncontrole + metering DSP]
-  soc --- se[Secure Element/TPM]
-  soc --- net[Ethernet x2]
-  soc --- wifi[Wi-Fi + BT]
-  soc --- cell[Modem 4G/LTE Cat-1/4 + SIM/eSIM]
-  soc --- disp[Display opcional + LEDs + USB]
-  mcu --- rs485[RS485 isolado x4-6]
-  mcu --- can[CAN x2]
-  mcu --- ct[Entradas de medição CT/PT\n3 fases]
-  mcu --- relays[Relés de carga / contator]
-  mcu --- ats[Controle de transferência\nbackup / ilhamento]
-  mcu --- dio[DI x8 / DO x4]
-  mcu --- ai[AI x2-4]
-```
-
-### Especificação (alvo) `[PREMISSA]`
-
-| Item | Smart Controller (adicional ao Gateway) |
+| Item | Smart Meter |
 |---|---|
-| **SoC aplicação** | Cortex-A quad-core, Linux (mais folga p/ otimização local) |
-| **Medição integrada** | entradas **CT/PT trifásicas**, classe de exatidão de medição (alvo classe 1 / 0,5S) `[VERIFICAR]` — habilita peak shaving/zero-export sem medidor externo |
-| **Relés / contator** | saídas de potência para **chaveamento de cargas** e comando de **contator de transferência (backup)** |
-| **Backup / ilhamento** | interface de **transferência** (ATS) coordenada com inversor híbrido; respeita anti-ilhamento ([02](02-contexto-regulatorio-mercado-br.md)) |
-| **Conectividade WAN** | + **4G/LTE** (Cat-1/Cat-4) com SIM/eSIM, para sites sem internet fixa |
-| **Comunicação ativos** | RS485 ×4–6, CAN ×2 |
-| **I/O** | DI ×8, DO ×4, AI ×2–4 |
-| **UI** | display opcional, LEDs, USB |
-| **Mecânica** | DIN (quadro), maior gabarito; IP20 (quadro) ou IP-superior em variante externa `[PREMISSA]` |
+| **Função** | medir energia/potência/tensão/corrente (bidirecional) no ponto de conexão |
+| **Local** | **quadro de entrada** ou **QGBT** |
+| **Exatidão** | **< 1% de desvio** (alvo classe 1 ou melhor) `[VERIFICAR classe regulatória aplicável]` |
+| **Fornecimento** | **commodity** — proprietário **ou** OEM/ODM de mercado |
+| **Medição** | monofásico / bifásico / trifásico conforme a UC; entradas CT |
+| **Comunicação** | **RS485 (Modbus-RTU)** para o Gateway; opções Modbus-TCP/M-Bus `[PREMISSA]` |
+| **Observação** | quando a topologia é **T2 (integrado)**, esta função vive **dentro** do Gateway |
+
+> Para níveis que exigem **peak shaving / zero-export / grid services** ([10](10-modos-de-operacao-e-features.md)), recomenda-se **Smart Meter dedicado** (T1) ou variante **integrada** (T2) — não depender só do medidor interno do inversor.
 
 ---
 
-## 4. Comparativo de SKUs
+## 4. Variantes / SKUs
 
-| Recurso | Smart Gateway | Smart Controller |
+| Variante | Descrição | Quando |
 |---|---|---|
-| Retrofit *plug & play* | ✅ | ✅ |
-| RS485 / CAN | 4 / 1 | 4–6 / 2 |
-| Wi-Fi / BT / Ethernet | ✅ / ✅ / 1 | ✅ / ✅ / 2 |
-| 4G/LTE | opcional | ✅ |
-| Medição própria (CT) | ❌ (usa medidor do inversor/externo) | ✅ |
-| Relés de carga / backup | DO de sinal | ✅ potência + transferência |
-| Controle determinístico offline | ✅ | ✅ (mais robusto) |
-| Grid services / VPP (N5) | limitado | ✅ recomendado |
-| Público | residencial retrofit | residencial+ / GD / agregador |
+| **Smart Gateway (base)** | cérebro + comunicação + controle por sinal; sem metrologia própria | T1, lê Smart Meter externo ou medidor do inversor |
+| **Smart Gateway + metrologia (integrado)** | acima + entradas CT/PT internas (< 1%) | T2, quando se quer um box único |
+| **Smart Meter** | medidor *commodity* < 1% no quadro | T1, par do Gateway base |
+
+> Não há mais "Smart Controller": as capacidades antes atribuídas a ele (medição, transferência, 4G, mais I/O) viram **opções do Gateway** (metrologia integrada, 4G) e **acionamento por sinal** de equipamentos de potência externos.
 
 ---
 
@@ -114,13 +110,14 @@ flowchart TB
 |---|---|
 | Computação | módulo SoM Cortex-A (i.MX8M Mini / RK3568) + MCU STM32/equivalente |
 | Memória | LPDDR4 1–2 GB + eMMC 8–16 GB |
-| Segurança | SE/TPM (ex.: classe ATECC/OPTIGA) |
-| Comunicação | transceptores RS485 isolados, PHY Ethernet, módulo Wi-Fi/BT certificável, módulo 4G (Controller) |
-| Medição (Controller) | front-end de metrologia (AFE) + entradas CT |
-| Potência | fonte AC/DC, relés/contator (Controller), proteção/surto |
+| Segurança | SE/TPM (classe ATECC/OPTIGA) |
+| Comunicação | transceptores RS485 isolados, PHY Ethernet, módulo Wi-Fi/BT certificável, módulo 4G opcional |
+| Metrologia (T2) | front-end de medição (AFE) + entradas CT |
+| Saídas de controle | relés de **sinal** / saídas a contato seco (sem condução de potência) |
+| Potência (alimentação) | fonte AC/DC, proteção/surto |
 | Mecânica | gabinete DIN/parede, conectores plugáveis |
 
-> A escolha final de SoC/módulos deve priorizar **componentes já homologáveis** (rádios com certificação prévia reduzem custo/tempo de ANATEL). `[VERIFICAR]`
+> Priorizar **rádios pré-certificados** (reduz custo/tempo de homologação ANATEL). `[VERIFICAR]`
 
 ---
 
@@ -128,21 +125,20 @@ flowchart TB
 
 | Domínio | Requisito | Status |
 |---|---|---|
-| **Radiofrequência** | **Homologação ANATEL** obrigatória (Wi-Fi/BT/4G) | `[VERIFICAR]` — preferir módulos pré-certificados |
+| **Radiofrequência** | **Homologação ANATEL** obrigatória (Wi-Fi/BT/4G) | `[VERIFICAR]` — usar módulos pré-certificados |
 | **Segurança elétrica** | conformidade ABNT/NBR aplicável a eletroeletrônico; instalação NBR 5410 | `[VERIFICAR]` |
-| **Inversor (se o produto atuar na interface de geração)** | NBR 16149/16150, IEC 62116 são do **inversor**, não do gateway — o Smart **não substitui** a proteção do inversor | ver [02](02-contexto-regulatorio-mercado-br.md) |
-| **EV** | se houver hardware de carga, NBR IEC 61851/62196 | `[VERIFICAR]` |
-| **EMC / segurança geral** | ensaios de compatibilidade eletromagnética | `[VERIFICAR]` |
+| **Metrologia (Smart Meter)** | exatidão **< 1%**; eventual aprovação metrológica (INMETRO/portaria de medidores) conforme uso faturável | `[VERIFICAR classe/uso]` |
+| **INMETRO inversores (140/2022 + 515/2023)** | aplica-se ao **inversor**, **não** ao Gateway/Meter Smart | ver [02](02-contexto-regulatorio-mercado-br.md) |
+| **EMC** | ensaios de compatibilidade eletromagnética | `[VERIFICAR]` |
 
-> O hardware Smart é um **controlador/medidor/gateway**, não um inversor; portanto **não pode desabilitar** proteções regulatórias do inversor (anti-ilhamento, limites). Isso é requisito de firmware ([07](07-especificacao-firmware-edge.md)) e regulatório ([02](02-contexto-regulatorio-mercado-br.md)).
+> O Gateway é um **controlador/gateway**; o Meter é um **medidor**. **Nenhum** substitui as proteções regulatórias do **inversor** (anti-ilhamento, limites) — requisito de firmware ([07](07-especificacao-firmware-edge.md)) e regulatório ([02](02-contexto-regulatorio-mercado-br.md)).
 
 ---
 
 ## 7. Interfaces de usuário no hardware
 
-- **LEDs** de status (energia, nuvem, ativos, falha) — padrão herdado do EzManager (LED ×4).
-- **USB** para serviço/diagnóstico local.
+- **LEDs** de status (energia, nuvem, ativos, falha) — herdado do EzManager.
+- **USB** para serviço/diagnóstico local; **display opcional**.
 - **BLE/Wi-Fi AP** para provisionamento pelo app no comissionamento ([09](09-apps-web-mobile-e-ux.md)).
-- **Display opcional** no Controller para leitura local sem app.
 
 Próximo: o que roda dentro dele em [07 — Firmware/Edge](07-especificacao-firmware-edge.md).

@@ -59,7 +59,7 @@ Cada driver/conector declara **quais capabilities suporta** e **por qual caminho
 | **Matter (Energy)** | dispositivos de casa inteligente | cargas, tomadas | ecossistema emergente |
 | **CAN** | BMS/PCS proprietários | bateria | conforme fabricante |
 
-> O **Smart Gateway** e o **Smart Controller** ([06](06-especificacao-hardware.md)) trazem **RS485 ×N, Ethernet, Wi-Fi/BT, DI/DO/AI, CAN** e (no Controller) **4G** — cobrindo a tabela acima fisicamente.
+> O **Smart Gateway** ([06](06-especificacao-hardware.md)) traz **RS485 ×N, Ethernet, Wi-Fi/BT, DI/DO (sinal)/AI, CAN** e **4G opcional** — cobrindo a tabela acima fisicamente; a medição vem do **Smart Meter** (dedicado ou integrado).
 
 ### Smart plugs / cargas simples
 Compatibilidade com **smart plugs** (ex.: padrão Shelly, como nas fontes, e equivalentes via Matter/Wi-Fi/Zigbee) para medir e chavear cargas comuns — capability `load.power` + `load.switch`.
@@ -70,16 +70,22 @@ Compatibilidade com **smart plugs** (ex.: padrão Shelly, como nas fontes, e equ
 
 Quando **não há acesso local** (ou como redundância), o Smart integra a **nuvem do fabricante** via API. Capacidades variam muito por fabricante — a tabela abaixo é o ponto de partida e **todos os detalhes de campos/limites são `[VERIFICAR]`** com a documentação oficial e contratos de parceria.
 
-| Fabricante / API | Leitura (telemetria) | Controle (escrita) | Observações |
-|---|---|---|---|
-| **GoodWe — SEMS Open-API** | Sim (raw + processed) | **Sim (batch control)** — citado no white paper | Caminho preferencial p/ ativos GoodWe sem edge; campos exatos `[VERIFICAR]` |
-| **Huawei — FusionSolar (Northbound)** | Sim | Limitado | controle frequentemente restrito a parceiros `[VERIFICAR]` |
-| **Sungrow — iSolarCloud OpenAPI** | Sim | Limitado | `[VERIFICAR]` |
-| **SolarEdge — Monitoring API** | Sim | **Não (somente leitura)** | controle exige integração local |
-| **Fronius — Solar API** | Sim (local LAN + Solar.web) | Limitado | API local read-only no equipamento |
-| **Growatt / Deye — Solarman (OSS/OpenAPI)** | Sim | Parcial | comum no Brasil; `[VERIFICAR]` |
-| **Enphase — Enlighten API** | Sim | Limitado | microinversores; controle restrito |
-| **Tesla — Fleet/Powerwall API** | Sim | Parcial (modos/reserva) | Powerwall |
+**Prioridade de conectores (decisão do usuário):** **GoodWe · Deye · Sungrow · Growatt · Huawei · Solis** — maior presença em BT no Brasil. Os demais entram em fase posterior.
+
+| Prioridade | Fabricante / API | Leitura (telemetria) | Controle (escrita) | Observações |
+|---|---|---|---|---|
+| 1 | **GoodWe — SEMS Open-API** | Sim (raw + processed) | **Sim (batch control)** — citado no white paper | Caminho preferencial p/ ativos GoodWe sem edge; campos exatos `[VERIFICAR]` |
+| 2 | **Deye — Solarman (OSS/OpenAPI)** | Sim | Parcial | muito comum no BR; `[VERIFICAR]` |
+| 3 | **Sungrow — iSolarCloud OpenAPI** | Sim | Limitado | `[VERIFICAR]` |
+| 4 | **Growatt — OpenAPI / Solarman** | Sim | Parcial | comum no BR; mapas semi-públicos; `[VERIFICAR]` |
+| 5 | **Huawei — FusionSolar (Northbound)** | Sim | Limitado | controle restrito a parceiros; `[VERIFICAR]` |
+| 6 | **Solis — SolisCloud API / Solarman** | Sim | Limitado | `[VERIFICAR]` |
+| — | SolarEdge — Monitoring API | Sim | **Não (só leitura)** | controle exige integração local |
+| — | Fronius — Solar API | Sim (LAN + Solar.web) | Limitado | API local read-only |
+| — | Enphase — Enlighten API | Sim | Limitado | microinversores |
+| — | Tesla — Fleet/Powerwall API | Sim | Parcial | Powerwall |
+
+> Os detalhes reais de cada API (campos, limites de controle) são levantados no **projeto de integração** (templates por fabricante e matriz de compatibilidade) — ver [`docs/smart/integracao/`](integracao/00-modelo-de-abstracao.md). Todos os campos marcados `[VERIFICAR]` até a ingestão dos docs oficiais.
 
 > **Regra de produto:** controle determinístico crítico **deve** preferir o caminho **local**; conectores cloud servem para **monitoramento universal** e para **controle onde o fabricante o permite**. Limitações conhecidas devem ser explicitadas ao usuário (ex.: "este inversor só permite monitoramento via nuvem").
 

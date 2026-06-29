@@ -60,7 +60,7 @@ A lista completa e a classificação estão em [10](10-modos-de-operacao-e-featu
 | **Autoconsumo (self-consumption)** | malha rápida PV↔carga↔bateria; não pode depender de nuvem | `[HW]` |
 | **Backup / ilhamento intencional** | transição em falta de rede deve ser local e imediata | `[HW]` |
 | **Zero-export / limite de injeção** | resposta rápida para não violar limite regulatório | `[HW]` |
-| **Peak shaving / limite de demanda** | precisa medir e atuar em segundos | `[HW]` (Controller com CT) |
+| **Peak shaving / limite de demanda** | precisa medir e atuar em segundos | `[HW]` (com Smart Meter / Gateway integrado) |
 | **Load shifting por tarifa (agenda)** | agenda baixada da nuvem, **executada** local | `[AMBOS]` |
 | **EV smart charging (modulação)** | modular corrente conforme excedente PV em tempo real | `[SW+HW]` |
 | **Despacho de grid service** | recebe sinal da nuvem/VPP, **executa** com garantias locais | `[SW+HW]` |
