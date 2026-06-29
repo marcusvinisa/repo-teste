@@ -1,0 +1,355 @@
+openapi: 3.0.3
+info:
+  title: Smart EMS/HEMS — API Pública
+  version: 0.1.0-draft
+  description: >
+    Contrato REST (rascunho) da API pública do Smart para parceiros
+    (instaladores, comercializadoras/agregadores, gestores de GD).
+    Vocabulário de telemetria/controle conforme o mapa canônico
+    (docs/smart/integracao/mapa-canonico-capacidades.md). Itens [VERIFICAR].
+servers:
+  - url: https://api.smart.example/v1
+    description: Produção (placeholder)
+security:
+  - bearerAuth: []
+tags:
+  - name: orgs
+  - name: ucs
+  - name: devices
+  - name: telemetry
+  - name: commands
+  - name: tariffs
+  - name: scenarios
+  - name: gd
+  - name: vpp
+  - name: alarms
+  - name: webhooks
+paths:
+  /auth/token:
+    post:
+      tags: [orgs]
+      summary: Obtém token de acesso (OAuth2 client credentials)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [client_id, client_secret]
+              properties:
+                client_id: { type: string }
+                client_secret: { type: string }
+      responses:
+        '200':
+          description: Token emitido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  token_type: { type: string, example: Bearer }
+                  expires_in: { type: integer }
+  /organizations:
+    get:
+      tags: [orgs]
+      summary: Lista organizações/tenants acessíveis
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Organization' }
+  /ucs:
+    get:
+      tags: [ucs]
+      summary: Lista unidades consumidoras
+      parameters:
+        - { name: org_id, in: query, schema: { type: string } }
+        - { name: arranjo, in: query, schema: { type: string, enum: [cativo, gd_compartilhada, mercado_livre] } }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/UC' }
+    post:
+      tags: [ucs]
+      summary: Cria uma UC
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UC' }
+      responses:
+        '201': { description: Criada }
+  /ucs/{uc_id}:
+    get:
+      tags: [ucs]
+      summary: Detalhe de uma UC
+      parameters: [ { name: uc_id, in: path, required: true, schema: { type: string } } ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UC' }
+  /ucs/{uc_id}/devices:
+    get:
+      tags: [devices]
+      summary: Lista dispositivos da UC (com capabilities)
+      parameters: [ { name: uc_id, in: path, required: true, schema: { type: string } } ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Device' }
+  /devices/{device_id}/telemetry:
+    get:
+      tags: [telemetry]
+      summary: Série temporal de pontos canônicos
+      parameters:
+        - { name: device_id, in: path, required: true, schema: { type: string } }
+        - { name: points, in: query, description: "ids canônicos separados por vírgula (ex.: inv.ac.power,bat.soc)", schema: { type: string } }
+        - { name: from, in: query, schema: { type: string, format: date-time } }
+        - { name: to, in: query, schema: { type: string, format: date-time } }
+        - { name: resolution, in: query, schema: { type: string, enum: [raw, 1m, 15m, 1h, 1d] } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/TelemetrySample' }
+  /devices/{device_id}/commands:
+    post:
+      tags: [commands]
+      summary: Envia comando (setpoint/modo) — idempotente, validado no edge
+      parameters: [ { name: device_id, in: path, required: true, schema: { type: string } } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Command' }
+      responses:
+        '202': { description: Aceito (assíncrono; confirmação via webhook) }
+        '409': { description: Recusado por limite de segurança local }
+  /ucs/{uc_id}/tariff:
+    put:
+      tags: [tariffs]
+      summary: Define a tarifa/contrato da UC
+      parameters: [ { name: uc_id, in: path, required: true, schema: { type: string } } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Tariff' }
+      responses:
+        '200': { description: OK }
+  /scenarios:
+    get:
+      tags: [scenarios]
+      summary: Lista os cenários de aplicação (grade 18)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Scenario' }
+  /gd/programs:
+    get:
+      tags: [gd]
+      summary: Lista programas de GD compartilhada
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/GDProgram' }
+  /gd/programs/{program_id}/rateio:
+    get:
+      tags: [gd]
+      summary: Conciliação e rateio de créditos por UC
+      parameters: [ { name: program_id, in: path, required: true, schema: { type: string } } ]
+      responses:
+        '200': { description: OK }
+  /vpp/events:
+    post:
+      tags: [vpp]
+      summary: Cria evento de grid service / despacho de flexibilidade
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FlexEvent' }
+      responses:
+        '202': { description: Despacho aceito }
+  /alarms:
+    get:
+      tags: [alarms]
+      summary: Lista alarmes
+      parameters:
+        - { name: uc_id, in: query, schema: { type: string } }
+        - { name: level, in: query, schema: { type: string, enum: [info, warning, critical] } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Alarm' }
+  /webhooks/subscriptions:
+    post:
+      tags: [webhooks]
+      summary: Assina eventos (alarme, comando concluído, evento de grid service)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url, events]
+              properties:
+                url: { type: string, format: uri }
+                events:
+                  type: array
+                  items: { type: string, example: command.completed }
+      responses:
+        '201': { description: Assinatura criada }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Organization:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        parent_id: { type: string, nullable: true }
+        role_scope: { type: string }
+    UC:
+      type: object
+      properties:
+        id: { type: string }
+        org_id: { type: string }
+        apelido: { type: string }
+        arranjo: { type: string, enum: [cativo, gd_compartilhada, mercado_livre] }
+        nivel: { type: string, enum: [N0, N1, N2, N3, N4, N5] }
+        distribuidora: { type: string }
+        endereco: { type: string }
+    Device:
+      type: object
+      properties:
+        id: { type: string }
+        uc_id: { type: string }
+        asset: { type: string, enum: [inverter, battery, meter, ev, heatpump, load] }
+        brand: { type: string }
+        model: { type: string }
+        firmware: { type: string }
+        path: { type: string, enum: [local, cloud, local+cloud] }
+        capabilities:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, example: inv.ac.power }
+              tipo: { type: string, enum: [telemetria, setpoint, modo, config] }
+              acesso: { type: string, enum: [R, W, RW] }
+    TelemetrySample:
+      type: object
+      properties:
+        point: { type: string, example: bat.soc }
+        ts: { type: string, format: date-time }
+        value: { type: number }
+        unit: { type: string }
+        quality: { type: string, enum: [good, uncertain, bad] }
+        source: { type: string, enum: [edge-local, cloud-connector] }
+    Command:
+      type: object
+      required: [point, value]
+      properties:
+        point: { type: string, example: bat.power.setpoint }
+        value: {}
+        unit: { type: string }
+        ttl_s: { type: integer, description: "validade do comando" }
+        idempotency_key: { type: string }
+    Tariff:
+      type: object
+      properties:
+        tipo: { type: string, enum: [convencional, branca, dinamica] }
+        bandeira: { type: string, enum: [verde, amarela, vermelha1, vermelha2], nullable: true }
+        price_import: { type: number, nullable: true }
+        price_export: { type: number, nullable: true }
+        postos:
+          type: array
+          items:
+            type: object
+            properties:
+              nome: { type: string, enum: [ponta, intermediario, fora_ponta] }
+              janela: { type: string, example: "18:00-21:00" }
+              price: { type: number }
+        serie_dinamica:
+          type: array
+          items:
+            type: object
+            properties:
+              ts: { type: string, format: date-time }
+              price: { type: number }
+    Scenario:
+      type: object
+      properties:
+        codigo: { type: string, example: B4 }
+        arranjo: { type: string }
+        nivel: { type: string }
+        hw: { type: string, example: "Gateway + Smart Meter" }
+        modos: { type: array, items: { type: string } }
+    GDProgram:
+      type: object
+      properties:
+        id: { type: string }
+        modalidade: { type: string, enum: [autoconsumo_remoto, geracao_compartilhada, emuc, cooperativa, consorcio] }
+        ucs:
+          type: array
+          items:
+            type: object
+            properties:
+              uc_id: { type: string }
+              rateio_pct: { type: number }
+    FlexEvent:
+      type: object
+      properties:
+        id: { type: string }
+        tipo: { type: string, enum: [curtailment, reativo, controle_tensao, demanda, mercado] }
+        inicio: { type: string, format: date-time }
+        fim: { type: string, format: date-time }
+        alvo: { type: array, items: { type: string, description: "uc_id ou device_id" } }
+        setpoint: {}
+    Alarm:
+      type: object
+      properties:
+        id: { type: string }
+        uc_id: { type: string }
+        device_id: { type: string }
+        level: { type: string, enum: [info, warning, critical] }
+        code: { type: string }
+        message: { type: string }
+        ts: { type: string, format: date-time }
+        status: { type: string, enum: [active, acknowledged, cleared] }

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart.example/schemas/modelo-canonico.schema.json",
+  "title": "Smart — Modelo Canônico (telemetria, dispositivos e comandos)",
+  "description": "Esquema do vocabulário canônico agnóstico de marca. Referência humana completa em docs/smart/integracao/mapa-canonico-capacidades.md. Versão 0.1 (rascunho).",
+  "type": "object",
+  "$defs": {
+    "assetType": {
+      "type": "string",
+      "enum": ["inverter", "battery", "meter", "ev", "heatpump", "load"]
+    },
+    "capabilityKind": {
+      "type": "string",
+      "enum": ["telemetria", "setpoint", "modo", "config"]
+    },
+    "access": { "type": "string", "enum": ["R", "W", "RW"] },
+    "quality": { "type": "string", "enum": ["good", "uncertain", "bad"] },
+    "source": { "type": "string", "enum": ["edge-local", "cloud-connector"] },
+    "pointId": {
+      "type": "string",
+      "description": "id canônico, ex.: inv.ac.power, bat.soc, meter.power.active, ev.current.offered",
+      "pattern": "^(inv|bat|meter|ev|hp|load|meta|health|comm|time|ota|commission)\\.[a-z0-9_.\\[\\]]+$"
+    },
+    "telemetrySample": {
+      "type": "object",
+      "required": ["point", "ts", "value"],
+      "properties": {
+        "point": { "$ref": "#/$defs/pointId" },
+        "ts": { "type": "string", "format": "date-time" },
+        "value": { "type": ["number", "boolean", "string"] },
+        "unit": { "type": "string", "examples": ["W", "Wh", "V", "A", "%", "Hz", "degC"] },
+        "quality": { "$ref": "#/$defs/quality" },
+        "source": { "$ref": "#/$defs/source" }
+      },
+      "additionalProperties": false
+    },
+    "capability": {
+      "type": "object",
+      "required": ["id", "tipo", "acesso"],
+      "properties": {
+        "id": { "$ref": "#/$defs/pointId" },
+        "tipo": { "$ref": "#/$defs/capabilityKind" },
+        "acesso": { "$ref": "#/$defs/access" },
+        "unidade": { "type": "string" },
+        "caminho": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["local", "cloud"] }
+        },
+        "enum": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "valores canônicos quando tipo=modo/estado"
+        }
+      },
+      "additionalProperties": false
+    },
+    "device": {
+      "type": "object",
+      "required": ["id", "asset"],
+      "properties": {
+        "id": { "type": "string" },
+        "uc_id": { "type": "string" },
+        "asset": { "$ref": "#/$defs/assetType" },
+        "brand": { "type": "string" },
+        "model": { "type": "string" },
+        "firmware": { "type": "string" },
+        "path": { "type": "string", "enum": ["local", "cloud", "local+cloud"] },
+        "capabilities": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/capability" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "command": {
+      "type": "object",
+      "required": ["point", "value"],
+      "properties": {
+        "point": { "$ref": "#/$defs/pointId" },
+        "value": { "type": ["number", "boolean", "string", "object", "array"] },
+        "unit": { "type": "string" },
+        "ttl_s": { "type": "integer", "minimum": 0 },
+        "idempotency_key": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "tariff": {
+      "type": "object",
+      "required": ["tipo"],
+      "properties": {
+        "tipo": { "type": "string", "enum": ["convencional", "branca", "dinamica"] },
+        "bandeira": { "type": "string", "enum": ["verde", "amarela", "vermelha1", "vermelha2"] },
+        "price_import": { "type": "number" },
+        "price_export": { "type": "number" },
+        "postos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nome": { "type": "string", "enum": ["ponta", "intermediario", "fora_ponta"] },
+              "janela": { "type": "string" },
+              "price": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "telemetry": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/telemetrySample" }
+    },
+    "devices": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/device" }
+    },
+    "commands": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/command" }
+    },
+    "tariff": { "$ref": "#/$defs/tariff" }
+  },
+  "additionalProperties": false
+}
