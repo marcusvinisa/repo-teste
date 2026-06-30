@@ -1,0 +1,2084 @@
+vendor: goodwe
+series: '[VERIFICAR]'
+protocol: modbus-rtu
+conventions:
+  endianness: big
+  word_swap: false
+  address_base: hex
+source:
+  file: fontes/goodwe-modbus-g1.pdf
+  title: goodwe-modbus-g1
+  tool: docling 2.107.0 (--no-ocr)
+registers:
+- canonical: null
+  name: Lowest Feeding Voltage of PV
+  address: '0x0000'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: RW
+  fn: null
+  range: null
+  notes: 280v-600v
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: Reconnect Time
+  address: '0x0001'
+  type: u16
+  scale: 1
+  unit: s
+  access: RW
+  fn: null
+  range: null
+  notes: 30s-300s
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: Low limit of Grid Voltage
+  address: '0x0002'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: RW
+  fn: null
+  range: null
+  notes: 110v-230v
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: High limit of Grid Voltage
+  address: '0x0003'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: RW
+  fn: null
+  range: null
+  notes: 230v-270v
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: Low limit of Grid Frequency
+  address: '0x0004'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: RW
+  fn: null
+  range: null
+  notes: 45hz-60hz
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: High limit of Grid Freqency
+  address: '0x0005'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: RW
+  fn: null
+  range: null
+  notes: 50hz-65hz
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: RTC date&time
+  address: '0x0010'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: 13-99/1-12
+  notes: High byte year, low byte month
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: Date / Hour
+  address: '0x0011'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: 1-31/0-23
+  notes: High byte day, low byte hour
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: Min ut/S econ d
+  address: '0x0012'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: 0-59/0-59
+  notes: High byte minute, low byte second
+  source:
+    page: 5
+    table: 10
+  verify:
+  - nome possivelmente com quebra de linha — conferir verbatim
+- canonical: null
+  name: Range of active power adjust
+  address: '0x0100'
+  type: u16
+  scale: 1
+  unit: '%'
+  access: W
+  fn: null
+  range: 0-100
+  notes: As 0%~100% of rated active power
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: Range of PF adjust
+  address: '0x0101'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: 1-20 , 80-100
+  notes: '1-20 as 0.99-0.8 lagging 80-100 as leading 0.8-1, Note : If reading instruction returns 0xffff,
+    it indicates that the inverter is'
+  source:
+    page: 5
+    table: 10
+  verify: []
+- canonical: null
+  name: Range of reactive power adjust H
+  address: '0x0102'
+  type: u16
+  scale: 1
+  unit: Var
+  access: RW
+  fn: null
+  range: 0-66535
+  notes: 'Range of reactive power adjust(32 bit) Note : If reading'
+  source:
+    page: 6
+    table: 11
+  verify:
+  - valor '66535' — provável typo do PDF para 65535
+- canonical: null
+  name: Range of reactive power adjust L
+  address: '0x0103'
+  type: u16
+  scale: 1
+  unit: Var
+  access: RW
+  fn: null
+  range: 0-66535
+  notes: instruction returns 0xffffffff, it indicates that the inverter is not in reactive power adjustment
+    mode.
+  source:
+    page: 6
+    table: 11
+  verify:
+  - valor '66535' — provável typo do PDF para 65535
+- canonical: null
+  name: Max value of reactive power adjust H
+  address: '0x0104'
+  type: u16
+  scale: 1
+  unit: Var
+  access: R
+  fn: null
+  range: 0-66535
+  notes: Read only , Max value that can be set for adjustable
+  source:
+    page: 6
+    table: 11
+  verify:
+  - valor '66535' — provável typo do PDF para 65535
+- canonical: null
+  name: Max value of reactive power adjust L
+  address: '0x0105'
+  type: u16
+  scale: 1
+  unit: Var
+  access: R
+  fn: null
+  range: 0-66535
+  notes: reactive power, usually 60% of the rated power
+  source:
+    page: 6
+    table: 11
+  verify:
+  - valor '66535' — provável typo do PDF para 65535
+- canonical: null
+  name: 'High byte: 0-100 , -100 , 0 , 128 ; Low byte: 0~256, ID command ;'
+  address: '0x0106'
+  type: f32
+  scale: 1
+  unit: '%'
+  access: W
+  fn: null
+  range: null
+  notes: 0-100,increase power; -100-0, decrease power; 128, recover to rated power.
+  source:
+    page: 6
+    table: 11
+  verify:
+  - múltiplos tokens de formato ['Real', 'Integer'] — conferir alinhamento
+- canonical: null
+  name: Vpset
+  address: '0x0107'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: RW
+  fn: null
+  range: (1.05~1.1)*Un
+  notes: Un Default 220
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Range of PF adjust
+  address: '0x0108'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: 80-100
+  notes: 80-100 as leading 0.8-1
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Range of reactive power adjust
+  address: '0x0109'
+  type: s16
+  scale: 1
+  unit: '%'
+  access: RW
+  fn: null
+  range: -60~60 (corresponding -60%~60%)
+  notes: Current default 0
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Range of active power adjust
+  address: '0x010A'
+  type: u16
+  scale: 10
+  unit: A
+  access: RW
+  fn: null
+  range: 1~100
+  notes: As 1%~100%
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Anti-reverse communication timeout setting
+  address: '0x010B'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: 1~65535
+  notes: 'unit : second'
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Taiwan VPC curve switch
+  address: '0x010C'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: null
+  notes: 0-off , 1-on
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Allow connecting grid
+  address: '0x0120'
+  type: u16
+  scale: 1
+  unit: W
+  access: W
+  fn: null
+  range: null
+  notes: '0'
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Forbid connecting grid
+  address: '0x0121'
+  type: u16
+  scale: 1
+  unit: W
+  access: W
+  fn: null
+  range: null
+  notes: '0'
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Reconnect
+  address: '0x0122'
+  type: u16
+  scale: 1
+  unit: W
+  access: W
+  fn: null
+  range: null
+  notes: '0'
+  source:
+    page: 6
+    table: 11
+  verify: []
+- canonical: null
+  name: Switch of power limit function
+  address: '0x0123'
+  type: u16
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: null
+  notes: Supported by India Bosh special ARMversion, ARM 11 version import ( 024D command )
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Power limit setting with%
+  address: '0x0124'
+  type: u16
+  scale: 1
+  unit: '%'
+  access: RW
+  fn: null
+  range: 0-100
+  notes: Supported by India Bosh special ARMversion, ARM 11 version import ( 024D command )
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Power limit setting with %(no need to switch on)
+  address: '0x0125'
+  type: u16
+  scale: 0.1
+  unit: '%'
+  access: RW
+  fn: null
+  range: 0-1100
+  notes: ARM 11 (024D Command, only MTseries support)
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Automatic reactive power compensation instruction
+  address: '0x0130'
+  type: u16
+  scale: 1
+  unit: W
+  access: W
+  fn: null
+  range: null
+  notes: PF Inc or dec value range(0~20)
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Automatic reactive power compensation instruction ID
+  address: '0x0131'
+  type: u16
+  scale: 1
+  unit: W
+  access: W
+  fn: null
+  range: null
+  notes: Every time the automatic reactive power compensation instruction is sent, the ID needs to change.
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Battery mode switch (Brazil)
+  address: '0x0133'
+  type: u16
+  scale: 1
+  unit: W
+  access: W
+  fn: null
+  range: null
+  notes: '0x0000: OFF 0x0001: ON'
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Battery voltage setting (Brazil)
+  address: '0x0134'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: W
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Shadow scan switch
+  address: '0x0138'
+  type: u16
+  scale: 1
+  unit: W
+  access: W
+  fn: null
+  range: null
+  notes: '0x0000: OFF 0x0001: ON'
+  source:
+    page: 7
+    table: 12
+  verify: []
+- canonical: null
+  name: Serial Number Of Inverter
+  address: '0x0200'
+  type: string
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 7
+    table: 12
+  verify: []
+  address_end: '0x0207'
+  words: 8
+- canonical: null
+  name: Model Name of Inverter
+  address: '0x0210'
+  type: string
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify:
+  - range de endereço reconstruído (NNNN-NNNN quebrado pela extração) — conferir
+  address_end: '0x0214'
+  words: 5
+- canonical: null
+  name: Error Cdoe(H)
+  address: '0x0220'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Refer to Error message table High Byte of Error code Table8-2
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Error Cdoe(L)
+  address: '0x0221'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Low Byte of Error code Table8-2
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: ETotal(H)
+  address: '0x0222'
+  type: u16
+  scale: 0.1
+  unit: KW
+  access: R
+  fn: null
+  range: null
+  notes: High Byte of Total Energy Yield
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: ETotal(L)
+  address: '0x0223'
+  type: u16
+  scale: 0.1
+  unit: KW
+  access: R
+  fn: null
+  range: null
+  notes: Low Byte of Total Energy Yield
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: HTotal(H)
+  address: '0x0224'
+  type: u16
+  scale: 1
+  unit: H
+  access: R
+  fn: null
+  range: null
+  notes: High Byte of Total Yield Time
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: HTotal(L)
+  address: '0x0225'
+  type: u16
+  scale: 1
+  unit: H
+  access: R
+  fn: null
+  range: null
+  notes: Low Byte of Total Yield Time
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: PV voltage of first tracker
+  address: '0x0226'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: PV voltage of second tracker
+  address: '0x0227'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: PV current of first tracker
+  address: '0x0228'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: PV current of second tracker
+  address: '0x0229'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid voltage of Phase 1
+  address: '0x022A'
+  type: u16
+  scale: 22
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid voltage of Phase 2
+  address: '0x022B'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid voltage of Phase 3
+  address: '0x022C'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid Current of Phase 1
+  address: '0x022D'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid Current of Phase 2
+  address: '0x022E'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid Current of Phase 3
+  address: '0x022F'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid Frequency of Phase 1
+  address: '0x0230'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid Frequency of Phase 2
+  address: '0x0231'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Grid Frequency of Phase 3
+  address: '0x0232'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 8
+    table: 13
+  verify: []
+- canonical: null
+  name: Feeding power to grid
+  address: '0x0233'
+  type: u16
+  scale: 1
+  unit: W
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Running status
+  address: '0x0234'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: '0: cWaitMode 1: cNormalMode 2: cFaultMode'
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Temperature of Heatsink
+  address: '0x0235'
+  type: s16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: 0.1 ℃
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: EDay
+  address: '0x0236'
+  type: u16
+  scale: 0.1
+  unit: KW
+  access: R
+  fn: null
+  range: null
+  notes: Energy yield in current day
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Vpv1
+  address: '0x0300'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: PV1 voltage
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Vpv2
+  address: '0x0301'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: PV2 voltage
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Ipv1
+  address: '0x0302'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV1 current
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Ipv2
+  address: '0x0303'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV2 current
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Vac1
+  address: '0x0304'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: Phase L1 voltage
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Vac2
+  address: '0x0305'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: Phase L2 voltage
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Vac3
+  address: '0x0306'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: Phase L3 voltage
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Iac1
+  address: '0x0307'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: Phase L1 current
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Iac2
+  address: '0x0308'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: Phase L2 current
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Iac3
+  address: '0x0309'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: Phase L3 current
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Phase L1 frequency
+  address: '0x030A'
+  type: u16
+  scale: 30
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Phase L2 frequency
+  address: '0x030B'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Phase L3 frequency
+  address: '0x030C'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Pac L
+  address: '0x030D'
+  type: u16
+  scale: 1
+  unit: W
+  access: R
+  fn: null
+  range: null
+  notes: low Byte of Feeding power
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Work Mode
+  address: '0x030E'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Work Mode Table8-1
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Temperature
+  address: '0x030F'
+  type: s16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Inverter internal temperature
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Error Message H
+  address: '0x0310'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Failure description for status ' failure ' Table8-2
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: Error Message L
+  address: '0x0311'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Failure description for status ' failure ' Table8-2
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: E-Total H
+  address: '0x0312'
+  type: u16
+  scale: 0.1
+  unit: KW.Hr
+  access: R
+  fn: null
+  range: null
+  notes: Total Feed Energy to grid
+  source:
+    page: 9
+    table: 14
+  verify: []
+- canonical: null
+  name: E-Total L
+  address: '0x0313'
+  type: u16
+  scale: 0.1
+  unit: KW.Hr
+  access: R
+  fn: null
+  range: null
+  notes: Total Feed Energy to grid
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: h-Total H
+  address: '0x0314'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Total feeding hours
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: h-Total L
+  address: '0x0315'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Total feeding hours
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Firmware Version
+  address: '0x0316'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: WarningCode
+  address: '0x0317'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Warning Code
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: PV2FaultValue
+  address: '0x0318'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: PV2 voltage fault value
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Functions Value
+  address: '0x0319'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Table 8-3
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Line2VfaultValue
+  address: '0x031A'
+  type: u16
+  scale: 31
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: Phase L2 voltage fault value
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Line3VfaultValue
+  address: '0x031B'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: Phase L3 voltage fault value
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: BUSVoltage
+  address: '0x031C'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: NBUSVoltage
+  address: '0x031D'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: null
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Line3FfaultValue
+  address: '0x031E'
+  type: u16
+  scale: 0.01
+  unit: Hz
+  access: R
+  fn: null
+  range: null
+  notes: Phase L3 frequency fault value
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Safety Country
+  address: '0x031F'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: GFCI check value(/Safet y Conutry)
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: E-Day
+  address: '0x0320'
+  type: u16
+  scale: 0.1
+  unit: KW.Hr
+  access: R
+  fn: null
+  range: null
+  notes: Feed Engery to grid in today
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Vpv5
+  address: '0x0324'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: PV5 voltage
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Ipv5
+  address: '0x0325'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV5 current
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Vpv6
+  address: '0x0326'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: PV6 voltage
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Ipv6
+  address: '0x0327'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV6 current
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Year :Month
+  address: '0x033B'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: High byte :Year; Low byte:Month
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Date :Hour
+  address: '0x033C'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: High byte :Date; Low byte:Hour
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Minute :Second
+  address: '0x033D'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: High byte :Minute; low byte:Second
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: Manufacture ID
+  address: '0x033E'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Manufacturer Identifier fo r Hanneng
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: RSSI
+  address: '0x033F'
+  type: u16
+  scale: 1
+  unit: '%'
+  access: R
+  fn: null
+  range: null
+  notes: GOODWEPOWER SUPPLY TECHNOLOGY Strength of Signal ( WiFi/GPRS
+  source:
+    page: 10
+    table: 15
+  verify: []
+- canonical: null
+  name: PV mode
+  address: '0x0340'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: HighByte:PV2; LowByte:PV1 Refer to Table 8- 4
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Pac H
+  address: '0x0352'
+  type: u16
+  scale: 1
+  unit: W
+  access: R
+  fn: null
+  range: null
+  notes: High Byte of Feeding power
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Pac L
+  address: '0x0353'
+  type: u16
+  scale: 1
+  unit: W
+  access: R
+  fn: null
+  range: null
+  notes: low Byte of Feeding power
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: FMversion of ARM
+  address: '0x0354'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Firmware Version ofARM
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: GPRS Burn-in Mode
+  address: '0x0355'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: '0x00: normal mode 0x01: burn-in mode'
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Pac H
+  address: '0x0356'
+  type: u16
+  scale: 1
+  unit: W
+  access: R
+  fn: null
+  range: null
+  notes: High Byte of Feeding power
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Vpv3
+  address: '0x0357'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: PV3 voltage
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Vpv4
+  address: '0x0358'
+  type: u16
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: PV4 voltage
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Ipv3
+  address: '0x0359'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV3 current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Ipv4
+  address: '0x035A'
+  type: u16
+  scale: 35
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV4 current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr1
+  address: '0x035B'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String1 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr2
+  address: '0x035C'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String2 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr3
+  address: '0x035D'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String3 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr4
+  address: '0x035E'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String4 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr5
+  address: '0x035F'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String5 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr6
+  address: '0x0360'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String6 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr7
+  address: '0x0361'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String7 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr8
+  address: '0x0362'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String8 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr9
+  address: '0x0363'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String9 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr10
+  address: '0x0364'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String10 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr11
+  address: '0x0365'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String11 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr12
+  address: '0x0366'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String12 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr13
+  address: '0x0367'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String13 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr14
+  address: '0x0368'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String14 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr15
+  address: '0x0369'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String15 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr16
+  address: '0x036A'
+  type: u16
+  scale: 36
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String16 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istring Status
+  address: '0x036B'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: Table 8-5
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr18
+  address: '0x036C'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String18 Current
+  source:
+    page: 11
+    table: 16
+  verify: []
+- canonical: null
+  name: Istr19
+  address: '0x036D'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String19 Current
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Istr20
+  address: '0x036E'
+  type: u16
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: PV String20 Current
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: PID&Wietap Status
+  address: '0x036F'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Table 8-6
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Output power control status
+  address: '0x0370'
+  type: u16
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Compatible with Japanese inverter 0-without control , 1-controlling
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Iac1
+  address: '0x03E8'
+  type: null
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: INT32 U
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Iac2
+  address: '0x03EA'
+  type: null
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: INT32 U
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Iac3
+  address: '0x03EC'
+  type: null
+  scale: 0.1
+  unit: A
+  access: R
+  fn: null
+  range: null
+  notes: INT32 U
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Vac1
+  address: '0x03EE'
+  type: null
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: INT32 U
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Vac2
+  address: '0x03F0'
+  type: null
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: INT32 U
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Vac3
+  address: '0x03F2'
+  type: null
+  scale: 0.1
+  unit: V
+  access: R
+  fn: null
+  range: null
+  notes: INT32 U
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: 3 phases active power
+  address: '0x03F4'
+  type: null
+  scale: 0.1
+  unit: KW
+  access: R
+  fn: null
+  range: null
+  notes: Active power
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: 3 phases reactive power
+  address: '0x03F6'
+  type: null
+  scale: 1
+  unit: Var
+  access: R
+  fn: null
+  range: null
+  notes: Reactive power
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: 3 phases PF
+  address: '0x03F8'
+  type: null
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Actual PF ( signed number )
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Frequency
+  address: '0x03FA'
+  type: null
+  scale: 0.1
+  unit: Hz
+  access: R
+  fn: null
+  range: null
+  notes: Grid frequency
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Status Flag1
+  address: '0x03FC'
+  type: null
+  scale: null
+  unit: null
+  access: R
+  fn: null
+  range: null
+  notes: Table 8-7
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: PF
+  address: '0x07D0'
+  type: null
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: null
+  notes: Set PF ( signed number )
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Operation& MODE
+  address: '0x07D1'
+  type: null
+  scale: null
+  unit: null
+  access: RW
+  fn: null
+  range: null
+  notes: Table 8-8
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Constant reactive power
+  address: '0x07D2'
+  type: null
+  scale: 1
+  unit: '%'
+  access: RW
+  fn: null
+  range: null
+  notes: Reactive power percentage
+  source:
+    page: 12
+    table: 17
+  verify: []
+- canonical: null
+  name: Constant active power
+  address: '0x07D3'
+  type: null
+  scale: 1
+  unit: '%'
+  access: RW
+  fn: null
+  range: null
+  notes: Active power percentage
+  source:
+    page: 12
+    table: 17
+  verify: []
+gaps: []

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smart.example/energy-device-maps/profile.schema.json",
+  "title": "energy-device-maps · Device Profile",
+  "description": "Formato único de perfil Modbus/SunSpec → capacidades canônicas. Contrato do repo. Perfis-rascunho (gerados por ingest) podem ter canonical=null e flags [VERIFICAR]; perfis revisados devem mapear canonical a partir de canonical/.",
+  "type": "object",
+  "required": ["vendor", "protocol", "source", "registers"],
+  "additionalProperties": false,
+  "properties": {
+    "vendor": { "type": "string", "description": "fabricante, ex.: goodwe" },
+    "series": { "type": "string", "description": "linha/série; pode ser '[VERIFICAR]' em rascunho" },
+    "models": { "type": "array", "items": { "type": "string" } },
+    "firmware_min": { "type": "string" },
+    "protocol": { "enum": ["modbus-rtu", "modbus-tcp", "sunspec"] },
+    "unit_id": { "type": "integer", "minimum": 0, "maximum": 255 },
+    "serial": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "baud": { "type": "integer" },
+        "format": { "type": "string" }
+      }
+    },
+    "conventions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endianness": { "enum": ["big", "little"] },
+        "word_swap": { "type": "boolean" },
+        "address_base": { "enum": ["hex", "dec"], "description": "como o doc grafa endereços" }
+      }
+    },
+    "sunspec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supported": { "enum": ["full", "partial", "none"] },
+        "models": { "type": "array", "items": { "type": "integer" } }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["file"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "type": "string", "description": "arquivo em fontes/" },
+        "title": { "type": "string" },
+        "version": { "type": "string" },
+        "date": { "type": "string" },
+        "tool": { "type": "string", "description": "extrator + versão, ex.: docling 2.107.0 (--no-ocr)" },
+        "extracted_at": { "type": "string" }
+      }
+    },
+    "registers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/register" }
+    },
+    "enums": {
+      "type": "object",
+      "description": "id_canônico|nome → mapa {valor: significado}",
+      "additionalProperties": { "type": "object" }
+    },
+    "gaps": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "register": {
+      "type": "object",
+      "required": ["address", "access", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "canonical": {
+          "type": ["string", "null"],
+          "description": "id do canonical/ (ex.: inv.ac.power) ou null se ainda não mapeado (rascunho)",
+          "pattern": "^(inv|bat|meter|pv|grid|ev|hp|load|sys|comm)\\.[a-z0-9_.]+$"
+        },
+        "name": { "type": "string", "description": "Name of Data conforme o doc do fabricante (verbatim)" },
+        "address": { "type": "string", "pattern": "^0x[0-9A-Fa-f]{2,4}$", "description": "endereço inicial em hex" },
+        "address_end": { "type": "string", "pattern": "^0x[0-9A-Fa-f]{2,4}$", "description": "fim do range (registrador multi-word)" },
+        "words": { "type": "integer", "minimum": 1, "description": "nº de registradores de 16 bits" },
+        "type": {
+          "type": ["string", "null"],
+          "description": "u16|s16|u32|s32|string|... derivado do Data Format (INT16U→u16)"
+        },
+        "scale": { "type": ["number", "null"], "description": "fator derivado do Unit (0.1V→0.1)" },
+        "unit": { "type": ["string", "null"], "description": "unidade física (V, A, Hz, W, %, ...)" },
+        "access": { "enum": ["R", "W", "RW"] },
+        "fn": { "type": ["integer", "null"], "description": "função Modbus (3=read holding,4=input,16=write) — [VERIFICAR]" },
+        "range": { "type": ["string", "null"], "description": "Range of Data (verbatim)" },
+        "notes": { "type": ["string", "null"], "description": "Remarks (verbatim)" },
+        "source": {
+          "type": "object",
+          "required": ["page"],
+          "additionalProperties": false,
+          "properties": {
+            "page": { "type": "integer" },
+            "table": { "type": "integer" }
+          }
+        },
+        "verify": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "anomalias detectadas na extração; vazio = limpo"
+        }
+      }
+    }
+  }
+}
