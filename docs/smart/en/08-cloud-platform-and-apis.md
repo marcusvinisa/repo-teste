@@ -69,15 +69,17 @@ flowchart LR
 
 ## 5. Multi-tenant & IAM/RBAC
 
-Inherits SEMS' 5-level hierarchy. The **4 personas** ([01](01-vision-and-prd.md)) map to **roles** with explicit **permissions**.
+Inherits SEMS' 5-level hierarchy. The **7 personas** ([01](01-vision-and-prd.md)) — **CON · INT · COM · AGG · GER · DSO · ORQ** — map to **roles** with explicit **permissions**.
 
-| Persona | Roles |
-|---|---|
-| Homeowner | Owner, Visitor |
-| Installer/integrator | Org admin, Installer, Technician |
-| Retailer/aggregator | Aggregator (VPP) |
-| Shared-DG manager | DG manager |
-| (all) | Support/Auditor (read + logs) |
+| Persona | Role(s) | Scope |
+|---|---|---|
+| **CON** Homeowner | Owner · Visitor | own CU(s) · shared CU (read) |
+| **INT** Integrator/EPC | Org admin · Installer · Technician | org/fleet · installed CUs · O&M |
+| **COM** Retailer | Retailer | client book (white-label tenant) |
+| **AGG** Aggregator/VPP | Aggregator | flexibility portfolio (multi-CU/org) |
+| **GER** Generator | Generator | plants / shared generation + allocation |
+| **DSO** Distributor | Grid operator | signals/orders in its concession area |
+| **ORQ** Orchestrator | Platform operator · Support/Auditor | multi-tenant infra · broad read + logs |
 
 **Permission matrix (summary):** view telemetry/reports, control mode/setpoint, commission/configure, OTA, manage tariff/contract, billing/DG allocation, VPP dispatch, manage users/org, public-API access — granted per role on a least-privilege basis (atomic permissions; custom roles for white-label partners). Per-tenant/CU isolation; plant sharing with permissions and expiry; full audit/logs.
 

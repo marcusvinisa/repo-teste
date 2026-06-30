@@ -28,7 +28,7 @@ Documentação completa de produto e engenharia para construir o Smart: visão e
 | 08 | [Plataforma Cloud e APIs](08-plataforma-cloud-e-apis.md) | Microsserviços, time-series, otimização/forecast, VPP, billing, API pública |
 | 09 | [Apps Web/Mobile e UX](09-apps-web-mobile-e-ux.md) | Mapa de apps por persona, fluxos, telas, white-label |
 | 10 | [Modos de Operação e Features](10-modos-de-operacao-e-features.md) | Catálogo completo com classificação por camada |
-| 11 | [Matriz de Cenários (BT Brasil)](11-matriz-de-cenarios.md) | Grade 3 arranjos × 6 níveis, 15 núcleo, fichas por cenário |
+| 11 | [Matriz de Cenários (BT Brasil)](11-matriz-de-cenarios.md) | Grade 3 arranjos × 6 níveis (18 cenários), fichas por cenário |
 | 12 | [Roadmap e Faseamento](12-roadmap-e-faseamento.md) | Fases MVP → tarifa dinâmica/EV → grid services/VPP, make-vs-buy |
 | 13 | [Gaps, Riscos e Decisões](13-gaps-riscos-e-decisoes.md) | Decisões assumidas, divergências, gaps, riscos, perguntas abertas |
 | 14 | [Glossário](14-glossario.md) | Termos PT-BR/EN |
@@ -59,6 +59,32 @@ Em `docs/smart/artefatos/`:
 | [modelo-canonico.schema.json](artefatos/modelo-canonico.schema.json) | JSON Schema do modelo canônico (telemetria/dispositivos/comandos) |
 | [checklist-certificacao-br.md](artefatos/checklist-certificacao-br.md) | Checklist de certificação/conformidade no Brasil |
 | [diagrama-tarifas-cenarios.md](artefatos/diagrama-tarifas-cenarios.md) | Diagramas de tarifas, sinais de preço e alavancas de valor |
+
+---
+
+## Repos externos (serviços de integração)
+
+Sementes de dois repositórios standalone em [`/repos`](../../repos/README.md):
+
+| Repo | Conteúdo |
+|---|---|
+| [energy-connectors](../../repos/energy-connectors/) | Conectores cloud-to-cloud (APIs de fabricantes → API normalizada); **GoodWe = 1º** |
+| [energy-device-maps](../../repos/energy-device-maps/) | Perfis Modbus/SunSpec (registrador → canônico) + lib + CLI (markitdown) |
+
+## Referências (estudos curados)
+
+Em `docs/smart/referencias/` — estudos **EOS-DENO** + **Discovery HEMS BR**, com nota de absorção/ajustes:
+
+| Arquivo | Conteúdo |
+|---|---|
+| [00 — Absorção e Ajustes](referencias/00-absorcao-e-ajustes.md) | Mapa EOS-DENO↔Smart, build/fork/buy, ajustes adotados |
+| [Personas e Casos de Uso](referencias/eos-deno-personas-casos-de-uso.md) | 7 personas + matriz de cenários |
+| [Matriz de Software](referencias/eos-deno-matriz-software.md) | Catálogo de microsserviços S0–S17 |
+| [Matriz de Funcionalidades](referencias/eos-deno-matriz-funcionalidades.md) | Árvore de capacidades EMS/HEMS/VPP/DER |
+| [Spec de Produto (HW)](referencias/eos-deno-spec-produto-passo3.md) | Spec de hardware (herdar/alcançar/ocupar) |
+| [Spec de Software](referencias/eos-deno-spec-software.md) | Build/fork/buy por domínio |
+| [Scoring de Software](referencias/eos-deno-scoring-software.md) | Scoring de 16 players |
+| [Discovery HEMS BR](referencias/discovery-tecnico-competitivo-hems-br.md) | ADRs, regulação 2026, AWS IoT, OEM |
 
 ---
 
