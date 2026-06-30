@@ -13,6 +13,8 @@
 | `eos-deno-spec-software.md` | Spec de **software** (build/fork/buy por domínio; CCEE + agent-fabric = moat) |
 | `eos-deno-scoring-software.md` | Scoring de 16 players (dupla lente: comparável + fundação build-on) |
 | `discovery-tecnico-competitivo-hems-br.md` | Discovery técnico do HEMS BR derivado do GoodWe EzManager3000 (ADRs, regulação 2026, AWS IoT, OEM) |
+| `fontes/matriz-produtos.md` | **Fonte** — matriz de produtos ideais EOS-DENO (14 produtos × 3 tiers × 7 personas × 2 fundações SW/HW) |
+| `matriz-produtos-revisao.md` | **Análise nossa** — verificação de lógica da matriz + crosswalk EOS→Smart + reconciliação de receitas (ver §8) |
 
 > **EOS-DENO ≈ Smart.** Os estudos são a **mesma linha de produto** da nossa suite, com granularidade maior. A suite Smart é a documentação de produto/engenharia; o EOS-DENO acrescenta a lente de **scoring competitivo**, **build/fork/buy** e **agent-fabric AI-native**. Esta nota concilia os dois.
 
@@ -96,3 +98,12 @@ Aplicados às specs (✅) ou propostos (▫️):
 - VPP/agregador residencial BT: **sem marco regulatório** — monetização prospectiva (coerente com nossa ressalva N5).
 - GoodWe Open-API: doc oficial parcialmente restrita — validar campos reais (projeto externo / repo `energy-connectors`).
 - Métricas de otimização e cifras de mercado: citar fonte primária/data antes de usar como fato.
+
+## 8. Matriz de produtos ideais (revisão)
+
+A [matriz de produtos EOS-DENO](fontes/matriz-produtos.md) foi revisada em [`matriz-produtos-revisao.md`](matriz-produtos-revisao.md). **Veredito:** lógica sólida e consistente com a suite (7 personas, 18 cenários, hardware D2, Lei 14.300/15.269); nada contradiz decisões fechadas. Achados de clareza:
+
+- **Crosswalk EOS→Smart:** os 14 produtos mapeiam limpo nos 6 tiers ([01 §5](../01-visao-e-prd.md)) — P1→Pro/Fleet, P2→DG, P3→Lite/Home, P5→Smart Meter, P6→Smart Gateway, etc.
+- **P13 (Agentes)** está em T3 mas **habilita o P8-BT (T2)** — contradição: o caso-base do P8 não pode depender de um T3. Agentes = *upside*, não premissa.
+- **P9 (Comercializadora)** é **negócio regulado, não produto** de software.
+- **Receitas:** doc 15 (R1–R6) é superset simplificado do mapa EOS-DENO (R-01…R-13); proposta de **dividir R1 → R1a device / R1b Meter-MaaS** (modelo Intellihub). Pendente OK do usuário (M1).
