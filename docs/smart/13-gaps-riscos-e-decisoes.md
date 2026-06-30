@@ -11,7 +11,7 @@
 | D1 | **Escopo da documentação** | ✅ **Suite completa** + artefatos técnicos (OpenAPI, JSON Schema, mapa canônico, checklist de certificação, diagrama de cenários) |
 | D2 | **Hardware** | ✅ **Smart Gateway** (cérebro + controle por **sinal**; aciona contator/disjuntor/ATS **externos**, não chaveia potência) + **Smart Meter** (*commodity*, exatidão **< 1%**, no quadro/QGBT). Topologias: **T1 separada** ou **T2 integrada**. **Sem** SKU "Controller". Nível OEM/ODM. Ver [06](06-especificacao-hardware.md) |
 | D3 | **Integração** | ✅ **Híbrida** local + cloud-to-cloud ([05](05-integracao-e-conectividade.md)) |
-| D4 | **Personas** | ✅ **4 personas** com roles/atribuições: morador + instalador (primárias), agregador + gestor GD (avançadas). RBAC em [08](08-plataforma-cloud-e-apis.md). **Proposta de expansão p/ 7 personas** (CON/INT/COM/AGG/GER/DSO/ORQ) do EOS-DENO — ver [absorção §4](referencias/00-absorcao-e-ajustes.md) `[A CONFIRMAR]` |
+| D4 | **Personas** | ✅ **7 personas confirmadas** (CON, INT, COM, AGG, GER, DSO, ORQ); primárias no MVP = **CON + INT**. Modelo em [01](01-visao-e-prd.md); roles/atribuições (RBAC) em [08](08-plataforma-cloud-e-apis.md) |
 | D5 | **Cenários** | ✅ **Grade completa de 18** (3 arranjos × 6 níveis), N0 incluídos como cenários plenos ([11](11-matriz-de-cenarios.md)) |
 | D6 | **Idioma** | ✅ **PT-BR + EN** (espelho em `docs/smart/en/`) |
 | D7 | **Conectores prioritários** | ✅ **GoodWe, Deye, Sungrow, Growatt, Huawei, Solis** ([05](05-integracao-e-conectividade.md)) |

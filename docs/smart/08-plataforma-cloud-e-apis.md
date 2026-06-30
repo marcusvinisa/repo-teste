@@ -117,34 +117,34 @@ flowchart LR
 
 ## 5. Multi-tenant e IAM/RBAC
 
-Herda e estende a hierarquia do SEMS (até 5 níveis). As **4 personas** ([01](01-visao-e-prd.md)) materializam-se em **roles** com **atribuições** (permissões) explícitas.
+Herda e estende a hierarquia do SEMS (até 5 níveis). As **7 personas** ([01](01-visao-e-prd.md)) — **CON · INT · COM · AGG · GER · DSO · ORQ** — materializam-se em **roles** com **atribuições** (permissões) explícitas.
 
 ### Roles e escopo
 
-| Persona | Role | Escopo |
+| Persona | Role(s) | Escopo |
 |---|---|---|
-| Morador | **Proprietário** | sua(s) UC(s) |
-| Morador | **Visitante** | UC compartilhada (somente leitura/limitado) |
-| Instalador/integrador | **Admin de organização** | toda a organização/frota |
-| Instalador/integrador | **Instalador** | UCs que instala/opera |
-| Instalador/integrador | **Técnico** | subconjunto operacional (O&M) |
-| Comercializadora/agregador | **Agregador (VPP)** | portfólio de flexibilidade (multi-UC, multi-org) |
-| Gestor de GD | **Gestor de GD** | programa(s) de GD e UCs participantes |
-| (todos) | **Suporte/Auditor** | leitura ampla + logs (sem controle) |
+| **CON** Morador | **Proprietário** · **Visitante** | sua(s) UC(s) · UC compartilhada (leitura/limitado) |
+| **INT** Integrador/EPC | **Admin de organização** · **Instalador** · **Técnico** | org/frota · UCs que instala · O&M |
+| **COM** Comercializadora | **Comercializador** | carteira de clientes (tenant white-label) |
+| **AGG** Agregador/VPP | **Agregador** | portfólio de flexibilidade (multi-UC/org) |
+| **GER** Gerador | **Gerador** | usinas / geração compartilhada + rateio |
+| **DSO** Distribuidor | **Operador de rede** | sinais/ordens na sua área de concessão |
+| **ORQ** Orquestrador | **Operador da plataforma** · **Suporte/Auditor** | infra multi-tenant · leitura ampla + logs |
 
 ### Matriz de atribuições (permissões)
 
-| Atribuição \ Role | Proprietário | Visitante | Admin org | Instalador | Técnico | Agregador | Gestor GD |
+| Atribuição \ Persona | CON | INT | COM | AGG | GER | DSO | ORQ |
 |---|---|---|---|---|---|---|---|
-| Ver telemetria/relatórios | ✅ (sua UC) | 👁️ limitado | ✅ frota | ✅ suas UCs | ✅ | ✅ portfólio | ✅ UCs do programa |
-| Controlar modo/setpoint | ✅ | — | ✅ | ✅ | ⚙️ supervisionado | ✅ despacho | — |
-| Comissionar / configurar parâmetros | — | — | ✅ | ✅ | ✅ | — | — |
-| OTA (dispositivo/frota) | — | — | ✅ | ✅ | ⚙️ | — | — |
-| Gerir tarifa/contrato da UC | ✅ | — | ✅ | ✅ | — | — | ✅ (rateio) |
-| Billing / rateio de GD | 👁️ sua UC | — | — | — | — | — | ✅ |
-| Despacho VPP / grid services | — | — | — | — | — | ✅ | — |
-| Gerir usuários/organização | — | — | ✅ | parcial | — | parcial | parcial |
-| Acesso à API pública | — | — | ✅ | ✅ | — | ✅ | ✅ |
+| Ver telemetria/relatórios | ✅ sua UC | ✅ frota | ✅ carteira | ✅ portfólio | ✅ geração | 👁️ rede/agregado | ✅ tudo |
+| Controlar modo/setpoint | ✅ | ✅ | — | ✅ despacho | ✅ sua geração | ⚙️ ordem/curtailment | ⚙️ supervisão |
+| Comissionar / configurar parâmetros | — | ✅ | — | — | ⚙️ | — | ✅ |
+| OTA (dispositivo/frota) | — | ✅ | — | — | — | — | ✅ |
+| Gerir tarifa / contrato | ✅ sua | ✅ | ✅ carteira | — | ✅ PPA | — | — |
+| Billing / rateio de GD | 👁️ sua | — | ✅ | — | ✅ rateio | — | ⚙️ |
+| Despacho VPP / grid services | — | — | — | ✅ | — | — | ⚙️ |
+| Sinais de rede / curtailment | — | — | — | ✅ executa | — | ✅ emite | — |
+| Gerir usuários / tenant | — | parcial | parcial | parcial | — | — | ✅ |
+| Acesso à API pública | — | ✅ | ✅ | ✅ | ✅ | ✅ | — |
 
 Legenda: ✅ permitido · ⚙️ permitido com supervisão/aprovação · 👁️ somente leitura · — não permitido.
 

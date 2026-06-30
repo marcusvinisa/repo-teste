@@ -47,14 +47,19 @@ Três promessas centrais:
 
 ## 3. Personas e *jobs-to-be-done*
 
-| Persona | Quem é | Principais *jobs* | Superfície primária |
-|---|---|---|---|
-| **Morador / proprietário** (primária) | Dono da UC residencial/pequeno comércio | "Quero pagar menos, ter backup e controlar minha casa sem complexidade" | App mobile |
-| **Instalador / integrador** (primária) | EPCista, integrador solar, O&M | "Quero comissionar rápido, monitorar uma frota e configurar/atualizar remoto" | Web Pro |
-| **Comercializadora / agregador (VPP)** (avançada) | Varejista, agregador de flexibilidade | "Quero agregar e despachar flexibilidade e faturar serviços" | Web Pro + API |
-| **Gestor de GD compartilhada** (avançada) | Administrador de geração compartilhada/cooperativa/consórcio | "Quero ratear créditos entre UCs e conciliar geração x consumo" | Portal GD |
+**Sete personas da cadeia** (modelo confirmado, alinhado ao EOS-DENO — ver [referências](referencias/00-absorcao-e-ajustes.md)). Lista é referência, **não teto**.
 
-Detalhamento de fluxos por persona em [09 — Apps e UX](09-apps-web-mobile-e-ux.md).
+| Cód | Persona | Quem é | Principais *jobs* | Superfície primária |
+|---|---|---|---|---|
+| **CON** | Consumidor / Prosumidor (morador) — *primária* | Dono da UC residencial/PME (varia pelos 18 cenários) | Pagar menos, backup, conforto, transparência | App mobile |
+| **INT** | Integrador / EPC — *primária (beachhead)* | Instala, comissiona, O&M | Comissionar rápido, monitorar frota, config/OTA remoto | Web Pro |
+| **COM** | Comercializadora / Varejista | Vende energia ao consumidor | Adquirir/reter carteira, faturar, gerir contratos, white-label | Web Pro + API |
+| **AGG** | Agregador / VPP | Agrega DER para mercado/rede | Monetizar flexibilidade da frota (bidding, ancilares, despacho) | Web Pro + API |
+| **GER** | Gerador | Opera geração (usinas GD, geração compartilhada) | Maximizar geração/valor, rateio de créditos, PPA | Web Pro / Portal GD |
+| **DSO** | Distribuidor | Operador da rede de distribuição | Operar com segurança e hosting capacity (sinais de rede, curtailment) | API / Operator Dashboard |
+| **ORQ** | Orquestrador / Operador da plataforma | Opera o Smart multi-tenant | Rodar a plataforma com SLA (frota, MLOps, config, marketplace) | Operator Dashboard |
+
+> **Primárias no MVP:** CON + INT. **Avançadas/posteriores:** COM, AGG, GER, DSO, ORQ. A plataforma é **multi-tenant desde a fundação** — COM/INT/AGG podem ser *tenants* white-label; ORQ opera a infra compartilhada. Detalhamento de fluxos por persona em [09 — Apps e UX](09-apps-web-mobile-e-ux.md); roles/permissões em [08](08-plataforma-cloud-e-apis.md).
 
 ---
 

@@ -35,14 +35,19 @@ Two tool categories exist today that **don't work well together** and leave gaps
 
 ## 3. Personas & jobs-to-be-done
 
-| Persona | Who | Jobs | Primary surface |
-|---|---|---|---|
-| **Homeowner** (primary) | LV residential/small-business owner | "Pay less, have backup, control my home simply" | Mobile app |
-| **Installer/integrator** (primary) | EPC, solar integrator, O&M | "Commission fast, monitor a fleet, configure/update remotely" | Web Pro |
-| **Retailer/aggregator (VPP)** (advanced) | Retailer, flexibility aggregator | "Aggregate and dispatch flexibility, bill services" | Web Pro + API |
-| **Shared-DG manager** (advanced) | Shared-generation/cooperative admin | "Allocate credits across CUs and reconcile" | DG Portal |
+**Seven value-chain personas** (confirmed, aligned with EOS-DENO). List is reference, **not a ceiling**.
 
-Roles & permissions in [08](08-cloud-platform-and-apis.md); flows per persona in [09](09-web-mobile-apps-and-ux.md).
+| Code | Persona | Who | Jobs | Primary surface |
+|---|---|---|---|---|
+| **CON** | Consumer / Prosumer (homeowner) — *primary* | LV residential/SME owner (varies across the 18 scenarios) | Pay less, backup, comfort, transparency | Mobile app |
+| **INT** | Integrator / EPC — *primary (beachhead)* | Installs, commissions, O&M | Commission fast, monitor fleet, remote config/OTA | Web Pro |
+| **COM** | Retailer | Sells energy to the consumer | Acquire/retain book, bill, manage contracts, white-label | Web Pro + API |
+| **AGG** | Aggregator / VPP | Aggregates DER for market/grid | Monetize fleet flexibility (bidding, ancillary, dispatch) | Web Pro + API |
+| **GER** | Generator | Operates generation (DG plants, shared generation) | Maximize generation/value, credit allocation, PPA | Web Pro / DG Portal |
+| **DSO** | Distributor | Distribution grid operator | Operate safely with hosting capacity (grid signals, curtailment) | API / Operator Dashboard |
+| **ORQ** | Orchestrator / Platform operator | Runs Smart multi-tenant | Run the platform with SLA (fleet, MLOps, config, marketplace) | Operator Dashboard |
+
+> **MVP primary:** CON + INT. **Advanced/later:** COM, AGG, GER, DSO, ORQ. The platform is **multi-tenant from the foundation** — COM/INT/AGG can be white-label tenants; ORQ operates the shared infra. Roles & permissions in [08](08-cloud-platform-and-apis.md); flows per persona in [09](09-web-mobile-apps-and-ux.md).
 
 ---
 

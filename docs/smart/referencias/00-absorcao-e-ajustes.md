@@ -60,7 +60,7 @@ A suite Smart usa **4 personas**; o EOS-DENO usa **7** (mais granular e curado):
 | DSO distribuidor | **ausente** |
 | ORQ orquestrador/operador da plataforma | Admin (parcial) |
 
-**Recomendação:** **adotar o modelo de 7 personas** (separar COM↔AGG, GER, DSO, ORQ). É a visão curada do usuário e habilita o RBAC e os "bundles por persona". `[A CONFIRMAR]` — proposto para [01](../01-visao-e-prd.md) e [08](../08-plataforma-cloud-e-apis.md); registrado em [13](../13-gaps-riscos-e-decisoes.md). (Não reescrevi as 4→7 ainda para não conflitar com a decisão D4; aguardo seu OK.)
+**✅ Confirmado pelo usuário:** **7 personas adotadas** (CON, INT, COM, AGG, GER, DSO, ORQ) — aplicadas em [01](../01-visao-e-prd.md), [08](../08-plataforma-cloud-e-apis.md) (RBAC) e [13](../13-gaps-riscos-e-decisoes.md) D4. Primárias no MVP: CON + INT; habilita os "bundles por persona".
 
 ## 5. Novos diferenciais estratégicos a registrar (dos estudos)
 
