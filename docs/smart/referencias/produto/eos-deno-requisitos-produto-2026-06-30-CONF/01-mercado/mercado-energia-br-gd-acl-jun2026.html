@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercado Brasileiro de Energia — GD Compartilhada & Mercado Livre (ACL) | jun/2026</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#121c30; --panel2:#172339; --ink:#e8eef7; --muted:#9fb0c8;
+    --acc:#36d399; --acc2:#3aa0ff; --acc3:#f5c451; --acc4:#ff7a90; --line:#243352;
+    --good:#36d399; --warn:#f5c451; --bad:#ff7a90;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:linear-gradient(180deg,#0a101d,#0b1220);color:var(--ink);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;font-size:15px}
+  a{color:var(--acc2);text-decoration:none}
+  header.top{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.92);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 18px}
+  header.top .brand{font-weight:700;font-size:15px;letter-spacing:.3px}
+  header.top .brand span{color:var(--acc)}
+  nav.anchors{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  nav.anchors a{font-size:12px;padding:4px 9px;border:1px solid var(--line);border-radius:20px;
+    color:var(--muted);background:var(--panel)}
+  nav.anchors a:hover{color:var(--ink);border-color:var(--acc2)}
+  .wrap{max-width:1120px;margin:0 auto;padding:24px 18px 80px}
+  h1{font-size:26px;margin:18px 0 6px;line-height:1.25}
+  h2{font-size:20px;margin:14px 0;border-left:4px solid var(--acc);padding-left:10px}
+  h3{font-size:16px;color:var(--acc3);margin:18px 0 8px}
+  .sub{color:var(--muted);font-size:13px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;margin:18px 0;scroll-margin-top:90px}
+  .tldr{background:linear-gradient(135deg,#10233a,#16335a);border-color:#2a4a78}
+  .tldr ul{margin:6px 0 0;padding-left:20px}
+  .tldr li{margin:8px 0}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .card .big{font-size:26px;font-weight:800;color:var(--acc)}
+  .card .big.b2{color:var(--acc2)} .card .big.b3{color:var(--acc3)} .card .big.b4{color:var(--acc4)}
+  .card .lbl{font-size:12.5px;color:var(--ink);font-weight:600;margin-top:2px}
+  .card .src{font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--acc3);font-size:12.5px;text-transform:uppercase;letter-spacing:.4px}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:14px 0;font-size:13px}
+  .flow .node{background:var(--panel2);border:1px solid var(--acc2);border-radius:9px;padding:9px 12px;font-weight:600}
+  .flow .node.g{border-color:var(--acc)} .flow .node.y{border-color:var(--acc3)} .flow .node.r{border-color:var(--acc4)}
+  .flow .arr{color:var(--muted);font-size:18px;font-weight:700}
+  .bar-row{display:grid;grid-template-columns:160px 1fr 70px;gap:10px;align-items:center;margin:6px 0;font-size:13px}
+  .bar-track{background:var(--panel2);border-radius:6px;height:18px;overflow:hidden;border:1px solid var(--line)}
+  .bar-fill{height:100%;border-radius:6px 0 0 6px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:8px 0}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .timeline{position:relative;margin:18px 0 6px;padding-left:6px}
+  .tl-item{display:grid;grid-template-columns:1fr;gap:6px;padding:10px 0 10px 16px;border-left:2px solid var(--line);margin-left:80px;position:relative}
+  .tl-item .yr{position:absolute;left:-86px;width:74px;text-align:right;font-weight:800;color:var(--acc3);font-size:13px}
+  .tl-item .dotmark{position:absolute;left:-7px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--acc);border:2px solid var(--bg)}
+  .tl-item.future .dotmark{background:var(--acc3)}
+  .tl-item.far .dotmark{background:var(--muted)}
+  .tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:5px;font-weight:700;margin-left:6px}
+  .tag.done{background:rgba(54,211,153,.16);color:var(--good);border:1px solid var(--good)}
+  .tag.next{background:rgba(245,196,81,.14);color:var(--warn);border:1px solid var(--warn)}
+  .tag.proj{background:rgba(159,176,200,.12);color:var(--muted);border:1px solid var(--muted)}
+  .callout{background:var(--panel2);border-left:4px solid var(--acc3);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:13.5px}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.acc{border-left-color:var(--acc2)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.two{grid-template-columns:1fr}.bar-row{grid-template-columns:110px 1fr 60px}.tl-item{margin-left:64px}.tl-item .yr{left:-70px;width:60px;font-size:11.5px}}
+  ul.tight li{margin:5px 0}
+  .kpi-strip{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+  .kpi{flex:1;min-width:120px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .kpi b{display:block;font-size:20px;color:var(--acc2)}
+  .kpi small{color:var(--muted);font-size:11px}
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
+  .src-note{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px}
+  .num-mono{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">⚡ MERCADO DE ENERGIA BR · <span>GD Compartilhada &amp; Mercado Livre (ACL)</span> · dossiê quantitativo jun/2026</div>
+  <nav class="anchors">
+    <a href="#tldr">TL;DR</a>
+    <a href="#s1">1 · Geradoras GD Compart.</a>
+    <a href="#s2">2 · Comercializadoras</a>
+    <a href="#s3">3 · Agregadoras</a>
+    <a href="#s4">4 · Varejistas ML</a>
+    <a href="#s5">5 · Clientes GD Compart.</a>
+    <a href="#s6">6 · Clientes ACL</a>
+    <a href="#s7">7 · Abertura BT 2027+</a>
+    <a href="#adj">Segmentos adjacentes</a>
+    <a href="#sint">Síntese estratégica (TAM/SAM)</a>
+  </nav>
+</header>
+
+<div class="wrap">
+
+<h1>Mapeamento quantitativo do mercado brasileiro de energia elétrica</h1>
+<p class="sub">Geração Distribuída compartilhada e Ambiente de Contratação Livre (ACL) · dados mais recentes disponíveis em junho de 2026 · fontes: ANEEL, CCEE, EPE, MME, ABSOLAR, ABGD, ABRACEEL, ABVE e imprensa setorial. Datas de referência indicadas em cada número.</p>
+
+<!-- ===================== TLDR ===================== -->
+<section id="tldr" class="tldr">
+  <h2 style="border-color:var(--acc2)">TL;DR — resposta direta</h2>
+  <ul>
+    <li><b>O mercado está em ponto de inflexão estrutural.</b> A GD compartilhada acumula <b>~1,55 milhão de UCs beneficiadas</b> e <b>~2,74 GW</b> (≈2.224 sistemas em operação no recorte 2025), enquanto o ACL reúne <b>~85,4 mil UCs</b> e responde por <b>42% do consumo nacional</b>. A sanção da <b>Lei 15.269/2025</b> destrava a baixa tensão (Grupo B), abrindo um endereçável de <b>~89–92 milhões de UCs</b> até <b>nov/2028</b>.</li>
+    <li><b>A infraestrutura de agentes já existe e está concentrada.</b> A CCEE tem <b>~506 comercializadoras</b> (das quais <b>129 varejistas habilitadas</b>) e <b>503 comercializadores atacadistas</b>; a GD compartilhada é operada por "dezenas de gestoras", lideradas por <b>Órigo (580 MWp / 91 mil UCs)</b> e <b>Cemig SIM (330 MWp / ~40 mil UCs)</b>.</li>
+    <li><b>A figura do agregador ainda é um espaço em aberto.</b> Não há regulação formal do agregador de RED até jun/2026 (prevista para o 3º ciclo da CP 39/2023 da ANEEL); o armazenamento (BESS) ganhou marco legal em nov/2025 e regulamentação ANEEL em <b>02/jun/2026</b>. É a janela competitiva para uma plataforma DER/EMS/VPP.</li>
+  </ul>
+</section>
+
+<!-- ===================== KEY FINDINGS STRIP ===================== -->
+<section>
+  <h2>Painel de números-chave</h2>
+  <div class="cards">
+    <div class="card"><div class="big">43,5–45 GW</div><div class="lbl">Potência MMGD total instalada</div><div class="src">ANEEL/ABGD, dez/2025 · EPE 2025 (45 GW)</div></div>
+    <div class="card"><div class="big b2">~2,74 GW</div><div class="lbl">Potência GD compartilhada</div><div class="src">Canal Solar c/ dados EPE/ANEEL, 2025</div></div>
+    <div class="card"><div class="big b3">~1,55 mi</div><div class="lbl">UCs beneficiadas — GD compart.</div><div class="src">Canal Solar c/ dados EPE/ANEEL, 2025</div></div>
+    <div class="card"><div class="big b4">~85,4 mil</div><div class="lbl">UCs no Mercado Livre (ACL)</div><div class="src">CCEE, dez/2025</div></div>
+    <div class="card"><div class="big">42%</div><div class="lbl">do consumo nacional no ACL</div><div class="src">EstudoCCEE, mar/2026 (≈30,2 GW médios)</div></div>
+    <div class="card"><div class="big b2">~506</div><div class="lbl">Comercializadoras na CCEE</div><div class="src">CCEE/ePowerBay, 2024–mar/2026</div></div>
+    <div class="card"><div class="big b3">129</div><div class="lbl">Varejistas habilitadas</div><div class="src">CCEE, mar/2026 (+23 em processo)</div></div>
+    <div class="card"><div class="big b4">~89–92 mi</div><div class="lbl">UCs Grupo B (TAM abertura BT)</div><div class="src">ABRACEEL / EPE Anuário 2025</div></div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 1 ===================== -->
+<section id="s1">
+  <h2>1 · Geradoras de GD compartilhada</h2>
+  <p>A <b>geração compartilhada</b> é a modalidade do SCEE (Sistema de Compensação de Energia Elétrica) em que consumidores se reúnem por <b>consórcio, cooperativa, condomínio civil ou associação</b> para usar créditos de uma ou mais usinas instaladas em local distinto do consumo, dentro da mesma área de concessão (REN 482/2012 → REN 687/2015 → Lei 14.300/2022 → REN 1.000/2021 e REN 1.059/2023). É a base regulatória da "energia solar por assinatura".</p>
+
+  <div class="cards">
+    <div class="card"><div class="big">~2.224</div><div class="lbl">Sistemas de GD compartilhada em operação (recorte)</div><div class="src">pv magazine c/ ANEEL, jan–set/2025</div></div>
+    <div class="card"><div class="big b2">+296 MW</div><div class="lbl">Potência adicionada em GD compart. (jan–set/25)</div><div class="src">pv magazine c/ ANEEL · vs +545 MW em 2024</div></div>
+    <div class="card"><div class="big b3">~116 mil</div><div class="lbl">UCs novas atendidas no período (≈52 UCs/sistema)</div><div class="src">pv magazine c/ ANEEL, set/2025</div></div>
+    <div class="card"><div class="big b4">99,3%</div><div class="lbl">da capacidade MMGD é solar FV</div><div class="src">ANEEL, jun/2025</div></div>
+  </div>
+
+  <h3>Diferenciação entre as 4 modalidades do SCEE (base ANEEL/Canal Solar 2025)</h3>
+  <table>
+    <thead><tr><th>Modalidade</th><th>UCs beneficiadas</th><th>Potência</th><th>Característica</th></tr></thead>
+    <tbody>
+      <tr><td><b>Junto à carga</b> (autoconsumo local)</td><td>maior fatia (telhados residenciais)</td><td>~4,8 GW adicionados em 2025</td><td>Geração e consumo no mesmo local</td></tr>
+      <tr><td><b>Autoconsumo remoto</b></td><td>~2,76 milhões</td><td>~11,37 GW</td><td>Mesma titularidade (CPF/CNPJ), local distinto</td></tr>
+      <tr><td><b>Geração compartilhada</b></td><td><b>~1,55 milhão</b></td><td><b>~2,74 GW</b></td><td>Consórcio/cooperativa/associação — base da assinatura solar</td></tr>
+      <tr><td><b>Múltiplas UCs (EMUC/condomínio)</b></td><td>condôminos</td><td>menor</td><td>Sistema em área comum de condomínio</td></tr>
+    </tbody>
+  </table>
+  <p class="src-note">Fonte: Canal Solar com dados consolidados EPE/ANEEL 2025; pv magazine Brasil (nov/2025). Em abr/2024 (resposta ANEEL ao TCU) a modalidade registrava 9.294 sistemas, 875 MW e 330 mil UCs — &lt;1% dos sistemas mas 8% das UCs beneficiadas: vocação de "pulverização" do crédito. O crescimento 2024–2025 triplicou potência e mais que quadruplicou UCs.</p>
+
+  <h3>Distribuição regional da capacidade MMGD total (jun/2025)</h3>
+  <div class="legend"><span><i class="dot" style="background:var(--acc)"></i>GW por região</span></div>
+  <div class="bar-row"><span>Sudeste</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--acc)"></div></div><span class="num-mono">13,5 GW</span></div>
+  <div class="bar-row"><span>Nordeste</span><div class="bar-track"><div class="bar-fill" style="width:66%;background:var(--acc2)"></div></div><span class="num-mono">8,9 GW</span></div>
+  <div class="bar-row"><span>Sul</span><div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--acc3)"></div></div><span class="num-mono">8,7 GW</span></div>
+  <div class="bar-row"><span>Centro-Oeste</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--acc4)"></div></div><span class="num-mono">7,0 GW</span></div>
+  <div class="bar-row"><span>Norte</span><div class="bar-track"><div class="bar-fill" style="width:23%;background:#7a8db0"></div></div><span class="num-mono">3,1 GW</span></div>
+  <p class="src-note">Fonte: Electra Energy c/ ANEEL, jun/2025. Total MMGD ≈ 41,5 GW naquele recorte; o Nordeste ultrapassou o Sul em capacidade acumulada em 2025.</p>
+</section>
+
+<!-- ===================== SECTION 2 ===================== -->
+<section id="s2">
+  <h2>2 · Comercializadoras (CCEE)</h2>
+  <div class="cards">
+    <div class="card"><div class="big">~506</div><div class="lbl">Comercializadoras registradas na CCEE</div><div class="src">CCEE, 2024 (referência mais recente publicada)</div></div>
+    <div class="card"><div class="big b2">503</div><div class="lbl">Comercializadores atacadistas (segmento)</div><div class="src">ePowerBay c/ CCEE, mar/2026 (+1,4% em 12m)</div></div>
+    <div class="card"><div class="big b3">129</div><div class="lbl">Varejistas habilitadas</div><div class="src">CCEE, mar/2026 (+23 em processo)</div></div>
+    <div class="card"><div class="big b4">~16 mil</div><div class="lbl">Agentes totais na CCEE</div><div class="src">CCEE, out/2024 (13,1 mil são consumidores)</div></div>
+  </div>
+  <p>O quadro de agentes da CCEE cresceu de ~10,9 mil (2021) para <b>~16 mil em out/2024</b>, com <b>61.977 ativos</b> — salto impulsionado pela abertura do Grupo A. A categoria <b>comercialização</b> divide-se em <b>atacadistas</b> (vendem energia a agentes da CCEE) e <b>varejistas</b> (representam UCs que não precisam ser agentes — obrigatório para cargas &lt;500 kW, conforme Portaria MME 50/2022).</p>
+  <div class="callout acc">A concentração é alta: dos varejistas habilitados, <b>~48 são ativos</b> (têm ≥1 UC) e apenas <b>11 operam acima de 1.000 UCs</b> (Thunders c/ CCEE, mar/2026). A entrada de cargas BT a partir de 2027 muda radicalmente o jogo de escala do varejo.</div>
+</section>
+
+<!-- ===================== SECTION 3 ===================== -->
+<section id="s3">
+  <h2>3 · Agregadoras — dois recortes</h2>
+
+  <h3>(a) A figura regulatória do agregador de RED</h3>
+  <div class="callout warn"><b>Status jun/2026: a figura formal do agregador de recursos energéticos distribuídos AINDA NÃO foi criada.</b> Está prevista para o <b>3º (último) ciclo</b> do roadmap regulatório da ANEEL (CP 39/2023): "no último ciclo, serão discutidos tópicos finais, como <b>agregadores para os vários serviços</b>" (ANEEL, gov.br). Os ciclos 2 e 3 estão programados para 2026 em diante.</div>
+  <p>Onde o agregador já opera de fato hoje é no <b>programa estrutural de Resposta da Demanda</b> (REN ANEEL 1.040/2022; operacionalizado por ONS + CCEE desde set/2022). A CCEE define agregador como "agente (comercializador, varejista, gerador ou consumidor) representante de ofertas para redução de demanda de um conjunto de consumidores". Em jun/2024 a CCEE simplificou o cadastro de agregação de carga no CliqCCEE. Há também o <b>Sandbox de RD — Produto Disponibilidade</b> (REN Autorizativa 12.600/2022; mecanismo competitivo conduzido pelo ONS, lotes mínimos de 5 MW).</p>
+
+  <h3>(b) Gestoras/orquestradoras de GD compartilhada que operam hoje</h3>
+  <p>Não há registro oficial único; as fontes (InfoMoney/Reuters, O Tempo, Greener) descrevem um mercado "pulverizado" de <b>"dezenas de empresas"</b>. A Greener pesquisa ~6 mil players da cadeia solar, mas esse universo inclui integradores, não apenas gestoras de crédito. Principais operadores com números auto-reportados:</p>
+  <table>
+    <thead><tr><th>Gestora</th><th>Capacidade</th><th>Clientes/UCs</th><th>Praça / nota</th></tr></thead>
+    <tbody>
+      <tr><td><b>Órigo Energia</b> (líder)</td><td><b>580 MWp</b></td><td><b>91 mil UCs</b></td><td>Nacional (13 estados+DF). Captação R$ 500 mi (Santander); receita R$ 416,5 mi; meta 2 GWp até 2027 <span class="tag proj">projeção</span></td></tr>
+      <tr><td><b>Cemig SIM</b></td><td><b>330 MWp</b></td><td>~40.000 UCs</td><td>MG, +60 municípios. Meta 1 GWp até 2029 <span class="tag proj">projeção</span></td></tr>
+      <tr><td><b>Lemon Energia</b></td><td>gere usinas de terceiros (IVI/Brookfield, Navi)</td><td>&gt;10.000 clientes</td><td>SP, RJ, MG, MS, DF. Foco PMEs (parceria Ambev)</td></tr>
+      <tr><td><b>Sun Mobi</b></td><td>22,5 MW</td><td>473 municípios SP + 395 PR</td><td>GD compartilhada desde 2017</td></tr>
+      <tr><td><b>Bulbe Energia</b></td><td>fazendas próprias</td><td>&gt;50 mil famílias</td><td>MG (rede Cemig)</td></tr>
+      <tr><td><b>Nex Energy</b></td><td>—</td><td>&gt;5.000 clientes ativos</td><td>PR, SC, SP, RS</td></tr>
+      <tr><td><b>Matrix Energia</b></td><td>16,28 MWp (parceria GreenYellow)</td><td>~2.900 (estimativa parceria)</td><td>Distribuidora digital; também BESS</td></tr>
+      <tr><td><b>Evolua, (re)energisa</b></td><td>n/d</td><td>n/d</td><td>MG; (re)energisa c/ Algar Telecom</td></tr>
+      <tr><td><b>Telecoms</b>: Claro, Vivo/SouVagalume, Oi, TIM</td><td>n/d</td><td>n/d (não divulgam)</td><td>Assinatura solar como cross-sell; Claro pioneira (jul/2022)</td></tr>
+    </tbody>
+  </table>
+  <p class="src-note">Fontes: NeoFeed (Órigo); pv magazine (Cemig SIM, jul/2025; Sun Mobi); InfoMoney 2025 (Lemon); sites das empresas. Números auto-reportados, não auditados.</p>
+</section>
+
+<!-- ===================== SECTION 4 ===================== -->
+<section id="s4">
+  <h2>4 · Comercializadoras varejistas do Mercado Livre</h2>
+  <div class="cards">
+    <div class="card"><div class="big">129</div><div class="lbl">Varejistas habilitadas (representam UCs no ML)</div><div class="src">CCEE, mar/2026</div></div>
+    <div class="card"><div class="big b2">38.635</div><div class="lbl">UCs com perfil varejista</div><div class="src">ePowerBay c/ CCEE, mar/2026 (+7.630 em 12m)</div></div>
+    <div class="card"><div class="big b3">11</div><div class="lbl">Varejistas com &gt;1.000 UCs</div><div class="src">Thunders c/ CCEE, mar/2026</div></div>
+    <div class="card"><div class="big b4">18.344</div><div class="lbl">UCs sob representação varejista (out/2024)</div><div class="src">CCEE — vs 40.531 UCs diretas</div></div>
+  </div>
+  <p>O varejista é distinto da comercializadora "comum": representa integralmente o consumidor junto à CCEE, dispensando-o de ser agente. Pela <b>Portaria MME 50/2022</b>, cargas &lt;500 kW só migram sob representação varejista. A trajetória de habilitação: 25 (2020) → 37 (2021) → marca de 100 na abertura do Grupo A → <b>129 (mar/2026)</b>. A migração por API a partir de jul/2025 faz parte das UCs varejistas não aparecerem integralmente nas bases públicas — os números reais são maiores que os divulgados.</p>
+</section>
+
+<!-- ===================== SECTION 5 ===================== -->
+<section id="s5">
+  <h2>5 · Clientes de GD compartilhada</h2>
+  <div class="kpi-strip">
+    <div class="kpi"><b>~1,55 mi</b><small>UCs beneficiadas — modalidade compartilhada (2025)</small></div>
+    <div class="kpi"><b>~7 mi</b><small>UCs beneficiadas — MMGD total (ANEEL/ABGD)</small></div>
+    <div class="kpi"><b>21 mi</b><small>pessoas beneficiadas por MMGD (ABGD)</small></div>
+  </div>
+  <h3>Perfil de clientes da GD compartilhada por classe (ABSOLAR)</h3>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--acc)"></i>Residencial (B1)</span>
+    <span><i class="dot" style="background:var(--acc2)"></i>Comércio/Serviços (B3)</span>
+    <span><i class="dot" style="background:var(--acc3)"></i>Rural (B2)</span>
+    <span><i class="dot" style="background:var(--acc4)"></i>Indústria</span>
+  </div>
+  <div class="bar-row"><span>Residencial (B1)</span><div class="bar-track"><div class="bar-fill" style="width:73.6%;background:var(--acc)"></div></div><span class="num-mono">73,6%</span></div>
+  <div class="bar-row"><span>Comércio/Serviços</span><div class="bar-track"><div class="bar-fill" style="width:16.6%;background:var(--acc2)"></div></div><span class="num-mono">16,6%</span></div>
+  <div class="bar-row"><span>Rural (B2)</span><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--acc3)"></div></div><span class="num-mono">7,0%</span></div>
+  <div class="bar-row"><span>Indústria</span><div class="bar-track"><div class="bar-fill" style="width:2.4%;background:var(--acc4)"></div></div><span class="num-mono">2,4%</span></div>
+  <p class="src-note">Fonte: ABSOLAR (perfil da geração compartilhada). A concentração no <b>Grupo B (B1 residencial e B3 comercial)</b> é exatamente o segmento que a Lei 15.269/2025 abrirá ao Mercado Livre — criando concorrência direta entre o modelo de assinatura solar e o ACL para o mesmo cliente.</p>
+  <div class="callout">O ticket é pulverizado: a Órigo exige consumo &gt;R$ 300/mês; a economia típica do modelo é de <b>10%–25%</b> (Lemon/Órigo/Sun Mobi). Segmentos de maior adesão: condomínios, restaurantes, supermercados, academias, pet shops, escolas, hotéis, hospitais e agronegócio.</div>
+</section>
+
+<!-- ===================== SECTION 6 ===================== -->
+<section id="s6">
+  <h2>6 · Clientes do Mercado Livre (ACL)</h2>
+  <div class="cards">
+    <div class="card"><div class="big">~85,4 mil</div><div class="lbl">UCs no ACL</div><div class="src">CCEE, dez/2025</div></div>
+    <div class="card"><div class="big b2">42%</div><div class="lbl">do consumo nacional (≈30,2 GW médios)</div><div class="src">EstudoCCEE, mar/2026</div></div>
+    <div class="card"><div class="big b3">21.707</div><div class="lbl">Novas migrações em 2025</div><div class="src">CCEE (vs 26.834 em 2024)</div></div>
+    <div class="card"><div class="big b4">13.519</div><div class="lbl">Agentes consumidores (livres/especiais/autoprod.)</div><div class="src">Thunders c/ CCEE, fev/2025</div></div>
+  </div>
+
+  <h3>Migrações por ramo de atividade em 2025</h3>
+  <table>
+    <thead><tr><th>Ramo</th><th>Novas UCs (2025)</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td>Serviços</td><td>6.648</td><td>Líder; consumo +20,6%</td></tr>
+      <tr><td>Comércio</td><td>4.098</td><td>Consumo +15,0%</td></tr>
+      <tr><td>Manufaturados diversos</td><td>1.940</td><td>—</td></tr>
+      <tr><td>Saneamento</td><td>904</td><td>Consumo +28,3% (novo marco do saneamento)</td></tr>
+      <tr><td>Alimentícios</td><td>665</td><td>—</td></tr>
+      <tr><td>Pessoa física (CPF)</td><td>370</td><td>+9% vs 2024 (era 9 em 2023 → 342 em 2024)</td></tr>
+    </tbody>
+  </table>
+  <p class="src-note">Fonte: EstudoCCEE / Agência iNFRA, dez/2025. Concentração regional das migrações: SP (6.114), PR (2.214), MG (1.743), RS (1.581), SC (1.344). Maior crescimento percentual em RO (+107%), MT (+85%), TO (+82%) — interiorização do ACL.</p>
+
+  <div class="callout acc"><b>Efeito da Portaria MME 50/2022:</b> a abertura total do Grupo A (alta + média tensão) em <b>jan/2024</b> elevou a base de ~40 mil para ~85 mil UCs em dois anos. A retração percentual de 2025 (21,7 mil vs 26,8 mil) reflete base de comparação elevada, não desaceleração estrutural. O universo do Grupo A é de ~202 mil UCs — ainda há headroom de ~117 mil.</div>
+</section>
+
+<!-- ===================== SECTION 7 ===================== -->
+<section id="s7">
+  <h2>7 · Potenciais clientes e segmentos a partir de 2027 — abertura da baixa tensão</h2>
+
+  <p>A <b>Lei nº 15.269/2025</b> (publicada em <b>24/11/2025</b>, conversão da MP 1.304/2025 que absorveu a MP 1.300/2025, com 20 vetos) é a maior reforma do setor desde 2004. Ela cria, pela primeira vez, <b>cronograma legal</b> de abertura do ACL para o Grupo B.</p>
+
+  <h3>Timeline visual da abertura do mercado</h3>
+  <div class="timeline">
+    <div class="tl-item"><span class="yr">jan/2024</span><span class="dotmark"></span><div><b>Grupo A completo</b> <span class="tag done">concluído</span><br><span class="sub">Portaria MME 50/2022 — toda média e alta tensão elegível. Base saltou para ~85 mil UCs.</span></div></div>
+    <div class="tl-item future"><span class="yr">ago/2026</span><span class="dotmark"></span><div><b>Antecipação (cronograma da MP)</b> <span class="tag next">previsto</span><br><span class="sub">Indústria/comércio BT — data citada no texto original da MP; o prazo legal vinculante na lei convertida é nov/2027.</span></div></div>
+    <div class="tl-item future"><span class="yr">nov/2027</span><span class="dotmark"></span><div><b>Indústria e comércio de baixa tensão</b> <span class="tag next">24 meses</span><br><span class="sub">Migração obrigatoriamente via varejista; perda do desconto TUSD/TUST para novas migrações.</span></div></div>
+    <div class="tl-item future"><span class="yr">nov/2028</span><span class="dotmark"></span><div><b>Residencial e demais classes (abertura total)</b> <span class="tag next">36 meses</span><br><span class="sub">~92 milhões de UCs elegíveis. Criação do SUI (Supridor de Última Instância) e produto padrão com preço de referência.</span></div></div>
+    <div class="tl-item far"><span class="yr">2038</span><span class="dotmark"></span><div><b>Fim do critério de tensão no rateio de encargos</b> <span class="tag proj">transição</span><br><span class="sub">Todas as faixas rateiam CDE na proporção do consumo.</span></div></div>
+  </div>
+
+  <h3>Universo do Grupo B (TAM por classe)</h3>
+  <table>
+    <thead><tr><th>Classe (Grupo B)</th><th>UCs</th><th>Economia potencial/ano (ABRACEEL)</th><th>Detalhe</th></tr></thead>
+    <tbody>
+      <tr><td>Residencial (B1)</td><td>82,9 milhões</td><td><b>R$ 22,7 bi</b></td><td>~90% dos domicílios; classe média desassistida</td></tr>
+      <tr><td>Comercial (B3)</td><td>6,0–6,1 milhões</td><td>R$ 7,2 bi</td><td>4,4 mi de pequenos comércios (0–500 kWh)</td></tr>
+      <tr><td>Rural (B2)</td><td>3,9–4,5 milhões</td><td>R$ 2,8 bi</td><td>3,4 mi microprodutores</td></tr>
+      <tr><td>Industrial BT</td><td>410,7 mil</td><td>R$ 710 mi</td><td>84% com fatura ≤ R$ 950/mês</td></tr>
+      <tr><td>Setor público / baixa renda</td><td>—</td><td>R$ 1,6 bi + R$ 880 mi</td><td>—</td></tr>
+      <tr><td><b>Total baixa tensão</b></td><td><b>~89–92 milhões</b></td><td><b>R$ 35,8 bi/ano</b></td><td>Economia média ~19% (preços de 2022)</td></tr>
+    </tbody>
+  </table>
+  <p class="src-note">Fontes: ABRACEEL — estudo "Portabilidade da Conta de Luz" (R$ 35,8 bi/ano; economia média de 19% a preços de 2022); universo de UCs: EPE Anuário 2025 (82,9 mi residencial, 6,1 mi comercial, 3,9 mi rural em dez/2024). Em estudo anterior, ABRACEEL estimou redução de até R$ 25 bi/ano e R$ 210 bi acumulados até 2035 com abertura completa.</p>
+
+  <h3>Consumo dos segmentos (contexto de volume)</h3>
+  <div class="kpi-strip">
+    <div class="kpi"><b>532 TWh</b><small>Consumo total Brasil 2024 (+4,4%)</small></div>
+    <div class="kpi"><b>~184 TWh</b><small>Residencial 2024 (+8%, +13,6 TWh)</small></div>
+    <div class="kpi"><b>~112 TWh</b><small>Comercial 2024 (+7,4%, +7,7 TWh)</small></div>
+    <div class="kpi"><b>&gt;10 GWm</b><small>Contratos ACR vencendo até 2028 (ABRACEEL)</small></div>
+  </div>
+  <p class="src-note">Fonte: EPE — BEN 2025 / Anuário Estatístico 2025. O ACL já responde por 42% do consumo nacional; a abertura BT adicionaria os ~44% restantes hoje cativos.</p>
+</section>
+
+<!-- ===================== ADJACENT ===================== -->
+<section id="adj">
+  <h2>Segmentos adjacentes que entram no mercado</h2>
+  <div class="two">
+    <div>
+      <h3>Armazenamento / Baterias (BESS)</h3>
+      <ul class="tight">
+        <li><b>Marco legal:</b> Lei 15.269/2025 reconhece o armazenamento como <b>atividade autônoma</b> (paralela a geração, transmissão, distribuição, comercialização). REIDI ampliado para BESS; <b>Imposto de Importação zerado até 2030</b>.</li>
+        <li><b>Regulamentação ANEEL:</b> aprovada em <b>02/jun/2026</b>, encerrando a 2ª fase da CP 39/2023 (652 sugestões de 70 participantes). SAE autônomo despachado pelo ONS: MUSTc de consumo = zero; ONS publicará mapas anuais de melhores pontos de conexão.</li>
+        <li><b>Leilão de Reserva de Capacidade (LRCAP) 2026:</b> previsto incluir baterias pela primeira vez.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Mobilidade elétrica / recarga</h3>
+      <ul class="tight">
+        <li><b>21.061 pontos públicos e semipúblicos</b> (fev/2026), <b>+42% a/a</b> (era 14.827); recarga rápida DC cresceu 167% (de 2.430 para 6.479), já 31% do total.</li>
+        <li>Relação <b>19,6 VE/eletroposto</b> (411.869 plug-in); presença em 1.649 municípios. <span class="src-note">ABVE + Tupi Mobilidade</span></li>
+        <li><b>Regulação:</b> recarga consolidada no Cap. V da REN 1.000/2021 (preços livres); <b>CP 42/2025</b> (contribuições 11/dez/2025–10/mar/2026) aprimora regras de conexão de carregadores.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout acc"><b>Resposta da demanda e agregadores:</b> a MP/Lei prevê precificação horária para a BT (estímulo à RD). A figura do agregador (RED) será regulada no 3º ciclo da CP 39/2023. Combinado com BESS + VPP + recarga, é o núcleo de uma plataforma DER/EMS — exatamente a tese de produto deste mapeamento.</div>
+</section>
+
+<!-- ===================== SÍNTESE ===================== -->
+<section id="sint">
+  <h2>Síntese estratégica — TAM/SAM consolidado e leitura de segmentos</h2>
+
+  <div class="flow">
+    <span class="node g">Geradora / Fazenda solar</span><span class="arr">→</span>
+    <span class="node y">Gestora / Agregadora (orquestração de crédito + carga)</span><span class="arr">→</span>
+    <span class="node">Distribuidora (SCEE)</span><span class="arr">→</span>
+    <span class="node r">Consumidor (créditos na fatura)</span>
+  </div>
+  <p class="sub" style="margin-top:-6px">Cadeia da GD compartilhada</p>
+  <div class="flow">
+    <span class="node g">Geração</span><span class="arr">→</span>
+    <span class="node">Comercialização (atacadista)</span><span class="arr">→</span>
+    <span class="node y">Varejista</span><span class="arr">→</span>
+    <span class="node r">Consumidor livre/especial</span><span class="arr">→</span>
+    <span class="node">CCEE (contabilização)</span>
+  </div>
+  <p class="sub" style="margin-top:-6px">Cadeia do Mercado Livre — a partir de 2027 o varejista é a porta de entrada obrigatória da BT</p>
+
+  <h3>Dimensionamento por camada de mercado</h3>
+  <table>
+    <thead><tr><th>Camada</th><th>Tamanho atual</th><th>Endereçável (2027–2028)</th><th>Leitura estratégica</th></tr></thead>
+    <tbody>
+      <tr><td><b>GD compartilhada (assinatura solar)</b></td><td>~1,55 mi UCs / ~2,74 GW</td><td>milhões de UCs B1/B3 sem telhado</td><td>Mercado mais maduro e operacional hoje; consolidação via M&amp;A. Concorre com ACL pós-2027.</td></tr>
+      <tr><td><b>ACL — Grupo A</b></td><td>~85 mil UCs (42% do consumo)</td><td>~202 mil UCs (headroom de ~117 mil)</td><td>Base instalada de varejistas/plataformas; margem comprimida, alta concorrência.</td></tr>
+      <tr><td><b>ACL — Grupo B comercial/industrial</b></td><td>0 (cativo)</td><td><b>~6,5 mi UCs · R$ 7,9 bi/ano</b></td><td><b>SAM prioritário</b>: abre nov/2027, varejista obrigatório, ticket médio viável.</td></tr>
+      <tr><td><b>ACL — Grupo B residencial/rural</b></td><td>0 (cativo)</td><td><b>~87 mi UCs · R$ 25,5 bi/ano</b></td><td>TAM máximo, mas ticket baixo (&lt;200 kWh pode não compensar); jogo de escala/plataforma e fidelização.</td></tr>
+      <tr><td><b>BESS + VPP + RD + recarga</b></td><td>nascente</td><td>BESS LRCAP 2026; 21 mil pontos recarga; RD via ONS</td><td>Diferenciação de produto — empilhamento de receitas (energia + flexibilidade + serviços ancilares).</td></tr>
+    </tbody>
+  </table>
+  <p class="src-note">Composições R$/ano derivadas dos estudos ABRACEEL (R$ 35,8 bi total BT: R$ 22,7 bi residencial + R$ 7,2 bi comercial + R$ 2,8 bi rural + R$ 0,71 bi industrial BT + setor público/baixa renda).</p>
+
+  <h2 style="border-color:var(--acc2)">Recomendações (escalonadas, com gatilhos)</h2>
+  <ol>
+    <li><b>Fase 1 (2026 — preparação):</b> capturar Grupo A residual (~117 mil UCs) e GD compartilhada B1/B3 como tração de receita e base de dados. <i>Gatilho de mudança:</i> publicação da regulamentação infralegal ANEEL/MME da Lei 15.269 e definição do SUI.</li>
+    <li><b>Fase 2 (2027 — abertura comercial/industrial BT):</b> priorizar o <b>SAM de ~6,5 mi UCs comerciais/industriais BT (R$ 7,9 bi/ano)</b> — varejista é figura obrigatória, ticket médio viável, e há &gt;10 GWm de contratos ACR vencendo até 2028 que viabilizam migração sem sobrecontratação. <i>Benchmark de avanço:</i> habilitação como varejista na CCEE e integração via API.</li>
+    <li><b>Fase 3 (2028 — residencial):</b> ativar plataforma de massa (jornada digital, fidelização, fatura unificada) para o TAM de ~87 mi UCs. <i>Threshold de viabilidade:</i> custo de gestão/representação abaixo da economia para UCs &lt;200 kWh — abaixo disso, oferecer GD compartilhada em vez de ACL.</li>
+    <li><b>Transversal — posicionamento como agregador/VPP:</b> participar ativamente do 3º ciclo da CP 39/2023 (agregadores) e do LRCAP 2026 (BESS); integrar resposta da demanda (REN 1.040/2022) e recarga (CP 42/2025). <i>Gatilho:</i> publicação da REN que criar formalmente a figura do agregador de RED — momento de pivotar de "gestor de crédito" para "orquestrador de flexibilidade".</li>
+  </ol>
+
+  <h2 style="border-color:var(--warn)">Caveats e ressalvas de fonte</h2>
+  <ul class="tight">
+    <li><b>Players auto-reportados:</b> números de Órigo, Cemig SIM, Lemon, Sun Mobi etc. vêm de comunicados/entrevistas (2023–2025), não auditados, com defasagem temporal entre empresas.</li>
+    <li><b>Projeções vs. realizado:</b> metas como Órigo 2 GWp/2027, Cemig SIM 1 GWp/2029 e ABVE 25 mil postos/2026 são projeções, não dados realizados.</li>
+    <li><b>Agregador:</b> figura ainda não criada formalmente até jun/2026 — todo dimensionamento dessa camada é prospectivo.</li>
+    <li><b>"Dezenas de gestoras":</b> não há número oficial preciso de gestoras de GD compartilhada; fontes usam faixa qualitativa.</li>
+    <li><b>Datas:</b> divergência menor na sanção da Lei 15.269 (24 vs 25/nov/2025; publicação oficial 24/11/2025). A data "ago/2026" para BT comercial consta do texto original da MP; o prazo legal vinculante na lei convertida é nov/2027 (24 meses).</li>
+    <li><b>Comercializadoras:</b> o total de ~506 é referência CCEE de 2024; o segmento atacadista mais recente (mar/2026) registra 503 agentes — números próximos mas de bases metodológicas distintas.</li>
+    <li><b>Dados via API:</b> desde jul/2025 parte das migrações varejistas não aparece nas bases públicas da CCEE — os números reais de UCs varejistas são maiores que os divulgados.</li>
+  </ul>
+</section>
+
+<footer>
+  Dossiê quantitativo · dados mais recentes disponíveis em junho de 2026 · Fontes primárias: ANEEL (SIGA, painel MMGD, REN 482/2012, 1.000/2021, 1.059/2023, 1.040/2022, CP 39/2023, CP 42/2025), CCEE (InfoMercado, EstudoCCEE, dados abertos), EPE (BEN 2025, Anuário 2025), MME (Portaria 50/2022, Lei 15.269/2025), ABSOLAR, ABGD, ABRACEEL, ABVE+Tupi Mobilidade, ONS. Imprensa setorial: Canal Solar, pv magazine Brasil, CanalEnergia, Agência iNFRA, InfoMoney, NeoFeed, Thunders, ePowerBay.<br>
+  Documento de inteligência de mercado — números e datas de referência conforme indicado em cada seção.
+</footer>
+
+</div>
+</body>
+</html>

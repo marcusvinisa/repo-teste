@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOS-DENO · Catálogo de Microsserviços (Software)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500;700&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#2e2519;--panel:#3a3022;--panel2:#473a29;--soft:#352b1e;
+    --ink:#fefcf6;--desc:#f7f1e6;--muted:#e8dfce;--faint:#ccc0a8;
+    --line:#ffffff26;--line2:#ffffff48;
+    --amber:#ff9d54;--gold:#efc56b;--teal:#79c9b9;--violet:#ab9fe2;--rose:#e49ebd;
+    --con:#ff9d54;--int:#efc56b;--com:#e49ebd;--agg:#79c9b9;--ger:#ab9fe2;--dso:#e08a73;--orq:#8fb0d8;
+    --radius:13px;--nav:230px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1200px 700px at 88% -8%,#45301a 0%,transparent 55%),radial-gradient(900px 600px at -8% 105%,#1e3b36 0%,transparent 52%),var(--bg);color:var(--ink);font-family:'Schibsted Grotesk',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")}
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  nav{position:fixed;top:0;left:0;width:var(--nav);height:100vh;background:rgba(32,25,18,.86);backdrop-filter:blur(12px);border-right:1px solid var(--line2);padding:24px 14px;z-index:50;overflow-y:auto}
+  .brand{font-family:'Archivo';font-weight:900;font-size:18px;letter-spacing:-.01em;line-height:1}
+  .brand .e{color:var(--amber)} .brand .d{color:var(--teal)}
+  .brandsub{font-family:'JetBrains Mono';font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:3px 0 18px}
+  .navlist{list-style:none;display:flex;flex-direction:column;gap:1px}
+  .navlist a{display:flex;gap:9px;padding:7px 9px;border-radius:7px;text-decoration:none;color:var(--muted);font-size:12px;border-left:2px solid transparent;transition:.15s}
+  .navlist a:hover{background:var(--panel2);color:var(--ink)}
+  .navlist a.active{background:linear-gradient(90deg,#ff9d5422,transparent);color:var(--amber);border-left-color:var(--amber)}
+  .navlist a .nn{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;color:var(--faint);min-width:26px}
+  .navlist a.active .nn{color:var(--amber)}
+  .navlist .sec{font-family:'JetBrains Mono';font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:12px 9px 5px}
+
+  main{margin-left:var(--nav);padding:0 34px;max-width:1040px}
+  header{padding:48px 0 26px;border-bottom:1px solid var(--line2)}
+  .kicker{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
+  h1{font-family:'Archivo';font-weight:900;font-size:clamp(26px,4.6vw,46px);line-height:1.0;letter-spacing:-.02em;text-transform:uppercase}
+  h1 .hl{color:var(--amber)} h1 .hl2{color:var(--teal)}
+  .lede{margin-top:14px;max-width:780px;font-size:15px;color:var(--desc)}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* persona filter */
+  .pfilter{margin-top:22px;background:var(--soft);border:1px solid var(--line2);border-radius:12px;padding:14px 16px}
+  .pfilter .pf-t{font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+  .pf-t b{color:var(--desc)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:'JetBrains Mono';font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--cc);color:var(--cc);background:transparent;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:6px}
+  .chip:hover{background:color-mix(in srgb,var(--cc) 14%,transparent)}
+  .chip.on{background:var(--cc);color:#241d15;font-weight:700}
+  .chip .full{color:inherit;opacity:.7;font-weight:400}
+  .chip.allc{--cc:var(--muted)}
+  .pfhint{margin-top:9px;font-size:11.5px;color:var(--faint)}
+
+  .layer{padding:34px 0 6px;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+  .lhead{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+  .lnum{font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:var(--lc)}
+  .lhead h2{font-family:'Archivo';font-weight:800;font-size:clamp(18px,3vw,25px);letter-spacing:-.01em;line-height:1.1}
+  .lrole{font-size:12.5px;color:var(--faint);font-family:'JetBrains Mono';margin-bottom:14px}
+  .oss{font-size:12px;color:var(--muted);margin:2px 0 14px;padding:8px 12px;background:var(--panel);border:1px solid var(--line);border-radius:9px}
+  .oss b{color:var(--teal);font-family:'JetBrains Mono';font-size:9.5px;letter-spacing:.05em;text-transform:uppercase}
+  .oss i{color:var(--gold);font-style:normal;font-weight:600}
+
+  .svc{margin-bottom:9px;background:var(--panel);border:1px solid var(--line2);border-radius:11px;border-left:3px solid var(--lc);padding:12px 15px;transition:.2s}
+  .svc.dim{opacity:.28;filter:grayscale(.6)}
+  .svc-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .svc-id{font-family:'JetBrains Mono';font-size:11px;color:var(--gold);font-weight:700;white-space:nowrap}
+  .svc-n{font-family:'Archivo';font-weight:800;font-size:14px}
+  .svc-p{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+  .ptag{font-family:'JetBrains Mono';font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:4px;border:1px solid var(--pc);color:var(--pc)}
+  .ptag.all{--pc:var(--faint)}
+  .svc-oq{font-size:12.5px;color:var(--desc);line-height:1.45}
+  .svc-oq .lab{font-family:'JetBrains Mono';font-size:9px;font-weight:700;color:var(--teal);margin-right:6px}
+  .svc-cm{font-size:12px;color:var(--muted);line-height:1.45;margin-top:6px;padding-left:11px;border-left:2px solid #ff9d5455}
+  .svc-cm .lab{font-family:'JetBrains Mono';font-size:9px;font-weight:700;color:var(--amber);margin-right:6px}
+
+  /* reference sections */
+  .ref{padding:38px 0;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+  .ref h2{font-family:'Archivo';font-weight:900;font-size:clamp(19px,3vw,26px);letter-spacing:-.01em;margin-bottom:6px}
+  .ref h2 .rn{font-family:'JetBrains Mono';font-size:13px;color:var(--rose);font-weight:700;margin-right:10px}
+  .ref .rsub{color:var(--desc);font-size:13.5px;max-width:780px;margin-bottom:18px}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;margin-bottom:6px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:'JetBrains Mono';font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);background:var(--soft)}
+  td{color:var(--desc)} td b{color:var(--ink)}
+  .pcode{font-family:'JetBrains Mono';font-weight:700;color:var(--pc)}
+  .scell{font-family:'JetBrains Mono';font-weight:700;font-size:11px;color:var(--gold)}
+  .reg{background:#e08a7318;border:1px solid #e08a7344;border-radius:9px;padding:11px 14px;font-size:12.5px;color:var(--desc);margin-top:10px}
+  .reg b{color:#e8a48c}
+
+  footer{padding:30px 0 64px;color:var(--faint);font-size:11.5px;line-height:1.7;font-family:'JetBrains Mono'}
+  footer b{color:var(--muted)}
+
+  @media(max-width:880px){
+    :root{--nav:0px}
+    nav{position:sticky;top:0;width:100%;height:auto;border-right:none;border-bottom:1px solid var(--line2);padding:12px 14px}
+    .navlist{flex-direction:row;flex-wrap:wrap;gap:5px} .navlist .sec{display:none}
+    .navlist a{border-left:none;border:1px solid var(--line);padding:5px 8px} .navlist a .label{display:none}
+    main{margin-left:0;padding:0 16px}
+    .svc-p{margin-left:0;width:100%}
+    table{display:block;overflow-x:auto;white-space:nowrap}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand"><span class="e">EOS</span>-<span class="d">DENO</span></div>
+  <div class="brandsub">Microsserviços · Software</div>
+  <ul class="navlist" id="navlist">
+    <li class="sec">Energia</li>
+    <li><a href="#S0"><span class="nn">S0</span><span class="label">Ingestão</span></a></li>
+    <li><a href="#S1"><span class="nn">S1</span><span class="label">Dados</span></a></li>
+    <li><a href="#S2"><span class="nn">S2</span><span class="label">Ativos & Twin</span></a></li>
+    <li><a href="#S3"><span class="nn">S3</span><span class="label">Forecasting</span></a></li>
+    <li><a href="#S4"><span class="nn">S4</span><span class="label">Otimização</span></a></li>
+    <li><a href="#S5"><span class="nn">S5</span><span class="label">EMS</span></a></li>
+    <li><a href="#S6"><span class="nn">S6</span><span class="label">DERMS</span></a></li>
+    <li><a href="#S7"><span class="nn">S7</span><span class="label">VPP/Mercado</span></a></li>
+    <li><a href="#S8"><span class="nn">S8</span><span class="label">CCEE/BR</span></a></li>
+    <li><a href="#S11"><span class="nn">S11</span><span class="label">Agent-fabric</span></a></li>
+    <li><a href="#S12"><span class="nn">S12</span><span class="label">Apps</span></a></li>
+    <li class="sec">Plataforma</li>
+    <li><a href="#S9"><span class="nn">S9</span><span class="label">Multi-tenant</span></a></li>
+    <li><a href="#S10"><span class="nn">S10</span><span class="label">API/Devs</span></a></li>
+    <li><a href="#S13"><span class="nn">S13</span><span class="label">MLOps</span></a></li>
+    <li><a href="#S14"><span class="nn">S14</span><span class="label">SRE</span></a></li>
+    <li><a href="#S15"><span class="nn">S15</span><span class="label">Segurança</span></a></li>
+    <li><a href="#S16"><span class="nn">S16</span><span class="label">Infra</span></a></li>
+    <li><a href="#S17"><span class="nn">S17</span><span class="label">Comercial</span></a></li>
+    <li class="sec">Referência</li>
+    <li><a href="#personas"><span class="nn">▸</span><span class="label">Personas</span></a></li>
+    <li><a href="#cenarios"><span class="nn">▸</span><span class="label">18 cenários</span></a></li>
+  </ul>
+</nav>
+
+<main>
+  <header>
+    <div class="kicker"><span class="dot"></span>EOS-DENO · catálogo de microsserviços · software</div>
+    <h1>O energy OS, <span class="hl">serviço</span><br>por <span class="hl2">serviço</span></h1>
+    <p class="lede">A plataforma ideal decomposta em microsserviços — para personalizar o produto <b>por persona/cenário</b> ativando subconjuntos. Complementa o mapa de hardware (o device é insumo). Cada serviço: <b>o que faz</b> + <b>como é feito</b> + <b>quem consome</b>; por domínio, a <b>fundação open-source</b> candidata.</p>
+    <div class="pfilter">
+      <div class="pf-t"><b>Filtrar por persona</b> — destaca os serviços que ela consome (o bundle dela)</div>
+      <div class="chips" id="chips"></div>
+      <div class="pfhint" id="pfhint">Mostrando todos os serviços. Clique numa persona para ver o bundle.</div>
+    </div>
+  </header>
+
+  <div id="tree"></div>
+
+  <section class="ref" id="personas">
+    <h2><span class="rn">REF</span>As 7 personas da cadeia</h2>
+    <p class="rsub">Atores que operam a plataforma. A lista é referência, não teto — o filtro acima usa estes códigos.</p>
+    <table>
+      <thead><tr><th>Cód</th><th>Persona</th><th>Jobs principais</th><th>Casos de uso exclusivos</th></tr></thead>
+      <tbody id="ptable"></tbody>
+    </table>
+  </section>
+
+  <section class="ref" id="cenarios">
+    <h2><span class="rn">REF</span>Os 18 cenários do consumidor</h2>
+    <p class="rsub">O consumidor não é um perfil único: <b>nível de ativos (N0–N5) × arranjo comercial (A Cativo / B GD compartilhada / C Mercado livre)</b>. Dita o bundle de cada UC.</p>
+    <table>
+      <thead><tr><th>Cód</th><th>Arranjo + Nível</th><th>Ativos</th><th>HW</th><th>Modos principais</th></tr></thead>
+      <tbody id="ctable"></tbody>
+    </table>
+    <div class="reg"><b>Ressalva regulatória:</b> grid services em BT (A5/B5/C5) e mercado livre para BT (coluna C) dependem de evolução regulatória — entram como <b>capacidade técnica pronta, monetização gradual</b>.</div>
+  </section>
+
+  <footer>
+    <b>Leitura:</b> ~70 microsserviços · domínios de energia (S0–S12) + plataforma/operação (S13–S17).<br>
+    O diferencial é S11 (agent-fabric) + S8 (CCEE/BR) — sem fundação OSS pronta. O resto tem build-on real.<br>
+    Catálogo de software · Projeto EOS-DENO · complementa o mapa de hardware. A coluna "como" é nível-arquitetural.
+  </footer>
+</main>
+
+<script>
+const P={CON:'Consumidor',INT:'Integrador',COM:'Comercializadora',AGG:'Agregador',GER:'Gerador',DSO:'Distribuidor',ORQ:'Orquestrador'};
+const personas=[
+ {c:'CON',j:'Pagar menos, backup, conveniência, transparência',x:'Conta/tarifa, autoconsumo, backup, EV, conforto; economia em R$/CO₂'},
+ {c:'INT',j:'Vender, instalar rápido, dar suporte, escalar carteira',x:'Comissionamento, onboarding de ativos, diagnóstico remoto, RMA, portal multi-cliente'},
+ {c:'COM',j:'Adquirir/reter carteira, faturar, gerir contratos',x:'Book, billing de energia, contratos/planos, app white-label, churn, liquidação CCEE'},
+ {c:'AGG',j:'Monetizar flexibilidade da frota',x:'Agregação, bidding, qualificação ancilar, despacho, baseline, revenue-share'},
+ {c:'GER',j:'Maximizar geração e valor da energia',x:'Performance de geração, rateio de créditos (GD), PPA, monetização de ativo'},
+ {c:'DSO',j:'Operar a rede com segurança e hosting capacity',x:'Sinais de rede (RCR/§14a/DOE), curtailment, telecontrole, capacidade de hospedagem'},
+ {c:'ORQ',j:'Rodar a plataforma multi-tenant com SLA',x:'Operação multi-tenant, SLA, saúde de frota, MLOps, config, marketplace'},
+];
+const scen=[
+ ['A0','Cativo, só consumo','medidor','nenhum','monitoramento, conta/tarifa'],
+ ['A1','Cativo + PV','+PV','—/Gateway','autoconsumo, zero-export, reativo, diagnóstico IV'],
+ ['A2','Cativo + bateria','+ESS','Gateway','+ backup, peak shaving, otimização básica'],
+ ['A3','Cativo + EV','+EV','Gateway','+ EV smart charging (V1G)'],
+ ['A4','Cativo + load shifting','+cargas/bomba','Gateway/Ctrl','+ load shifting (branca/bandeiras), SG-Ready, cenas'],
+ ['A5','Cativo + grid services','+flexibilidade','Controller','+ curtailment por ordem, reativo, (DR futuro)'],
+ ['B0','GD compart., só consumo','medidor','nenhum','monitoramento + rateio/billing de créditos'],
+ ['B1','GD compart. + PV','+PV','—/Gateway','A1 + geração que gera créditos a ratear'],
+ ['B2','GD compart. + bateria','+ESS','Gateway','A2 + armazenar p/ usar crédito melhor'],
+ ['B3','GD compart. + EV','+EV','Gateway','A3 + coordenação com créditos'],
+ ['B4','GD compart. + load shifting','+cargas/bomba','Gateway/Ctrl','A4 + otimização de uso de créditos'],
+ ['B5','GD compart. + grid services','+flexibilidade','Controller','A5 + agregação multi-UC'],
+ ['C0','Mercado livre, só consumo','medidor p/ liquidação','nenhum','monitoramento + medição p/ CCEE'],
+ ['C1','Mercado livre + PV','+PV','—/Gateway','A1 + injeção valorada a preço de mercado'],
+ ['C2','Mercado livre + bateria','+ESS','Gateway','arbitragem de preço (carrega barato/descarrega caro)'],
+ ['C3','Mercado livre + EV','+EV','Gateway','EV por preço de mercado'],
+ ['C4','Mercado livre + load shifting','+cargas/bomba','Gateway/Ctrl','otimização por tarifa dinâmica plena (maior ganho)'],
+ ['C5','Mercado livre + grid services','+flexibilidade','Controller','participação em mercado/flexibilidade (conforme regulação)'],
+];
+const A='todas';
+const domains=[
+ {code:'S0',name:'Ingestão & Conectividade',role:'a porta de entrada — dado do device p/ a plataforma e comando de volta',color:'var(--violet)',oss:'<b>OSS</b> <i>OpenEMS</i> (edge/connector), <i>ThingsBoard/OpenRemote</i> (gateway IoT)',svc:[
+   {id:'S0.1',n:'Device Gateway / Connector',w:'Ingere telemetria de medidores/inversores/baterias',h:'Um gateway por site/tenant mantém conexões persistentes (MQTT/Modbus-TCP/poll REST) com cada device, normaliza o frame bruto e publica numa fila; reconexão automática e backpressure garantem que rajada ou queda de link não perca pacote.',p:[A]},
+   {id:'S0.2',n:'Protocol Adapter Registry',w:'Biblioteca de drivers por fabricante (agnosticismo no dado)',h:'Cada fabricante vira um driver-plugin que declara seus registradores/endpoints e a tradução para o modelo canônico; o registry versiona os drivers e carrega o certo pelo modelo de device detectado — suportar marca nova é publicar um plugin, sem tocar o core.',p:[A]},
+   {id:'S0.3',n:'Edge Sync / Store-and-forward',w:'Sincroniza estado edge↔cloud, buffer offline',h:'O edge grava telemetria e comandos pendentes em fila local persistente e, ao reconectar, sincroniza por timestamp/sequência com reconciliação idempotente; assim corte de conectividade não perde dado nem reaplica comando duplicado.',p:[A]},
+   {id:'S0.4',n:'Command Dispatch Bus',w:'Entrega setpoints/comandos ao edge com confirmação',h:'Comando vira mensagem com ID único numa fila com confirmação (ack) ponta-a-ponta; sem ack no prazo, reenvia o mesmo ID (idempotente) e mantém o estado pendente/confirmado/falho auditável por comando.',p:['CON','AGG','DSO','ORQ']},
+ ]},
+ {code:'S1',name:'Plataforma de Dados & Telemetria',role:'a memória — onde todo dado vive e flui',color:'var(--violet)',oss:'<b>OSS</b> <i>TimescaleDB</i>, <i>Kafka/NATS</i> (infra aberta)',svc:[
+   {id:'S1.1',n:'Time-Series Store',w:'Armazena medição em alta resolução',h:'Banco de série temporal com hypertables particionadas por tempo, compressão e downsampling por faixa de retenção — alta resolução no recente, agregados no histórico longo, consulta por range em milissegundos.',p:[A]},
+   {id:'S1.2',n:'Event Bus / Streaming',w:'Pub/sub de eventos p/ serviços reativos',h:'Broker de log particionado (ex. Kafka/NATS) com tópicos por tipo de evento; produtores publicam e múltiplos consumidores leem em paralelo no próprio offset, desacoplando quem gera de quem reage e absorvendo picos.',p:[A]},
+   {id:'S1.3',n:'Data Lake',w:'Histórico bruto p/ analytics e ML',h:'Telemetria bruta e eventos caem em object storage particionado (por tenant/data) em formato colunar (Parquet), com um catálogo de metadados indexando o que existe — habilita treino de ML e analytics sem onerar o banco operacional.',p:['ORQ','AGG','COM']},
+   {id:'S1.4',n:'Telemetry API',w:'Consulta de telemetria por serviços/apps',h:'Endpoint REST/GraphQL que traduz a query do app em consulta ao TSDB, com cache das séries quentes e paginação; expõe a telemetria de forma uniforme, escondendo onde o dado fisicamente mora.',p:[A]},
+ ]},
+ {code:'S2',name:'Modelo de Ativos & Digital Twin',role:'a verdade sobre o que existe e em que estado',color:'var(--violet)',oss:'<b>OSS</b> modelagem própria (CIM/IEC 61968 como referência)',svc:[
+   {id:'S2.1',n:'Asset Registry',w:'Cadastro de UCs, medidores, inversores, baterias, VE, cargas',h:'Modelo de dados canônico (UC, medidor, inversor, bateria, VE, carga) com chaves e relações, servindo de fonte única de verdade sobre o que existe — referenciado por todos os demais serviços.',p:[A]},
+   {id:'S2.2',n:'Topology Model',w:'Relação elétrica (fase, circuito, ponto de conexão, UC↔usina em GD)',h:'Grafo que liga UC → ponto de conexão → fase/circuito → usina (em GD), guardando a relação elétrica; permite raciocinar sobre fase, rateio e impacto na rede, não apenas listar ativos soltos.',p:['INT','GER','DSO','AGG']},
+   {id:'S2.3',n:'Device Abstraction',w:'Modelo canônico que abstrai fabricantes (agnosticismo na plataforma)',h:'Camada que mapeia cada device a um capability model (o que sabe medir/controlar) e traduz as particularidades do fabricante; a plataforma fala com a capacidade abstrata e o adapter resolve o dialeto concreto.',p:[A]},
+   {id:'S2.4',n:'Digital Twin State',w:'Estado em tempo real de cada ativo/site',h:'Projeção em state-store do último estado de cada ativo, atualizada por stream de eventos (event-sourcing); responde "qual o estado agora" sem ir ao device e reconstrói o estado a partir do log de eventos.',p:['CON','AGG','ORQ']},
+ ]},
+ {code:'S3',name:'Forecasting (Previsão)',role:'olhar para frente — geração, carga, preço',color:'var(--teal)',star:1,oss:'<b>OSS</b> <i>pvlib</i> (solar físico), libs ML (scikit-learn). Forecasting-as-a-service',svc:[
+   {id:'S3.1',n:'Solar Forecast',w:'Prevê geração por site (intraday→multi-dia)',h:'Um modelo físico (posição solar + clear-sky + irradiância prevista) dá a linha-base e uma camada de ML corrige o viés por site usando geração real vs. prevista do histórico, refinando do intraday ao multi-dia.',p:['CON','AGG','GER']},
+   {id:'S3.2',n:'Load Forecast',w:'Prevê consumo por UC',h:'Modelo de série temporal/ML (gradient boosting ou LSTM) treinado no histórico de consumo da UC com features de clima, calendário e perfil; gera a curva prevista por intervalo e é re-treinado conforme o hábito muda.',p:['CON','AGG','COM']},
+   {id:'S3.3',n:'Price Forecast',w:'Prevê preço (PLD/spot)',h:'Modelo de série temporal sobre o histórico de preço (PLD/spot) somado a sinais de mercado (carga do sistema, hidrologia, oferta); produz a curva de preço esperada que alimenta a otimização e o bidding.',p:['AGG','COM','GER']},
+   {id:'S3.4',n:'Weather Ingestion',w:'Ingere meteorologia/irradiância',h:'Conectores agendados puxam previsão e observação (irradiância, temperatura, nebulosidade) de APIs meteorológicas/satélite, normalizam para a grade do site e publicam como feature — insumo comum dos modelos solar e de carga.',p:[A]},
+ ]},
+ {code:'S4',name:'Otimização & Scheduling',role:'o cérebro econômico — decidir o melhor despacho',color:'var(--teal)',star:1,oss:'<b>OSS</b> <i>OR-Tools, PyPSA, oemof</i> (sistema); <i>EMHASS</i> (residencial via HA)',svc:[
+   {id:'S4.1',n:'Optimization Engine',w:'Resolve despacho ótimo (carga/descarga, cargas)',h:'Formula o despacho como um problema MILP/MPC (variáveis: carga/descarga da bateria, on/off de cargas) com restrições físicas e função-objetivo de custo; um solver resolve a cada ciclo o plano ótimo no horizonte definido.',p:['CON','AGG','GER']},
+   {id:'S4.2',n:'Tariff & Price Model',w:'Modela tarifa branca/bandeiras/dinâmica/PLD',h:'Codifica a estrutura tarifária BR (convencional, branca, bandeiras, ponta/fora-ponta e PLD no ACL) como regras parametrizadas, convertendo "kWh por hora" em "R$ por hora" — que é exatamente o que a otimização minimiza.',p:['CON','COM']},
+   {id:'S4.3',n:'Multi-objective Policy',w:'Pondera custo × bateria × CO₂ × crédito',h:'A função-objetivo pondera vários critérios (custo, SOC/saúde da bateria, CO₂, uso de crédito de GD) com pesos configuráveis; o tenant escolhe o trade-off e o engine otimiza para essa combinação específica.',p:['CON','GER']},
+   {id:'S4.4',n:'RL Policy Service',w:'Políticas adaptativas aprendidas',h:'Um agente de aprendizado por reforço treina, sobre simulação + dados reais, uma política estado→ação que dispensa re-resolver o MILP a cada passo; útil onde a dinâmica é complexa e a resposta precisa ser imediata.',p:['AGG','ORQ']},
+   {id:'S4.5',n:'Plan / Schedule Service',w:'Gera e versiona o plano 24–48h',h:'Mantém o plano vigente de 24–48h e o re-otimiza em horizonte rolante (receding horizon) a cada ~15min com dados frescos, versionando cada plano para auditoria e entregando-o ao EMS/edge para execução.',p:['CON','AGG']},
+ ]},
+ {code:'S5',name:'Controle & EMS Orchestration',role:'as mãos na nuvem — aplicar as estratégias com segurança',color:'var(--teal)',star:1,oss:'<b>OSS</b> <i>OpenEMS</i> (EMS edge+backend, a base mais forte)',svc:[
+   {id:'S5.1',n:'EMS Core / Control Loop',w:'Aplica estratégias (autoconsumo, zero-export, peak shaving)',h:'Malha de controle que lê o estado, consulta o plano/regra ativa (autoconsumo, zero-export, peak shaving) e escreve setpoints no device via dispatch; roda em ciclo curto, fechando a malha medição→decisão→comando.',p:['CON','GER']},
+   {id:'S5.2',n:'Safety & Guardrails',w:'Limites de proteção (anti-backfeed, anti-trip, SOC)',h:'Antes de qualquer comando sair, um validador checa limites rígidos (anti-backfeed, faixa de SOC, corrente/tensão máximas, anti-trip) e bloqueia ou satura o setpoint; interlocks impedem combinações perigosas mesmo sob ordem externa.',p:[A]},
+   {id:'S5.3',n:'Scene / Mode Manager',w:'Modos e cenas por usuário (SG-Ready, cenas A4)',h:'Modos e cenas nomeados (ex. "modo viagem", SG-Ready, cenas A4) são regras parametrizadas com gatilho (horário, evento, manual); selecionar um modo troca o conjunto de regras que o control loop aplica.',p:['CON']},
+   {id:'S5.4',n:'Edge Policy Distribution',w:'Empacota plano/regras p/ o edge operar offline',h:'Empacota plano + regras + guardrails num bundle versionado e o sincroniza ao edge, de modo que o site continue executando a estratégia localmente mesmo com a nuvem fora, reconciliando ao reconectar.',p:['CON','ORQ']},
+ ]},
+ {code:'S6',name:'DERMS / Fleet Orchestration',role:'coordenar muitos ativos como um só',color:'var(--rose)',star:1,oss:'<b>OSS</b> sem base madura de DERMS (build); <i>Volttron</i> p/ controle distribuído',svc:[
+   {id:'S6.1',n:'Fleet Manager',w:'Gere frota de devices/sites em escala',h:'Mantém o inventário da frota (devices/sites) com agrupamento por atributo e conduz rollouts em ondas com health-check entre etapas; é o painel que sabe o estado de cada nó e propaga mudanças em escala sem big-bang.',p:['INT','ORQ','AGG']},
+   {id:'S6.2',n:'Group / Cohort Control',w:'Comando coordenado de grupos (multi-UC, multi-site)',h:'Define um grupo (multi-UC/multi-site por critério) e emite um comando coordenado que o sistema faz fan-out para cada membro, coletando confirmações — permite agir sobre milhares de ativos como uma única ação rastreável.',p:['AGG','DSO']},
+   {id:'S6.3',n:'Grid Signal Handler',w:'Recebe sinais do DSO (RCR/§14a/DOE) e traduz em ordens',h:'Recebe o sinal do DSO (RCR/§14a/DOE — limite de injeção/consumo por nó) via conector e o traduz em setpoints concretos por device respeitando a topologia; é a ponte entre "ordem da rede" e "ação no ativo".',p:['DSO','AGG']},
+   {id:'S6.4',n:'Curtailment Orchestrator',w:'Corta geração/carga por ordem, com auditoria',h:'Executa corte de geração/carga por ordem (regulatória ou de mercado) priorizando ativos por regra e registra cada ação (quem, quanto, quando, por quê) em trilha imutável, para comprovação regulatória e ressarcimento.',p:['DSO','AGG']},
+ ]},
+ {code:'S7',name:'VPP / Mercado / Trading',role:'onde a flexibilidade vira receita',color:'var(--rose)',star:1,oss:'<b>OSS</b> <i>OpenADR/OpenLEADR</i> (sinalização DR). Mercado/bidding = build',svc:[
+   {id:'S7.1',n:'Aggregation Engine',w:'Agrega flexibilidade da frota como recurso único',h:'Soma a flexibilidade disponível da frota (quanto cada ativo pode subir/descer a cada instante) aplicando qualificação por disponibilidade, SOC e restrição de rede; expõe o portfólio como um recurso despachável único.',p:['AGG']},
+   {id:'S7.2',n:'Bidding / Market Optimization',w:'Posiciona ofertas em mercados (DA/ID/imbalance)',h:'Dado o portfólio agregado, o forecast e o preço, um otimizador monta as ofertas (quantidade × preço por janela) que maximizam receita sob risco de penalidade, gerando a posição a submeter nos mercados DA/ID/imbalance.',p:['AGG','COM']},
+   {id:'S7.3',n:'Market Connectors',w:'Integra a mercados/operadores',h:'Adaptadores que falam o protocolo/formato de cada mercado ou operador (hoje CCEE; amanhã os padrões de VPP BT que surgirem), submetendo ofertas e recebendo despacho/resultado e isolando a lógica de negócio das idiossincrasias de cada mercado.',p:['AGG','COM']},
+   {id:'S7.4',n:'Ancillary Services',w:'FCR/aFRR/mFRR, reserva, suporte de tensão',h:'Para FCR/aFRR/mFRR e suporte de tensão, responde ao sinal do operador (droop de frequência / setpoint AGC) ajustando a frota em segundos e mede a entrega contra a baseline, comprovando o serviço prestado.',p:['AGG','DSO']},
+   {id:'S7.5',n:'DR Program Manager',w:'Programas de resposta da demanda',h:'Modela cada programa de demanda como evento (janela, alvo de redução, incentivo), aciona os participantes, mede a redução real contra baseline e calcula o crédito — o ciclo completo de um evento de DR.',p:['AGG','DSO','COM']},
+ ]},
+ {code:'S8',name:'CCEE / Liquidação / Billing BR',role:'o fosso brasileiro — onde o mercado de energia BR se fecha',color:'var(--amber)',star:1,oss:'<b>OSS</b> <i>nenhuma</i> — específico do Brasil. Build puro e moat regulatório',svc:[
+   {id:'S8.1',n:'CCEE Integration',w:'Medição p/ contabilização/liquidação CCEE',h:'Conecta à CCEE para enviar/receber a medição de faturamento por ponto, alinhada ao processo oficial de contabilização e liquidação, tratando formatos e prazos do mercado brasileiro — onde nenhuma base estrangeira ajuda.',p:['COM','GER','AGG']},
+   {id:'S8.2',n:'Credit Allocation / Rateio',w:'Rateio de créditos de GD compartilhada (Lei 14.300) entre UCs',h:'Motor que distribui os créditos de uma usina de GD compartilhada entre as UCs beneficiárias conforme percentual/ordem cadastrados (Lei 14.300), por ciclo de faturamento — resolve o rateio que o autoconsumo remoto exige.',p:['GER','COM','CON']},
+   {id:'S8.3',n:'Settlement Service',w:'Liquidação no mercado livre (ACL)',h:'Concilia energia contratada × medida × preço no ACL, apura as diferenças e gera os lançamentos de liquidação, fechando o ciclo financeiro do mercado livre por agente/UC.',p:['COM','AGG']},
+   {id:'S8.4',n:'Energy Billing',w:'Fatura de energia/assinatura por UC',h:'Aplica a tarifa/plano sobre o consumo medido (descontando créditos rateados), emite a fatura e integra com o fiscal (nota/impostos) — o billing de energia/assinatura por UC, em reais e conforme a regra BR.',p:['COM']},
+ ]},
+ {code:'S11',name:'Agent-Fabric / AI-native',role:'o diferencial — operar por agentes, não por telas',color:'var(--amber)',star:1,oss:'<b>OSS</b> <i>Volttron</i> (plataforma de agentes, análogo); frameworks LLM abertos',svc:[
+   {id:'S11.1',n:'Agent Runtime',w:'Executa agentes LLM com ferramentas',h:'Ambiente que executa agentes LLM em loop (percepção→raciocínio→ação) com orquestração das ferramentas que podem chamar, controle de contexto e estado; é o motor onde os agentes de cada persona rodam sob supervisão.',p:[A]},
+   {id:'S11.2',n:'Tool Registry',w:'Ferramentas que leem/escrevem ativos/mercados sob política',h:'Catálogo de ferramentas (ler telemetria, mudar setpoint, submeter oferta…) cada uma com schema de entrada/saída, escopo e exigência de auth; o agente só enxerga e chama as tools que sua política permite, com limite por tenant.',p:['ORQ']},
+   {id:'S11.3',n:'Per-Persona Agents',w:'Agentes por persona (consumidor, agregador, integrador…)',h:'Cada persona ganha um agente com prompt, política, conjunto de tools e memória próprios (o do consumidor difere do agregador); a especialização vem da configuração, não de código novo por persona.',p:[A]},
+   {id:'S11.4',n:'Copilot / NL Interface',w:'Interface conversacional operacional',h:'Interface conversacional que usa LLM + RAG sobre os dados/controles do tenant para responder e executar pedidos em linguagem natural ("por que minha conta subiu?", "priorize a bateria amanhã"), traduzindo intenção em consulta/ação via as tools.',p:[A]},
+   {id:'S11.5',n:'Agent Guardrails & Policy',w:'Limites do que cada agente pode fazer',h:'Um policy engine intercepta toda ação proposta por agente e a valida contra regras (limite de valor, ativos permitidos, necessidade de aprovação); ações de alto impacto entram em human-in-the-loop antes de executar.',p:['ORQ']},
+ ]},
+ {code:'S12',name:'Apps & Experiência',role:'a face — onde cada persona toca o produto',color:'var(--teal)',oss:'<b>OSS</b> <i>Home Assistant</i> (ref UX + EMHASS), frameworks de front-end',svc:[
+   {id:'S12.1',n:'Consumer App',w:'App do dono (consumo, economia, controle)',h:'App mobile/web do dono que consome a API da plataforma para mostrar consumo, economia (R$/CO₂) e controles simples; a lógica vive nos serviços e o app é a camada de apresentação e interação.',p:['CON']},
+   {id:'S12.2',n:'Installer Portal',w:'Comissionamento, diagnóstico, frota do integrador',h:'Portal web onde o integrador comissiona ativos (pareia o device, configura, testa), diagnostica à distância e gere a carteira multi-cliente — a ferramenta de trabalho do canal de instalação.',p:['INT']},
+   {id:'S12.3',n:'Operator Dashboard',w:'Dashboard do agregador/orquestrador',h:'Painel onde agregador/orquestrador/DSO visualizam frota, despacho, mercado e saúde em tempo real, com ações em lote; renderiza sobre a API e os eventos, sem acesso direto aos devices.',p:['AGG','ORQ','DSO']},
+   {id:'S12.4',n:'Engagement & Notifications',w:'Economia em R$/CO₂, gamificação, alertas',h:'Serviço que reage a eventos (meta atingida, alerta, oportunidade de economia) e dispara push/email/in-app com gamificação de R$/CO₂, fechando o loop de engajamento que sustenta a retenção.',p:['CON','COM']},
+ ]},
+ {code:'S9',name:'Identidade, Multi-tenant & RBAC',role:'plataforma · cross-cutting',color:'var(--gold)',oss:'<b>OSS</b> <i>Keycloak/Ory</i> (identidade aberta)',svc:[
+   {id:'S9.1',n:'Auth & Identity',w:'Autenticação (OAuth/OIDC)',h:'Um provedor OAuth/OIDC emite e valida tokens, centralizando login federado, MFA e sessão; cada requisição passa a carregar a identidade verificada que os outros serviços usam para autorizar.',p:[A]},
+   {id:'S9.2',n:'Tenant Isolation',w:'Isolamento multi-tenant',h:'Todo dado e requisição carregam um tenant-id propagado no contexto, e o acesso é particionado (por linha/schema/chave) de modo que um tenant jamais enxergue dado de outro — a base do multi-tenant.',p:['ORQ','COM','INT','AGG']},
+   {id:'S9.3',n:'RBAC & Permissions',w:'Papéis e permissões por persona',h:'Um policy engine avalia papel × ação × recurso a cada chamada (ex.: "integrador comissiona, mas não liquida"); as permissões por persona/tenant são declarativas e auditáveis.',p:['ORQ']},
+   {id:'S9.4',n:'White-label Theming',w:'Marca/domínio por tenant',h:'Marca, domínio, cores e textos são configuração por tenant carregada em runtime, de modo que o mesmo código sirva N marcas (comercializadora, integrador, agregador) sem fork — cada uma vê o "seu" produto.',p:['COM','INT','AGG']},
+ ]},
+ {code:'S10',name:'API, SDK & Ecossistema de Devs',role:'plataforma · cross-cutting',color:'var(--gold)',star:1,oss:'<b>OSS</b> <i>Kong/APISIX</i> (gateway aberto)',svc:[
+   {id:'S10.1',n:'API Gateway',w:'REST/GraphQL público + rate limit',h:'Ponto único de entrada que autentica, aplica rate-limit/quota e roteia para os microsserviços, expondo REST/GraphQL versionado e protegendo o backend de abuso e de acoplamento direto.',p:[A]},
+   {id:'S10.2',n:'Webhooks / Events',w:'Assinaturas de eventos para terceiros',h:'Terceiros assinam tipos de evento e recebem um POST assinado quando o evento ocorre (com retry e dead-letter), permitindo integração reativa sem polling — o parceiro é notificado, não pergunta.',p:['INT','COM','AGG']},
+   {id:'S10.3',n:'SDK & Docs',w:'SDK + documentação OpenAPI',h:'SDKs e documentação OpenAPI gerados a partir do próprio schema da API, sempre em sincronia com o contrato, reduzindo o atrito de quem integra (integrador, comercializadora, parceiro).',p:['INT','COM','AGG']},
+   {id:'S10.4',n:'Module Marketplace',w:'Catálogo de módulos/apps de parceiros',h:'Registry onde módulos/apps de parceiros são publicados, instalados por tenant e cobrados por uso/assinatura, transformando a plataforma em ecossistema extensível com billing de módulo embutido.',p:['ORQ','INT']},
+ ]},
+ {code:'S13',name:'MLOps & Dados Científicos',role:'plataforma · cross-cutting',color:'var(--gold)',oss:'<b>OSS</b> <i>MLflow, Feast</i> (MLOps aberto)',svc:[
+   {id:'S13.1',n:'Model Registry',w:'Versiona modelos de previsão/otimização',h:'Versiona cada modelo (forecast, otimização, RL) com metadados, métricas e estágio (staging/prod), permitindo promover, comparar e reverter modelos de forma rastreável.',p:['ORQ']},
+   {id:'S13.2',n:'Training Pipeline',w:'Treina com dados da frota',h:'Pipeline agendado/triggado que extrai dados da frota, treina e avalia o modelo e o registra se passar nos critérios — automatiza o re-treino conforme os dados acumulam.',p:['ORQ']},
+   {id:'S13.3',n:'Feature Store',w:'Features compartilhadas entre modelos',h:'Repositório de features compartilhadas (clima, perfis, históricos) servidas online (baixa latência para inferência) e offline (para treino), garantindo que treino e produção usem a mesma definição.',p:['ORQ']},
+   {id:'S13.4',n:'Drift Monitoring',w:'Monitora degradação de modelo',h:'Monitora a distribuição das entradas e o erro do modelo em produção; quando o drift cruza o limiar, alerta e dispara re-treino — evita que as previsões degradem em silêncio.',p:['ORQ']},
+ ]},
+ {code:'S14',name:'Observabilidade & SRE',role:'plataforma · cross-cutting',color:'var(--gold)',oss:'<b>OSS</b> <i>Prometheus/Grafana/OpenTelemetry</i>',svc:[
+   {id:'S14.1',n:'Monitoring & Logging',w:'Métricas/logs da plataforma',h:'Métricas (Prometheus), logs estruturados e traces (OpenTelemetry) coletados de todos os serviços e correlacionados, dando visibilidade de saúde e desempenho da plataforma em tempo real.',p:['ORQ']},
+   {id:'S14.2',n:'Alerting & Incident',w:'Alertas + resposta a incidente',h:'Regras sobre as métricas disparam alertas roteados ao on-call e ligados a runbooks de resposta, reduzindo o tempo de detecção e padronizando a contenção do incidente.',p:['ORQ']},
+   {id:'S14.3',n:'SLA & Uptime',w:'Garantia de serviço por tenant',h:'SLOs por serviço/tenant medidos continuamente, com error budget e relatório de disponibilidade, sustentando o compromisso contratual de uptime com a comercializadora.',p:['ORQ','COM']},
+   {id:'S14.4',n:'Fleet Health',w:'Saúde dos devices (RMA, falhas)',h:'Health-checks e telemetria de cada device alimentam um score de saúde da frota (falha, offline, degradação) que aciona RMA/manutenção — é a saúde do parque físico, não só da nuvem.',p:['INT','ORQ']},
+ ]},
+ {code:'S15',name:'Segurança & Compliance',role:'plataforma · cross-cutting',color:'var(--gold)',oss:'<b>OSS</b> <i>Vault/OpenBao</i>, OpenTelemetry p/ auditoria',svc:[
+   {id:'S15.1',n:'Encryption & Secrets',w:'TLS, encriptação, secrets',h:'TLS em trânsito, criptografia em repouso e segredos guardados num cofre (KMS/Vault) com rotação; as chaves nunca ficam em código/config e o acesso é auditado.',p:['ORQ']},
+   {id:'S15.2',n:'Audit Log',w:'Trilha de auditoria (comandos, acessos)',h:'Toda ação sensível (comando, acesso, mudança) é gravada num log append-only imutável com quem/quando/o quê — a prova para auditoria, disputa regulatória e forense.',p:['ORQ','DSO']},
+   {id:'S15.3',n:'Compliance',w:'LGPD, SOC 2 / ISO 27001',h:'Controles mapeados a LGPD/SOC 2/ISO 27001 com coleta de evidência e relatório contínuos, transformando "estar conforme" num processo verificável e não numa declaração.',p:['ORQ']},
+   {id:'S15.4',n:'Secure SDLC',w:'Assinatura, pen-test, supply chain',h:'Pipeline com análise de código, varredura de dependências, assinatura de artefato e SBOM, somados a pen-test periódico — a segurança entra na esteira de entrega, não como remendo final.',p:['ORQ']},
+ ]},
+ {code:'S16',name:'Deploy & Infra',role:'plataforma · cross-cutting',color:'var(--gold)',oss:'<b>OSS</b> <i>Kubernetes, ArgoCD/Terraform</i>',svc:[
+   {id:'S16.1',n:'Cloud-native Runtime',w:'Orquestração de contêineres, multi-region',h:'Serviços empacotados em contêineres orquestrados por Kubernetes, com auto-scaling, self-healing e multi-region; a plataforma escala horizontalmente e tolera falha de nó.',p:['ORQ']},
+   {id:'S16.2',n:'CI/CD & IaC',w:'Entrega contínua + infra como código',h:'Esteira de entrega contínua (build→test→deploy) e infraestrutura declarada como código (Terraform), tornando ambientes reproduzíveis e submetendo cada mudança a revisão automática.',p:['ORQ']},
+   {id:'S16.3',n:'Edge Runtime Distribution',w:'Distribui runtime ao edge (OTA de software)',h:'Distribui e atualiza o runtime/regras nos gateways de borda via OTA versionado com rollback, mantendo milhares de edges numa versão conhecida sem visita física.',p:['ORQ']},
+   {id:'S16.4',n:'Deployment Modes',w:'SaaS / self-hosted / híbrido',h:'O mesmo produto é empacotado para SaaS multi-tenant, self-hosted (on-prem do cliente) ou híbrido, atendendo exigências de soberania de dado/regulação variando o modo de deploy, não o código.',p:['ORQ','COM']},
+ ]},
+ {code:'S17',name:'Comercial & Monetização',role:'plataforma · cross-cutting',color:'var(--gold)',oss:'<b>OSS</b> integração (não core); build/buy conforme caso',svc:[
+   {id:'S17.1',n:'Subscription Billing',w:'Cobrança recorrente por device/seat',h:'Motor de cobrança recorrente por device/seat/plano, com ciclos, provisionamento e dunning, gerando a receita previsível da plataforma (SaaS) por tenant.',p:['COM','ORQ']},
+   {id:'S17.2',n:'Usage Metering',w:'Mede uso (API, dispatch) p/ cobrança',h:'Mede uso técnico (chamadas de API, dispatches, volume) e o converte em base de cobrança, habilitando modelos pay-per-use além da assinatura fixa.',p:['ORQ']},
+   {id:'S17.3',n:'Revenue-share',w:'Partilha de receita de flexibilidade',h:'Calcula e divide a receita de flexibilidade/mercado entre as partes (dono do ativo, agregador, plataforma) conforme o contrato — automatiza o split que o modelo asset-light exige.',p:['AGG','ORQ']},
+   {id:'S17.4',n:'CRM / Partner Mgmt',w:'Gestão de clientes/parceiros',h:'Integra com CRM para gerir o ciclo de clientes/parceiros (lead→contrato→suporte) e os dados comerciais, conectando a operação técnica ao funil comercial.',p:['COM','INT']},
+ ]},
+];
+
+// render tree
+const pc={CON:'var(--con)',INT:'var(--int)',COM:'var(--com)',AGG:'var(--agg)',GER:'var(--ger)',DSO:'var(--dso)',ORQ:'var(--orq)'};
+let html='';
+domains.forEach(d=>{
+  const star=d.star?'<span style="color:var(--gold);font-size:11px">★</span> ':'';
+  html+=`<section class="layer" id="${d.code}" style="--lc:${d.color}"><div class="lhead"><span class="lnum">${d.code}</span><h2>${star}${d.name}</h2></div><div class="lrole">${d.role}</div><div class="oss">${d.oss}</div>`;
+  d.svc.forEach(s=>{
+    const ptags=s.p.map(pp=>pp===A?`<span class="ptag all">todas</span>`:`<span class="ptag" style="--pc:${pc[pp]}">${pp}</span>`).join('');
+    const pdata=s.p.includes(A)?'ALL':s.p.join(',');
+    html+=`<div class="svc" data-p="${pdata}" style="--lc:${d.color}">
+      <div class="svc-h"><span class="svc-id">${s.id}</span><span class="svc-n">${s.n}</span><span class="svc-p">${ptags}</span></div>
+      <div class="svc-oq"><span class="lab">O QUE</span>${s.w}</div>
+      <div class="svc-cm"><span class="lab">COMO</span>${s.h}</div>
+    </div>`;
+  });
+  html+=`</section>`;
+});
+document.getElementById('tree').innerHTML=html;
+
+// persona chips
+const chipsEl=document.getElementById('chips');
+chipsEl.innerHTML=`<button class="chip allc on" data-c="ALL">Todos</button>`+
+  Object.keys(P).map(c=>`<button class="chip" data-c="${c}" style="--cc:${pc[c]}">${c} <span class="full">${P[c]}</span></button>`).join('');
+let active='ALL';
+chipsEl.addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b)return;
+  active=b.dataset.c;
+  [...chipsEl.children].forEach(x=>x.classList.toggle('on',x===b));
+  const svcs=document.querySelectorAll('.svc');
+  let n=0;
+  svcs.forEach(s=>{
+    const d=s.dataset.p;
+    const show = active==='ALL' || d==='ALL' || d.split(',').includes(active);
+    s.classList.toggle('dim',!show);
+    if(show && active!=='ALL') n++;
+  });
+  const hint=document.getElementById('pfhint');
+  hint.textContent = active==='ALL' ? 'Mostrando todos os serviços. Clique numa persona para ver o bundle.'
+    : `Bundle de ${P[active]} (${active}): serviços destacados que esta persona consome (inclui o núcleo comum "todas").`;
+});
+
+// reference tables
+document.getElementById('ptable').innerHTML=personas.map(p=>
+  `<tr><td><span class="pcode" style="--pc:${pc[p.c]}">${p.c}</span></td><td><b>${P[p.c]}</b></td><td>${p.j}</td><td>${p.x}</td></tr>`).join('');
+document.getElementById('ctable').innerHTML=scen.map(r=>
+  `<tr><td><span class="scell">${r[0]}</span></td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join('');
+
+// scroll-spy
+const links=[...document.querySelectorAll('#navlist a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===id));}});},{rootMargin:'-15% 0px -75% 0px',threshold:0});
+secs.forEach(s=>s&&obs.observe(s));
+</script>
+</body>
+</html>
