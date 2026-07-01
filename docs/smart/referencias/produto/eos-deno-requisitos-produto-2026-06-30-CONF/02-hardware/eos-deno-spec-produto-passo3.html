@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOS-DENO · Especificação do Produto Ideal · Passo 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500;700&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#2e2519;--panel:#3a3022;--panel2:#473a29;--soft:#352b1e;
+    --ink:#fefcf6;--desc:#f7f1e6;--muted:#e8dfce;--faint:#ccc0a8;
+    --line:#ffffff26;--line2:#ffffff48;
+    --amber:#ff9d54;--gold:#efc56b;--teal:#79c9b9;--violet:#ab9fe2;--rose:#e49ebd;--red:#ec8c75;
+    --radius:13px;--nav:210px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1200px 700px at 88% -8%,#45301a 0%,transparent 55%),radial-gradient(900px 600px at -8% 105%,#1e3b36 0%,transparent 52%),var(--bg);color:var(--ink);font-family:'Schibsted Grotesk',sans-serif;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")}
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  nav{position:fixed;top:0;left:0;width:var(--nav);height:100vh;background:rgba(32,25,18,.86);backdrop-filter:blur(12px);border-right:1px solid var(--line2);padding:26px 16px;z-index:50;overflow-y:auto}
+  .brand{font-family:'Archivo',sans-serif;font-weight:900;font-size:19px;letter-spacing:-.01em;line-height:1}
+  .brand .e{color:var(--amber)} .brand .d{color:var(--teal)}
+  .brandsub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:3px 0 24px}
+  .navlist{list-style:none;display:flex;flex-direction:column;gap:1px}
+  .navlist a{display:flex;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:12.5px;border-left:2px solid transparent;transition:.15s}
+  .navlist a:hover{background:var(--panel2);color:var(--ink)}
+  .navlist a.active{background:linear-gradient(90deg,#ff9d5422,transparent);color:var(--amber);border-left-color:var(--amber)}
+  .navlist a .nn{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--faint)}
+  .navlist a.active .nn{color:var(--amber)}
+
+  main{margin-left:var(--nav);padding:0 40px;max-width:1000px}
+  header{padding:54px 0 30px;border-bottom:1px solid var(--line2)}
+  .kicker{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
+  h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(28px,5vw,50px);line-height:1.0;letter-spacing:-.02em;text-transform:uppercase}
+  h1 .hl{color:var(--amber)} h1 .hl2{color:var(--teal)}
+  .lede{margin-top:16px;max-width:760px;font-size:clamp(14px,2vw,16.5px);color:var(--desc)}
+  .lede b{color:var(--ink);font-weight:600}
+  .onel{margin-top:22px;background:linear-gradient(160deg,#ff9d541c,#79c9b912);border:1px solid var(--line2);border-left:4px solid var(--amber);border-radius:12px;padding:16px 18px}
+  .onel .l{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);font-weight:700}
+  .onel p{font-size:15px;color:var(--ink);margin-top:6px;line-height:1.5}
+  .onel b{color:var(--gold)}
+
+  section{padding:46px 0;border-bottom:1px solid var(--line);scroll-margin-top:20px}
+  .sechead{display:flex;align-items:baseline;gap:13px;margin-bottom:8px}
+  .secnum{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--amber);font-weight:700}
+  h2{font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(20px,3.2vw,30px);letter-spacing:-.01em;line-height:1.07}
+  .sub{color:var(--desc);max-width:790px;margin:13px 0 24px;font-size:14.5px}
+  .sub b{color:var(--ink)}
+
+  .move{margin-bottom:16px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);border-top:3px solid var(--c);overflow:hidden}
+  .movehd{padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--soft);border-bottom:1px solid var(--line)}
+  .movehd .mtag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c);background:var(--panel2);padding:5px 11px;border-radius:6px;border:1px solid var(--line2)}
+  .movehd h3{font-family:'Archivo',sans-serif;font-weight:900;font-size:19px;letter-spacing:-.01em}
+  .movehd .risk{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--faint)}
+  .moveintro{padding:13px 20px;font-size:13.5px;color:var(--desc);border-bottom:1px solid var(--line);line-height:1.5}
+  .moveintro b{color:var(--ink)}
+
+  .c2{padding:13px 20px;border-bottom:1px solid var(--line)}
+  .c2:last-child{border-bottom:none}
+  .c2top{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+  .c2id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;white-space:nowrap}
+  .c2name{font-size:14.5px;color:var(--ink);font-weight:700;flex:1;min-width:180px}
+  .c2lv{font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .c2lv .from{color:var(--faint)} .c2lv .arr{color:var(--c)} .c2lv .to{color:var(--gold);font-weight:700}
+  .c2ref{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);white-space:nowrap}
+  .c2ref b{color:var(--teal);font-weight:600}
+  .c2ctx{font-size:13px;color:var(--desc);line-height:1.5;margin-top:7px;padding-left:12px;border-left:2px solid var(--cline)}
+  .c2ctx b{color:var(--ink)}
+  .c2body{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+  .c2oq{font-size:13px;color:var(--desc);line-height:1.5}
+  .c2cm{font-size:12.5px;color:var(--muted);line-height:1.5;padding-left:11px;border-left:2px solid var(--amber)}
+  .c2oq b,.c2cm b{color:var(--ink)}
+  .c2lab{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.05em;margin-right:7px}
+  .c2lab.oql{color:var(--teal)} .c2lab.cml{color:var(--amber)}
+  .c2nt{font-size:11.5px;color:var(--faint);line-height:1.45;font-style:italic}
+
+  .arch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+  .ac{background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);padding:17px;border-top:3px solid var(--c)}
+  .ac .an{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--c);font-weight:700}
+  .ac h4{font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;margin:5px 0 8px}
+  .ac p{font-size:13px;color:var(--desc);line-height:1.5}
+  .ac p b{color:var(--ink)}
+
+  .waves{display:flex;flex-direction:column;gap:11px}
+  .wave{display:grid;grid-template-columns:64px 1fr;gap:16px;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:15px 17px;border-left:3px solid var(--c)}
+  .wave .wm{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:var(--c)}
+  .wave .wm small{display:block;font-size:9px;color:var(--faint);font-weight:400;margin-top:3px;letter-spacing:.04em}
+  .wave h4{font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;margin-bottom:5px}
+  .wave p{font-size:13px;color:var(--desc);line-height:1.5} .wave p b{color:var(--ink)}
+  .wave .goal{margin-top:7px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--teal)}
+
+  .bear{background:var(--panel);border:1px solid #ec8c7544;border-left:3px solid var(--red);border-radius:12px;padding:6px 0;margin-top:6px}
+  .br{padding:13px 18px;border-bottom:1px solid var(--line)}
+  .br:last-child{border-bottom:none}
+  .br h4{font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;color:var(--red);display:flex;gap:9px;align-items:baseline}
+  .br h4 .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint)}
+  .br p{font-size:13px;color:var(--desc);margin-top:5px;line-height:1.5} .br p b{color:var(--ink)}
+  .br .mit{font-size:12px;color:var(--teal);margin-top:5px} .br .mit b{color:var(--teal);font-family:'JetBrains Mono';font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+
+  footer{padding:32px 0 70px;color:var(--faint);font-size:12px;line-height:1.7;font-family:'JetBrains Mono',monospace}
+  footer b{color:var(--muted)}
+
+  @media(max-width:880px){
+    :root{--nav:0px}
+    nav{position:sticky;top:0;width:100%;height:auto;border-right:none;border-bottom:1px solid var(--line2);padding:14px 16px}
+    .navlist{flex-direction:row;flex-wrap:wrap;gap:6px}
+    .navlist a{border-left:none;border:1px solid var(--line);padding:6px 9px}
+    .navlist a .label{display:none}
+    main{margin-left:0;padding:0 18px}
+    .arch{grid-template-columns:1fr}
+    .c2top{gap:7px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand"><span class="e">EOS</span>-<span class="d">DENO</span></div>
+  <div class="brandsub">Spec do Produto · Passo 3</div>
+  <ul class="navlist" id="navlist">
+    <li><a href="#tese"><span class="nn">01</span><span class="label">A tese</span></a></li>
+    <li><a href="#herdar"><span class="nn">02</span><span class="label">Herdar</span></a></li>
+    <li><a href="#alcancar"><span class="nn">03</span><span class="label">Alcançar</span></a></li>
+    <li><a href="#ocupar"><span class="nn">04</span><span class="label">Ocupar</span></a></li>
+    <li><a href="#arq"><span class="nn">05</span><span class="label">Arquitetura</span></a></li>
+    <li><a href="#roadmap"><span class="nn">06</span><span class="label">Roadmap</span></a></li>
+    <li><a href="#bear"><span class="nn">Σ</span><span class="label">Pré-mortem</span></a></li>
+  </ul>
+</nav>
+
+<main>
+  <header>
+    <div class="kicker"><span class="dot"></span>EOS-DENO · especificação de produto · passo 3</div>
+    <h1>Herdar a fundação.<br><span class="hl">Alcançar</span> o software.<br><span class="hl2">Ocupar</span> o Brasil.</h1>
+    <p class="lede">O scoring dos 11 players deu um mapa cirúrgico: o smart-meter <b>já lidera 3 camadas</b> (medição, hardware, BR) e <b>zera 2</b> (inteligência, VPP). A spec do EOS-DENO não é "ter tudo" — são três movimentos em ordem crescente de esforço e risco. Cada capacidade traz <b>número</b>, <b>o salto de nível</b>, a <b>referência</b> (quem detém o teto) e <b>o que é / como se faz</b>.</p>
+    <div class="onel">
+      <div class="l">A tese em uma linha</div>
+      <p>O EOS-DENO é o <b>sistema operacional de energia AI-native enraizado no medidor</b> — agnóstico, BR-nativo — construído sobre a fundação que já é a melhor do grupo, alcançando a camada de software que o mercado já provou, e ocupando o espaço brasileiro que hoje está vazio.</p>
+    </div>
+  </header>
+
+  <section id="tese">
+    <div class="sechead"><span class="secnum">01</span><h2>Por que três movimentos, e não um roadmap único</h2></div>
+    <p class="sub">Misturar "o que já temos", "o que o mercado já provou" e "o que ninguém tem" num só plano esconde o que mais importa: <b>cada um tem risco e horizonte radicalmente diferentes</b>. Herdar é grátis. Alcançar é execução conhecida. Ocupar é a aposta. Não se financia a aposta com a lógica do que é grátis — e não se trata o conhecido como se fosse fronteira.</p>
+    <div class="arch">
+      <div class="ac" style="--c:var(--teal)"><div class="an">risco ~0</div><h4>Herdar</h4><p>A fundação que <b>já lidera</b> o mercado. Custo zero — é manter e não estragar.</p></div>
+      <div class="ac" style="--c:var(--gold)"><div class="an">risco de execução</div><h4>Alcançar</h4><p>A camada de software que <b>4 líderes já provaram</b>. Caminho conhecido, replicável — mas exige times.</p></div>
+      <div class="ac" style="--c:var(--violet)"><div class="an">risco de tese</div><h4>Ocupar</h4><p>O espaço BR vazio + a fronteira AI-native. <b>Ninguém tem.</b> Maior prêmio, maior incerteza.</p></div>
+    </div>
+  </section>
+
+  <section id="herdar">
+    <div class="sechead"><span class="secnum">02</span><h2>Herdar — a fundação que já é a melhor do grupo</h2></div>
+    <p class="sub">Estas capacidades o smart-meter <b>já tem no topo do mercado</b>. O trabalho é preservar e não diluir — e usar como o moat que os controladores puros (EzManager, Air 2, gridX) <b>não têm: o sensor próprio</b>. Quem controla o medidor controla o dado.</p>
+    <div class="move" style="--c:var(--teal);--cline:#79c9b955">
+      <div class="movehd"><span class="mtag">Herdar</span><h3>A base inimitável</h3><span class="risk">manter · custo ~0</span></div>
+      <div class="moveintro">Todo controlador HEMS depende de um <b>medidor externo</b>. O EOS-DENO <b>é</b> o medidor — agnóstico, BR, metrológico. Essa é a fundação que nenhum dos 10 estrangeiros tem.</div>
+      <div id="herdarList"></div>
+    </div>
+  </section>
+
+  <section id="alcancar">
+    <div class="sechead"><span class="secnum">03</span><h2>Alcançar — a camada que o mercado já provou</h2></div>
+    <p class="sub">Aqui o smart-meter está no <b>chão (0)</b> ou abaixo do teto. A boa notícia do scoring: <b>4 líderes (gridX, Kiwigrid, Eniris, Fenecon) já provaram que dá</b>. Não é pesquisa de fronteira — é execução conhecida. Copiar o melhor de cada, tropicalizando.</p>
+    <div class="move" style="--c:var(--gold);--cline:#efc56b55">
+      <div class="movehd"><span class="mtag">Alcançar</span><h3>O salto de software</h3><span class="risk">execução · risco técnico médio</span></div>
+      <div class="moveintro">A metade que falta é exatamente a metade que os líderes <b>já têm</b>. O caminho está provado, é replicável — mas exige times de ML, energia e regulatório. Risco de <b>execução</b>, não de tese.</div>
+      <div id="alcancarList"></div>
+    </div>
+  </section>
+
+  <section id="ocupar">
+    <div class="sechead"><span class="secnum">04</span><h2>Ocupar — o espaço brasileiro vazio</h2></div>
+    <p class="sub">O achado mais forte do scoring: <b>o teto brasileiro está vazio onde mora a receita</b>. Todo o VPP do mundo pesquisado está plugado em §14a/Elia/AEMO — <b>zero em CCEE</b>. Conformidade ANEEL/PRODIST/INMETRO: nenhum dos 10. Aqui o EOS-DENO não copia ninguém — ocupa um vazio e antecipa a fronteira AI-native.</p>
+    <div class="move" style="--c:var(--violet);--cline:#ab9fe255">
+      <div class="movehd"><span class="mtag">Ocupar</span><h3>O fosso regulatório + a fronteira</h3><span class="risk">aposta · maior prêmio/risco</span></div>
+      <div class="moveintro">Ninguém ocupa este espaço no Brasil. É o fosso (conformidade + CCEE) somado à camada AI-native (agent-fabric) — onde a tese <b>nasce à frente, não atrás</b>.</div>
+      <div id="ocuparList"></div>
+    </div>
+  </section>
+
+  <section id="arq">
+    <div class="sechead"><span class="secnum">05</span><h2>Arquitetura — três decisões travadas</h2></div>
+    <p class="sub">A spec assenta sobre três escolhas arquiteturais derivadas direto do scoring e da tese EOS-DENO.</p>
+    <div class="arch">
+      <div class="ac" style="--c:var(--teal)">
+        <div class="an">decisão 1</div><h4>Topologia desacoplada</h4>
+        <p><b>Medidor universal barato</b> (o smart-meter evoluído) em toda a base + <b>Energy Hub premium</b> só onde há geração. O medidor é o sensor universal; o controle ativa por assinatura onde paga. Break-even vs. SKU integrado ~35% de adoção.</p>
+      </div>
+      <div class="ac" style="--c:var(--gold)">
+        <div class="an">decisão 2</div><h4>Cloud-edge, não nuvem pura</h4>
+        <p>Controle crítico <b>no edge</b> (sobrevive à queda da nuvem); otimização pesada e agregação na nuvem. <b>Evidência do scoring:</b> 5 dos 11 líderes já fazem; os que não (EzManager, Zerofy) são os mais frágeis.</p>
+      </div>
+      <div class="ac" style="--c:var(--violet)">
+        <div class="an">decisão 3</div><h4>Multi-tenant + agent-fabric</h4>
+        <p>A plataforma é <b>multi-tenant desde a fundação</b> — a comercializadora-âncora é um tenant, não a dona. A camada de agentes opera por persona (gerador, agregador, consumidor).</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="sechead"><span class="secnum">06</span><h2>Roadmap em ondas</h2></div>
+    <p class="sub">A ordem é a dos três movimentos: o que é grátis primeiro, a execução conhecida em seguida, a aposta por último. Cada onda destrava a próxima.</p>
+    <div class="waves">
+      <div class="wave" style="--c:var(--teal)">
+        <div class="wm">M0<small>fundação</small></div>
+        <div><h4>O que já temos</h4><p>Medidor agnóstico Classe 1/2 + nuvem + assinatura + comando de inversor/bateria/cargas. <b>Nada a construir</b> — é a base que já lidera.</p><div class="goal">→ ponto de partida com a melhor fundação do grupo</div></div>
+      </div>
+      <div class="wave" style="--c:var(--gold)">
+        <div class="wm">M1<small>alcançar EMS+IA</small></div>
+        <div><h4>O salto de software</h4><p>Escrita de controle ampliada (VE/bomba), EMS completo (demanda/peak/tarifa), <b>inteligência cloud-edge</b> (previsão + scheduling), API aberta, UX autopilot.</p><div class="goal">→ fecha unit economics do integrador/EPC (beachhead)</div></div>
+      </div>
+      <div class="wave" style="--c:var(--rose)">
+        <div class="wm">M2<small>VPP + ocupar BR</small></div>
+        <div><h4>Receita de flexibilidade</h4><p><b>Agregação/VPP tropicalizada</b> (CCEE), conformidade ANEEL/PRODIST/INMETRO, white-label multi-tenant. A camada de mercado.</p><div class="goal">→ destrava receita de flexibilidade no espaço BR vazio</div></div>
+      </div>
+      <div class="wave" style="--c:var(--violet)">
+        <div class="wm">M3<small>fronteira</small></div>
+        <div><h4>O moat de longo prazo</h4><p><b>Agent-fabric AI-native</b>, CCEE-nativo + liquidação automática, copilot operacional por persona.</p><div class="goal">→ a aposta que nasce à frente do mercado</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="bear" style="border-bottom:none">
+    <div class="sechead"><span class="secnum">Σ</span><h2>Pré-mortem — onde isto quebra</h2></div>
+    <p class="sub">Não-negociável: a spec só vale com o bear case na mesa. Cinco formas de esta tese falhar — e o que a protege.</p>
+    <div class="bear">
+      <div class="br">
+        <h4><span class="n">01</span> O relógio competitivo fecha a janela</h4>
+        <p>Octopus/Kraken e gridX/Kiwigrid (white-label) podem <b>tropicalizar antes</b>. A janela é a abertura do Grupo B (2027–2028). Se chegarem com capital e playbook pronto, o espaço BR vazio fecha.</p>
+        <p class="mit"><b>mitigação:</b> velocidade no M1+M2; e o medidor-sensor como moat de dado que controlador puro não tem.</p>
+      </div>
+      <div class="br">
+        <h4><span class="n">02</span> "Execução conhecida" ≠ execução barata</h4>
+        <p>Inteligência cloud-edge + VPP exigem times de ML, energia e regulatório. O caminho está provado, mas <b>replicá-lo custa</b>. É risco de execução, não de tese — e risco de execução mata startups.</p>
+        <p class="mit"><b>mitigação:</b> herdar a fundação libera capital/foco para o M1; o beachhead do integrador financia a onda.</p>
+      </div>
+      <div class="br">
+        <h4><span class="n">03</span> Conformidade BR é fosso e armadilha</h4>
+        <p>ANEEL/PRODIST/INMETRO protege contra estrangeiros — mas o custo/tempo de homologação pode <b>atrasar o M2</b> e queimar caixa antes da receita.</p>
+        <p class="mit"><b>mitigação:</b> começar a homologação cedo, em paralelo ao M1; usar a comercializadora-âncora como âncora regulada.</p>
+      </div>
+      <div class="br">
+        <h4><span class="n">04</span> O VPP brasileiro pode estar vazio porque não existe</h4>
+        <p>O "espaço vazio" pode ser vazio porque o <b>mercado ainda não se formou</b>. Receita de flexibilidade no BR é <b>hipótese, não fato</b> — depende de regulação em construção.</p>
+        <p class="mit"><b>mitigação:</b> não modelar M2 como receita certa; tratar VPP como opção regulatória, não premissa de sobrevivência.</p>
+      </div>
+      <div class="br">
+        <h4><span class="n">05</span> Agnosticismo é passivo de engenharia perpétuo</h4>
+        <p>Suportar N fabricantes é custo contínuo — cada firmware de inversor que muda quebra a integração. <b>O EzManager escolheu o jardim murado por isso.</b> O moat tem manutenção.</p>
+        <p class="mit"><b>mitigação:</b> driver layer disciplinada + certificação de device + priorizar as marcas que cobrem 80% da base BR.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>Sequência:</b> herdar (grátis) → alcançar (execução) → ocupar (aposta). Não financiar a aposta com a lógica do que é grátis.<br>
+    <b>Leitura de cada item:</b> número · salto de nível (atual→alvo, do scoring) · referência (quem detém o teto) · o que é / como se faz.<br>
+    Documento de arquitetura de produto · Projeto EOS-DENO · passo 3. Premissas de mercado e regulatórias a validar com assessoria.
+  </footer>
+</main>
+
+<script>
+const herdar=[
+ {id:'02.1',n:'Medição nativa Classe 1/2',from:'teto 3',arrow:'●',to:'manter',ref:'smart-meter detém',oq:'Mede tensão e corrente no ponto de conexão com exatidão Classe 1/2 — é a <b>fonte de verdade</b> de todo o sistema.',como:'Um metering IC dedicado amostra V (divisor resistivo) e I (TC/Rogowski) em alta taxa e calcula RMS, potências e energia; calibrado em laboratório contra padrão rastreável para garantir a classe de exatidão.',nota:'Nenhum controlador puro (EzManager/Air2/gridX) tem isso — todos dependem de um medidor externo.'},
+ {id:'02.2',n:'Hardware IP65 · &lt;5W · TFT+RGB',from:'teto 4',arrow:'●',to:'manter',ref:'smart-meter detém',oq:'Gabinete para ambiente externo abrigado, consumo mínimo e display local de comissionamento.',como:'Vedação IP65, eletrônica de baixo consumo sem ventilação ativa (&lt;5W), display TFT + LED RGB de status e QR de comissionamento; componentes grau industrial.',nota:'Melhor que o IP20/LED do EzManager.'},
+ {id:'02.3',n:'Agnosticismo de fabricante',from:'3',arrow:'→',to:'4',ref:'EzManager = 0',oq:'Lê e comanda inversores/baterias de várias marcas sem amarrar a um fabricante.',como:'Uma <b>camada de driver</b> traduz cada mapa Modbus proprietário para um modelo canônico interno; suportar marca nova = adicionar um perfil de equipamento testado, sem tocar o núcleo.',nota:'É onde o EzManager (murado) é estruturalmente zero.'},
+ {id:'02.4',n:'Comando inversor + bateria + cargas',from:'2–3',arrow:'→',to:'3',ref:'já existe',oq:'Atua sobre inversor, bateria e cargas — a base de controle físico do sistema.',como:'Escreve setpoints (% de potência, SOC, carga/descarga) nos registradores do inversor via Modbus e comanda cargas por relé/plug; a malha de atuação já existe no device.',nota:''},
+ {id:'02.5',n:'Celular 4G/NB-IoT + I/O físico + OTA',from:'teto 3',arrow:'●',to:'manter',ref:'já existe',oq:'Conectividade autônoma, comando local cabeado e atualização remota.',como:'Modem celular (4G/NB-IoT) dá autonomia sem o Wi-Fi do cliente; entradas/saídas físicas permitem comando local; a atualização OTA usa <b>flash dual-bank com rollback</b> — se a imagem nova falhar, volta à anterior.',nota:''},
+ {id:'02.6',n:'BR-nativo',from:'único',arrow:'●',to:'manter',ref:'nenhum dos 10',oq:'Projetado para a realidade brasileira: rede, regulação e canal.',como:'Dimensionado para as tensões/topologia da rede BR, com conformidade de descarte (PNRS) e distribuição pelo canal de ~5k integradores.',nota:'A <b>única fundação brasileira</b> entre os comparáveis.'},
+];
+const alcancar=[
+ {id:'03.1',n:'Inteligência cloud-edge (previsão + scheduling)',from:'0',arrow:'→',to:'4',ref:'gridX, Kiwigrid',oq:'Decide quando carregar/descarregar a bateria e ligar cargas, olhando geração, consumo e preço à frente.',como:'A previsão (ML + meteorologia) alimenta um <b>otimizador MILP/MPC</b> que resolve o plano em horizonte rolante; o pesado roda na nuvem, a resposta rápida no edge.',nota:''},
+ {id:'03.2',n:'Compute no edge (resiliência)',from:'1',arrow:'→',to:'4',ref:'5 já fazem',oq:'O device continua executando a estratégia mesmo sem nuvem.',como:'O edge guarda o plano + regras e roda a lógica localmente num runtime leve (contêiner/WASM), reconciliando com a nuvem ao reconectar.',nota:'5 dos 11 comparáveis já fazem; os puramente cloud caem junto com a internet.'},
+ {id:'03.3',n:'VPP / agregação',from:'0',arrow:'→',to:'4',ref:'Eniris, Kiwigrid, Lifepowr',oq:'Coordena a frota de baterias/inversores como um <b>recurso único</b> e monetiza a flexibilidade.',como:'Uma plataforma agrega a capacidade de subir/descer de cada ativo e a oferta em mercado/serviço de rede; no BR, o trabalho extra é traduzir para a CCEE e para a figura (ainda inexistente) do agregador.',nota:'Receita bloqueada por regulação — capacidade técnica pronta, monetização gradual.'},
+ {id:'03.4',n:'API aberta / white-label / multi-tenant',from:'1',arrow:'→',to:'4',ref:'gridX, Kiwigrid',oq:'Permite que parceiros entreguem a plataforma como produto próprio.',como:'API documentada (OpenAPI) + <b>tematização por tenant</b> + isolamento multi-tenant (tenant-id propagado, dados particionados).',nota:'Exigido pela tese: a comercializadora é tenant, não dona.'},
+ {id:'03.5',n:'Otimização por tarifa (ToU / dinâmica / BR)',from:'0',arrow:'→',to:'3',ref:'Eniris, Fenecon',oq:'Desloca consumo e armazenamento para as janelas de preço baixo.',como:'O otimizador ingere a <b>curva de preço</b> (tarifa branca, bandeiras ou dinâmica/PLD) modelada como regras BR e a usa como função-custo do scheduling.',nota:'Modelar a estrutura tarifária brasileira é o trabalho específico.'},
+ {id:'03.6',n:'Comando de VE + bomba de calor',from:'0',arrow:'→',to:'3',ref:'todos',oq:'Controla carregador de VE e bomba de calor para absorver o excedente solar.',como:'OCPP ajusta a corrente do carregador de VE; SG-Ready/Modbus/EEBUS desloca a bomba de calor para o excedente (<b>power-to-heat</b>).',nota:'Lacuna pontual do device hoje.'},
+ {id:'03.7',n:'UX autopilot + onboarding sem fricção',from:'2',arrow:'→',to:'4',ref:'Zerofy',oq:'Aplica a melhor estratégia <b>sem o usuário configurar nada</b>.',como:'Um modo padrão (autopilot) aplica a política ótima out-of-the-box; o dashboard traduz kWh em R$ e CO₂; onboarding guiado por QR/app.',nota:'A lição do Zerofy: UX é capacidade de produto, não enfeite.'},
+ {id:'03.8',n:'Protocolos (Modbus-TCP, EEBUS, OCPP)',from:'2',arrow:'→',to:'4',ref:'gridX, Kiwigrid',oq:'Amplia a cobertura de ativos integráveis.',como:'Adiciona <b>Modbus-TCP</b> (sobre LAN), <b>EEBUS</b> (bomba/VE no padrão europeu) e <b>OCPP</b> (VE) ao stack de drivers.',nota:''},
+];
+const ocupar=[
+ {id:'04.1',n:'Conformidade ANEEL/PRODIST/INMETRO nativa',from:'2',arrow:'→',to:'4',ref:'ninguém',oq:'Conformidade regulatória brasileira embutida no produto.',como:'Homologação INMETRO da medição + aderência ao PRODIST + homologação na distribuidora — ensaios e certificações que entram no design, não como remendo.',nota:'Um <b>fosso que o estrangeiro não tem pronto</b>.'},
+ {id:'04.2',n:'Integração CCEE / mercado livre (ACL)',from:'0',arrow:'→',to:'4',ref:'vazio no BR',oq:'Conecta o produto ao mercado de energia brasileiro.',como:'Integração com a <b>medição/contabilização/liquidação da CCEE</b> + gestão de contratos do ACL, via conectores aos processos e formatos oficiais.',nota:'Espaço a ocupar — o VPP brasileiro ainda não existe.'},
+ {id:'04.3',n:'Agent-fabric AI-native (por persona)',from:'0',arrow:'→',to:'4',ref:'fronteira 2030',oq:'Opera o sistema por <b>agentes</b>, não por telas.',como:'Agentes LLM por persona, cada um com ferramentas que leem/escrevem ativos e mercados sob política, mais um copilot operacional e guardrails com human-in-the-loop.',nota:'A fronteira onde a tese AI-native nasce à frente — ninguém tem.'},
+ {id:'04.4',n:'Liquidação automática no ACL',from:'0',arrow:'→',to:'4',ref:'fronteira BR',oq:'Liquida no mercado livre sem conciliação manual.',como:'<b>Settlement direto</b>: concilia medição × contratos × preço automaticamente e gera os lançamentos, via integração profunda com a CCEE.',nota:'Fronteira BR.'},
+];
+function row(c){
+  return `<div class="c2">
+    <div class="c2top">
+      <span class="c2id">${c.id}</span>
+      <span class="c2name">${c.n}</span>
+      <span class="c2lv"><span class="from">${c.from}</span> <span class="arr">${c.arrow}</span> <span class="to">${c.to}</span></span>
+      <span class="c2ref">ref: <b>${c.ref}</b></span>
+    </div>
+    <div class="c2body">\n      <div class="c2oq"><span class="c2lab oql">O QUE</span>${c.oq}</div>\n      <div class="c2cm"><span class="c2lab cml">COMO</span>${c.como}</div>\n      ${c.nota?`<div class="c2nt">${c.nota}</div>`:''}\n    </div>
+  </div>`;
+}
+document.getElementById('herdarList').innerHTML=herdar.map(row).join('');
+document.getElementById('alcancarList').innerHTML=alcancar.map(row).join('');
+document.getElementById('ocuparList').innerHTML=ocupar.map(row).join('');
+
+const links=[...document.querySelectorAll('#navlist a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===id));}});},{rootMargin:'-15% 0px -75% 0px',threshold:0});
+secs.forEach(s=>s&&obs.observe(s));
+</script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOS-DENO · Mapa de Especificações & Funcionalidades · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500;700&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#2e2519;--panel:#3a3022;--panel2:#473a29;--soft:#352b1e;
+    --ink:#fefcf6;--desc:#f7f1e6;--muted:#e8dfce;--faint:#ccc0a8;
+    --line:#ffffff26;--line2:#ffffff48;
+    --amber:#ff9d54;--gold:#efc56b;--teal:#79c9b9;--violet:#ab9fe2;--rose:#e49ebd;--cyan:#79c9b9;
+    --radius:13px;--nav:230px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 700px at 88% -8%, #45301a 0%, transparent 55%),
+      radial-gradient(900px 600px at -8% 105%, #1e3b36 0%, transparent 52%),
+      var(--bg);
+    color:var(--ink);font-family:'Schibsted Grotesk',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  nav{position:fixed;top:0;left:0;width:var(--nav);height:100vh;background:rgba(32,25,18,.86);backdrop-filter:blur(12px);border-right:1px solid var(--line2);padding:26px 16px;z-index:50;overflow-y:auto}
+  .brand{font-family:'Archivo',sans-serif;font-weight:900;font-size:19px;letter-spacing:-.01em;line-height:1;margin-bottom:3px}
+  .brand .e{color:var(--amber)} .brand .d{color:var(--teal)}
+  .brandsub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:24px}
+  .navlist{list-style:none;display:flex;flex-direction:column;gap:1px}
+  .navlist a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:12.5px;transition:.15s;border-left:2px solid transparent}
+  .navlist a:hover{background:var(--panel2);color:var(--ink)}
+  .navlist a.active{background:linear-gradient(90deg,#ff9d5422,transparent);color:var(--amber);border-left-color:var(--amber)}
+  .navlist a .nn{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--faint);min-width:24px}
+  .navlist a.active .nn{color:var(--amber)}
+  .navlist .sep{height:1px;background:var(--line);margin:9px 6px}
+  .navlist a.special.active{border-left-color:var(--rose);color:var(--rose);background:linear-gradient(90deg,#e49ebd22,transparent)}
+  .navlist a.special .nn{color:var(--rose)}
+  .navlist a.future.active{border-left-color:var(--violet);color:var(--violet);background:linear-gradient(90deg,#ab9fe222,transparent)}
+  .navlist a.future .nn{color:var(--violet)}
+
+  main{margin-left:var(--nav);padding:0 36px;max-width:1020px}
+  header{padding:54px 0 30px;border-bottom:1px solid var(--line2)}
+  .kicker{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
+  h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(27px,4.8vw,50px);line-height:1.0;letter-spacing:-.02em;text-transform:uppercase}
+  h1 .hl{color:var(--amber)} h1 .hl2{color:var(--teal)}
+  .lede{margin-top:16px;max-width:780px;font-size:clamp(14px,2vw,16px);color:var(--desc)}
+  .lede b{color:var(--ink);font-weight:600}
+  .legend{margin-top:20px;background:var(--soft);border:1px solid var(--line2);border-radius:12px;padding:14px 17px;font-size:13px;color:var(--desc)}
+  .legend b{color:var(--ink)}
+  .legend .row{display:flex;gap:8px;align-items:flex-start;margin-top:7px}
+  .legend .row:first-of-type{margin-top:10px}
+  .legend .tg{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap;margin-top:1px}
+  .tg.oq{background:#79c9b922;color:var(--teal);border:1px solid #79c9b955}
+  .tg.cm{background:#ff9d5422;color:var(--amber);border:1px solid #ff9d5455}
+  .tg.id{background:var(--panel2);color:var(--gold);border:1px solid var(--line2)}
+
+  .layer{padding:40px 0 10px;border-bottom:1px solid var(--line);scroll-margin-top:20px}
+  .lhead{display:flex;align-items:baseline;gap:13px;margin-bottom:5px}
+  .lnum{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--lc)}
+  .lhead h2{font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(19px,3vw,27px);letter-spacing:-.01em;line-height:1.1}
+  .lrole{font-size:13px;color:var(--faint);font-family:'JetBrains Mono',monospace;margin-bottom:18px;padding-left:2px}
+
+  .cap{margin-bottom:13px;background:var(--panel);border:1px solid var(--line2);border-radius:12px;border-left:3px solid var(--lc);overflow:hidden}
+  .caphd{display:flex;align-items:center;gap:11px;padding:11px 15px;background:var(--soft);border-bottom:1px solid var(--line)}
+  .capid{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);font-weight:700}
+  .capname{font-family:'Archivo',sans-serif;font-weight:800;font-size:15px}
+  .star{color:var(--gold);font-size:11px}
+  .captag{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);background:var(--panel2);padding:3px 8px;border-radius:5px;border:1px solid var(--line)}
+  .subs{padding:2px 0}
+  .sub{display:grid;grid-template-columns:minmax(170px,0.95fr) 1.85fr;gap:16px;padding:11px 15px;border-bottom:1px solid var(--line)}
+  .sub:last-child{border-bottom:none}
+  .subL{display:flex;gap:9px;align-items:baseline}
+  .subid{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--faint);font-weight:500;white-space:nowrap;margin-top:1px}
+  .subname{font-size:13.5px;color:var(--ink);font-weight:700;line-height:1.3}
+  .subR{min-width:0}
+  .oq{font-size:13px;color:var(--desc);line-height:1.45}
+  .oq .lab{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.05em;color:var(--teal);margin-right:7px}
+  .cm{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:7px;padding-left:12px;border-left:2px solid #ff9d5455}
+  .cm .lab{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.05em;color:var(--amber);margin-right:7px}
+
+  .special{padding:44px 0 10px;border-bottom:1px solid var(--line);scroll-margin-top:20px}
+  .sphead{display:flex;align-items:baseline;gap:13px;margin-bottom:6px}
+  .spnum{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700}
+  .sphead h2{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(20px,3vw,28px);letter-spacing:-.01em}
+  .spsub{font-size:14px;color:var(--desc);max-width:790px;margin:9px 0 22px}
+  .spsub b{color:var(--ink)}
+  .cni .caphd .capid{color:var(--rose)} .cni{border-left-color:var(--rose)!important}
+  .h30 .caphd .capid{color:var(--violet)} .h30{border-left-color:var(--violet)!important}
+  .h30 .cm{border-left-color:#ab9fe255} .h30 .cm .lab{color:var(--violet)}
+  .h30badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#ab9fe222;color:var(--violet);padding:2px 7px;border-radius:5px;margin-left:7px}
+
+  footer{padding:34px 0 70px;color:var(--faint);font-size:12px;line-height:1.7;font-family:'JetBrains Mono',monospace}
+  footer b{color:var(--muted)}
+
+  @media(max-width:880px){
+    :root{--nav:0px}
+    nav{position:sticky;top:0;width:100%;height:auto;border-right:none;border-bottom:1px solid var(--line2);padding:14px 16px}
+    .brandsub{margin-bottom:12px}
+    .navlist{flex-direction:row;flex-wrap:wrap;gap:6px}
+    .navlist a{padding:6px 9px;border-left:none;border:1px solid var(--line)}
+    .navlist a.active{border-color:var(--amber)}
+    .navlist a .label{display:none}
+    .navlist .sep{display:none}
+    main{margin-left:0;padding:0 18px}
+    .sub{grid-template-columns:1fr;gap:7px;padding:12px 14px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand"><span class="e">EOS</span>-<span class="d">DENO</span></div>
+  <div class="brandsub">Mapa de Especificações · v2</div>
+  <ul class="navlist" id="navlist">
+    <li><a href="#L00"><span class="nn">00</span><span class="label">Medição</span></a></li>
+    <li><a href="#L01"><span class="nn">01</span><span class="label">Conectividade</span></a></li>
+    <li><a href="#L02"><span class="nn">02</span><span class="label">Integração</span></a></li>
+    <li><a href="#L03"><span class="nn">03</span><span class="label">Controle & EMS</span></a></li>
+    <li><a href="#L04"><span class="nn">04</span><span class="label">Inteligência</span></a></li>
+    <li><a href="#L05"><span class="nn">05</span><span class="label">VPP / Flex</span></a></li>
+    <li><a href="#L06"><span class="nn">06</span><span class="label">Plataforma</span></a></li>
+    <li><a href="#L07"><span class="nn">07</span><span class="label">Conformidade</span></a></li>
+    <li><a href="#L08"><span class="nn">08</span><span class="label">Hardware</span></a></li>
+    <li><a href="#L09"><span class="nn">09</span><span class="label">UX</span></a></li>
+    <li class="sep"></li>
+    <li><a href="#CNI" class="special"><span class="nn">C&I</span><span class="label">Comercial/Ind.</span></a></li>
+    <li><a href="#H30" class="future"><span class="nn">2030</span><span class="label">Horizonte</span></a></li>
+  </ul>
+</nav>
+
+<main>
+  <header>
+    <div class="kicker"><span class="dot"></span>EOS-DENO · mapa de especificações & funcionalidades · v2</div>
+    <h1>O destino — <span class="hl">e como</span><br>se chega lá</h1>
+    <p class="lede">A árvore completa de capacidades de um EMS/HEMS/VPP/DER de classe mundial — montada como <b>mapa de engenharia</b>, não checklist. Cada item traz três coisas: um <b>número</b>, <b>o que é / faz</b> (o destino), e <b>como é feito ou pode ser feito</b> (o mecanismo). <span class="hl2">★</span> = capacidade de alto valor estratégico para a tese EOS-DENO.</p>
+    <div class="legend">
+      <b>Como ler cada item:</b>
+      <div class="row"><span class="tg id">00.1.1</span><span><b>Número</b> hierárquico — camada · capacidade · sub-feature.</span></div>
+      <div class="row"><span class="tg oq">O QUE</span><span><b>O destino</b> — o que a função entrega no nível de classe mundial.</span></div>
+      <div class="row"><span class="tg cm">COMO</span><span><b>O mecanismo</b> — como isso é feito ou pode ser feito (a engenharia por trás).</span></div>
+    </div>
+  </header>
+
+  <div id="tree"></div>
+
+  <section class="special" id="CNI">
+    <div class="sphead"><span class="spnum" style="color:var(--rose)">C&amp;I</span><h2>Camada Comercial &amp; Industrial</h2></div>
+    <p class="spsub">Módulo acoplável, separado do núcleo residencial/GD. Capacidades que só fazem sentido em escala C&amp;I.</p>
+    <div id="cni"></div>
+  </section>
+
+  <section class="special" id="H30">
+    <div class="sphead"><span class="spnum" style="color:var(--violet)">2030</span><h2>Horizonte 2030 — a fronteira</h2></div>
+    <p class="spsub">Capacidades que <b>quase nenhum</b> dos 11 players tem hoje, mas que a régua AI-native + a abertura regulatória BR vão exigir. Aqui o produto ideal <b>antecipa</b>.</p>
+    <div id="h30"></div>
+  </section>
+
+  <footer>
+    <b>Escopo:</b> núcleo residencial/GD · C&amp;I em camada separada · horizonte 2030 à parte.<br>
+    <b>Leitura:</b> número + o que (destino) + como (mecanismo de engenharia, feito ou possível).<br>
+    Mapa de especificações montado com engenharia de energia (EMS/HEMS/VPP/DER) + os players pesquisados · Projeto EOS-DENO · v2.
+  </footer>
+</main>
+
+<script>
+const core=[
+ {code:'00',id:'L00',name:'Medição & Sensoriamento',role:'a fundação — o sensor sobre o qual todo o resto se empilha',color:'var(--cyan)',caps:[
+   {cap:'Medição elétrica',tag:'metrologia',subs:[
+     {f:'Grandezas medidas',d:'V (L-N/L-L), I, P/Q/S, fator de potência, frequência, energia import/export, THD/harmônicos, desequilíbrio.',c:'Amostragem simultânea de tensão (divisor resistivo) e corrente (TC/Rogowski) a kHz; um metering IC/DSP (ex.: ADE/STPM) calcula RMS, potências e harmônicos por FFT.'},
+     {f:'Topologia de rede',d:'Mono / bi / trifásico · 3 e 4 fios · detecção automática.',c:'Múltiplos canais de V e I no front-end; o firmware detecta presença e defasagem das fases e auto-seleciona a topologia ativa.'},
+     {f:'Método de aquisição',d:'TC split/solid-core, Rogowski, shunt — ou leitura de medidor externo.',c:'TC split-core clipa no cabo sem cortar a fiação (retrofit); ou lê o medidor da concessionária via porta óptica/P1/Modbus quando já existe.'},
+     {f:'Classe metrológica',d:'Classe 0.5S / 1 (IEC 62053), bidirecional, apto a faturamento.',c:'Metering IC calibrado em laboratório contra padrão rastreável; aprovação INMETRO via ensaio de exatidão sob carga e temperatura.'},
+     {f:'Resolução temporal',d:'Sub-segundo p/ transitórios · 1s p/ controle · 1–15min p/ telemetria.',c:'Buffer de alta taxa captura eventos (sag/swell) + agregação configurável (1s/1min/15min) para telemetria e faturamento.'},
+     {f:'Submedição',d:'Por circuito · por carga · por fase — múltiplos pontos.',c:'Um TC por derivação do quadro (circuito) ou por carga; ou uma rede de submedidores em barramento Modbus/RS485 reportando ao gateway — cada ponto é um canal independente.'},
+   ]},
+   {cap:'Sensoriamento ambiental',tag:'p/ previsão',subs:[
+     {f:'Irradiância solar',d:'Piranômetro / sensor de referência — melhora previsão de geração.',c:'Sensor de irradiância (célula de referência ou piranômetro) na entrada analógica; correlaciona com a geração para calibrar previsão e detectar sujeira/sombra.'},
+     {f:'Temperatura',d:'De painel, de bateria, ambiente — derating e eficiência.',c:'Termistores/RTD (PT100) ou sensores 1-Wire nos pontos críticos; usado para derating de potência e proteção térmica da bateria.'},
+     {f:'Qualidade de energia',d:'Sags/swells, flicker, detecção de ilhamento.',c:'Detecção por janela RMS rápida + monitoramento de frequência/fase; algoritmo anti-ilhamento (ex.: salto de frequência) desconecta na perda de rede.'},
+   ]},
+   {cap:'Sensoriamento de estado de ativos',tag:'telemetria',subs:[
+     {f:'Bateria',d:'SOC, SOH, temperatura, ciclos, potência instantânea.',c:'Leitura do BMS via CAN/Modbus do inversor híbrido; SOC vem do balanço de carga, SOH da degradação de capacidade medida ao longo dos ciclos.'},
+     {f:'Inversor / geração',d:'Status, potência, alarmes, curva de geração.',c:'Polling Modbus/SunSpec dos registradores do inversor (potência, código de falha, energia acumulada) a cada poucos segundos.'},
+     {f:'Cargas',d:'Consumo por dispositivo, on/off, NILM (desagregação).',c:'Smart plug por carga (medição direta) ou NILM — ML desagrega o consumo agregado do medidor principal por assinatura, sem sensor em cada aparelho.'},
+   ]},
+ ]},
+ {code:'01',id:'L01',name:'Conectividade & Protocolos',role:'o sistema nervoso — como o produto fala com tudo',color:'var(--violet)',caps:[
+   {cap:'Comunicação física',tag:'meios',subs:[
+     {f:'Sem fio curto',d:'Wi-Fi (2.4/5GHz), Bluetooth/BLE, Zigbee, Z-Wave, Thread/Matter.',c:'SoC de rádio (ex.: ESP32/Nordic) no device: Wi-Fi para a nuvem, BLE para comissionamento local, Zigbee/Thread/Matter para malha de dispositivos.'},
+     {f:'Celular',d:'4G/LTE, NB-IoT / LTE-Cat-M, 5G — autonomia sem roteador.',c:'Modem celular embarcado + SIM/eSIM M2M; NB-IoT/Cat-M para baixo consumo onde não há Wi-Fi, com autonomia total do roteador do cliente.'},
+     {f:'Serial / barramento',d:'RS485, RS232, CAN.',c:'Transceiver RS485 para barramento Modbus multidrop (até ~500m / 32 nós); CAN para o BMS da bateria.'},
+     {f:'Cabeada',d:'Ethernet / LAN (gigabit).',c:'PHY Ethernet para conexão estável ao roteador/switch; preferida em C&I e onde o Wi-Fi é instável.'},
+   ]},
+   {cap:'Protocolos de energia',tag:'interoperabilidade',subs:[
+     {f:'Medição/inversor',d:'Modbus-RTU, Modbus-TCP, SunSpec, DLMS/COSEM.',c:'Stack Modbus mestre lê/escreve holding registers; o mapa SunSpec padroniza registradores entre fabricantes; DLMS/COSEM para medidores de concessionária.'},
+     {f:'Grid / utility',d:'IEC 61850, IEC 60870-5-104, DNP3.',c:'Protocolos de subestação/telecontrole para interface com o SCADA da distribuidora — usados em despacho e serviços de rede.'},
+     {f:'Cargas / IoT',d:'MQTT, REST/JSON, EEBUS, KNX.',c:'MQTT (pub/sub leve) para telemetria à nuvem; REST/JSON para integração; EEBUS para bomba/VE no padrão europeu; KNX para automação predial.'},
+     {f:'Ativos específicos',d:'OCPP (VE), SG-Ready (bomba de calor).',c:'OCPP sobre WebSocket comanda a corrente de carga do carregador; SG-Ready aciona modos da bomba por contato seco (DO).'},
+   ]},
+   {cap:'I/O físico',tag:'borda',subs:[
+     {f:'Entradas',d:'Digitais (DI) — contatos, RCR/ripple · analógicas (AI) 0-10V/4-20mA.',c:'Optoacopladores isolam as DI (ex.: sinal de ripple/RCR da distribuidora); ADC lê as AI (0-10V/4-20mA) de sensores.'},
+     {f:'Saídas',d:'Digitais (DO/relé) — comando direto · analógicas.',c:'Relés ou saídas a transistor comandam contatores/cargas diretamente — atuação local que não depende da nuvem.'},
+   ]},
+   {cap:'Ciclo de vida de firmware',tag:'O&M',subs:[
+     {f:'Atualização',d:'OTA remoto + USB local · rollback seguro.',c:'Flash dual-bank (A/B): baixa a nova imagem em background, valida o checksum, troca o boot e reverte automaticamente se falhar.'},
+     {f:'Segurança de firmware',d:'Assinatura criptográfica, versionamento, anti-tamper.',c:'Imagem assinada com a chave privada do fabricante e verificada no boot; secure boot rejeita firmware não-assinado.'},
+   ]},
+   {cap:'Capacidade de gateway de borda',tag:'edge',subs:[
+     {f:'Resiliência offline',d:'Store-and-forward (buffer), broker local, opera sem nuvem.',c:'Buffer em flash/RAM guarda a telemetria durante a queda do link e reenvia ao reconectar; um broker MQTT local mantém os dispositivos coordenados.'},
+     {f:'Runtime de borda',d:'Executa lógica/modelos localmente (edge compute).',c:'Um runtime leve no SoC (contêiner ou WASM) roda regras e modelos de otimização localmente, sem ida-e-volta à nuvem.'},
+   ]},
+ ]},
+ {code:'02',id:'L02',name:'Integração & Comando de Ativos',role:'as mãos — ler é monitorar; comandar é controlar',color:'var(--amber)',caps:[
+   {cap:'Inversor FV (grid-tie)',tag:'ler + comandar',subs:[
+     {f:'Leitura',d:'Geração, status, alarmes.',c:'Polling dos registradores de leitura do inversor via Modbus/SunSpec.'},
+     {f:'Comando',d:'Curtailment / limite de potência ativa · controle de reativo.',c:'Escrita nos registradores de setpoint do inversor (% de potência ativa, cosφ/Q) — limita a injeção e ajusta o reativo em malha fechada.'},
+   ]},
+   {cap:'Bateria / BESS (inversor híbrido)',tag:'ler + comandar',subs:[
+     {f:'Leitura',d:'SOC, SOH, potência.',c:'Leitura via inversor híbrido/BMS por CAN/Modbus.'},
+     {f:'Comando',d:'Setpoint de carga/descarga, limites SOC, modo de operação.',c:'Escreve setpoint de potência (carrega/descarrega em kW) e limites de SOC no inversor híbrido; seleciona o modo (autoconsumo/backup/arbitragem).'},
+   ]},
+   {cap:'Carregador de VE (EVSE)',tag:'ler + comandar',subs:[
+     {f:'Leitura',d:'Estado de sessão, potência, conector.',c:'OCPP/Modbus reporta o estado da sessão e a energia transferida.'},
+     {f:'Comando',d:'Corrente de carga, smart charging (OCPP), V2G / V2H.',c:'OCPP ajusta a corrente (6–32A) dinamicamente conforme excedente/tarifa; V2G/V2H exige carregador bidirecional para devolver energia à casa/rede.'},
+   ]},
+   {cap:'Bomba de calor / térmico',tag:'ler + comandar',subs:[
+     {f:'Comando',d:'SG-Ready (eco/reserva), Modbus/EEBUS, power-to-heat.',c:'Contato seco SG-Ready (4 estados) ou Modbus/EEBUS desloca o aquecimento para janelas de excedente solar/tarifa baixa (power-to-heat).'},
+     {f:'Cargas térmicas',d:'Boiler/água quente, ar-condicionado, piscina.',c:'Relé/contator no circuito da resistência/bomba; usa a inércia térmica do reservatório como armazenamento.'},
+   ]},
+   {cap:'Cargas & eletrodomésticos',tag:'ler + comandar',subs:[
+     {f:'Comando',d:'Smart plugs, relés, liga/desliga, dimming, agendamento.',c:'Smart plug (Wi-Fi/Zigbee) ou relé liga/desliga a carga; agenda por excedente de geração ou por tarifa.'},
+     {f:'Eletrodomésticos',d:'Integração direta (linha branca), gestão de partida.',c:'Integração via API do fabricante (ex.: Home Connect) ou Matter; difere a partida de máquinas para as janelas mais baratas.'},
+   ]},
+   {cap:'Geração de backup',tag:'ler + comandar',subs:[
+     {f:'Genset / grupo gerador',d:'Partida/parada, sincronismo, transferência.',c:'DO de partida + leitura de status; controle de transferência (ATS) e sincronismo em sistemas híbridos.'},
+   ]},
+   {cap:'Agnosticismo de fabricante',star:1,tag:'★ moat',subs:[
+     {f:'Camada de driver/abstração',d:'Abstrai N fabricantes atrás de uma API única.',c:'Um driver por fabricante traduz o mapa Modbus/API proprietário para um modelo de dados canônico interno — o resto do sistema fala uma só língua.'},
+     {f:'Cobertura multimarca',d:'Dezenas a centenas de marcas (inversor, bateria, VE, bomba).',c:'Biblioteca de perfis de equipamento, versionada; cada perfil é um arquivo de mapeamento testado em laboratório.'},
+     {f:'Onboarding de equipamento',d:'Auto-detecção · lista pública · certificação de novo device.',c:'Varredura do barramento + identificação pelo registrador de modelo; fallback manual ("Outros") e um processo de certificação para novos devices.'},
+   ]},
+ ]},
+ {code:'03',id:'L03',name:'Controle & EMS',role:'as regras — proteção, qualidade e despacho determinístico',color:'var(--teal)',caps:[
+   {cap:'Estratégias de proteção & qualidade',tag:'segurança da rede',subs:[
+     {f:'Autoconsumo',d:'Maximiza o uso local da geração.',c:'Loop de controle: quando geração > consumo, direciona o excedente para bateria/cargas antes de exportar à rede.'},
+     {f:'Anti-backfeed / zero feed-in',d:'Limita ou zera a exportação conforme regra da distribuidora.',c:'Medição no ponto de conexão + curtailment do inversor em malha fechada para manter a injeção ≤ limite (até zero feed-in).'},
+     {f:'Limite de demanda / peak shaving',d:'Corta picos (demand charge management).',c:'Monitora a demanda em janela móvel (15min) e descarrega bateria / desliga cargas ao se aproximar do teto contratado.'},
+     {f:'Controle de potência',d:'Ativa (curtailment) e reativa (FP, suporte de tensão).',c:'Setpoint de P (curtailment) e Q (suporte de tensão/FP) escrito no inversor conforme a regra ou a ordem da rede.'},
+     {f:'Proteção de fusível/disjuntor',d:'Anti-trip no ponto de conexão (load balancing dinâmico).',c:'Soma das correntes por fase em tempo real; reduz a carga de VE/bomba antes que o disjuntor do ponto de conexão atue.'},
+     {f:'Balanço de fase',d:'Compensação/redistribuição entre fases.',c:'Redistribui cargas controláveis e potência do inversor entre as fases para equalizar corrente e reduzir desequilíbrio.'},
+     {f:'Backup / ilhamento',d:'Transição on→off-grid, modo ilha, religamento.',c:'Detecção de queda da rede + chave de transferência; o inversor forma a rede (grid-forming) na ilha e ressincroniza no retorno.'},
+     {f:'Priorização de cargas',d:'Load shedding hierárquico em restrição.',c:'Tabela de prioridade; em déficit (off-grid ou no limite), desliga as cargas da menor prioridade para a maior.'},
+   ]},
+   {cap:'Otimização econômica',tag:'regra → ótimo',subs:[
+     {f:'Time-of-Use (ToU)',d:'Arbitragem em tarifa horária.',c:'Carrega a bateria em fora-ponta (barato) e descarrega na ponta (caro) por uma agenda fixa de tarifa.'},
+     {f:'Tarifa dinâmica',d:'Day-ahead / spot / 15-min.',c:'Ingere a curva de preço futura (API da comercializadora/mercado) e otimiza carga/descarga contra ela.'},
+     {f:'Tarifa BR',d:'Tarifa branca, bandeiras, ponta/fora-ponta.',c:'Modela a estrutura tarifária brasileira (tarifa branca, bandeiras vermelho/amarelo) dentro do otimizador.'},
+     {f:'Multi-objetivo',d:'Custo × autoconsumo × vida de bateria × CO₂.',c:'Função-objetivo ponderada que penaliza custo, ciclos de bateria (degradação) e emissões simultaneamente.'},
+   ]},
+ ]},
+ {code:'04',id:'L04',name:'Inteligência / AI',role:'o cérebro — prever, otimizar, aprender',color:'var(--cyan)',caps:[
+   {cap:'Previsão (forecasting)',tag:'prever',subs:[
+     {f:'Geração solar',d:'Curva de geração intraday → multi-dia.',c:'Modelo físico (clear-sky + geometria) ajustado por ML sobre o histórico do site + previsão meteorológica (nuvem/irradiância de API ou satélite).'},
+     {f:'Carga / consumo',d:'Perfil de demanda futura por residência.',c:'ML (gradient boosting/LSTM) sobre histórico de consumo + calendário/clima; opcionalmente desagregado por dispositivo via NILM.'},
+     {f:'Preço',d:'Day-ahead / spot.',c:'Modelo de série temporal sobre preços históricos + sinais de mercado; ou ingestão direta da curva day-ahead publicada.'},
+   ]},
+   {cap:'Otimização / scheduling',tag:'decidir',subs:[
+     {f:'Motor de decisão',d:'Rule-based → LP/MILP → MPC → RL.',c:'Formula o despacho como problema de otimização (MILP) com horizonte; o MPC re-resolve a cada passo com previsões novas; RL para políticas adaptativas.'},
+     {f:'Horizonte & cadência',d:'Planeja 24–48h · re-otimiza a cada 15min/hora.',c:'Janela rolante (receding horizon): o plano de 24–48h é recomputado a cada 15min com dados frescos.'},
+   ]},
+   {cap:'Aprendizado & adaptação',tag:'aprender',subs:[
+     {f:'Adaptação ao usuário',d:'Aprende padrões e melhora sem update manual.',c:'Modelo online re-treina com os dados do próprio site e ajusta padrões (ex.: rotina de banho/VE) sem precisar de firmware novo.'},
+     {f:'Detecção de anomalia',d:'Falha de equipamento, degradação, desvio de geração.',c:'Compara baseline esperado vs. medido; o desvio (geração abaixo do previsto, SOH caindo) dispara alerta.'},
+     {f:'NILM',d:'Desagregação não-intrusiva pelo consumo agregado.',c:'ML sobre a forma de onda/curva agregada identifica a assinatura de cada aparelho (geladeira, chuveiro) sem medidor por carga.'},
+   ]},
+   {cap:'Locus de compute',star:1,tag:'★ onde roda',subs:[
+     {f:'Arquitetura',d:'Nuvem pura · edge puro · híbrido cloud-edge.',c:'Controle crítico e de baixa latência roda no edge (device); a otimização pesada (MILP de longo horizonte) e o treino de modelo na nuvem; os dois sincronizam o plano.'},
+     {f:'Resiliência',d:'Controle ótimo sobrevive à queda da nuvem — e por quanto tempo.',c:'O device guarda o último plano/política e regras de fallback; opera horas/dias offline e ressincroniza ao reconectar.'},
+   ]},
+ ]},
+ {code:'05',id:'L05',name:'Despacho Externo & Flexibilidade / VPP',role:'a interface com a rede e o mercado — onde DER vira receita',color:'var(--rose)',caps:[
+   {cap:'Sinais de rede / despacho do DSO',tag:'grid',subs:[
+     {f:'Despacho da distribuidora',d:'RCR/ripple, EnWG §14a, telecontrole/RTU, control box, curtailment ordenado.',c:'Recebe o sinal de controle (ripple via DI, ou control box digital/§14a) e aplica o curtailment/limite ordenado pela distribuidora.'},
+     {f:'BR-equivalente',d:'Comandos da distribuidora, corte/religamento remoto.',c:'Interface com o comando da distribuidora (futuro padrão BR) para corte/religamento e limite de injeção remotos.'},
+   ]},
+   {cap:'Agregação / VPP',star:1,tag:'★ receita',subs:[
+     {f:'Agregação de DER',d:'Coordena frota de baterias/FV/cargas como usina virtual.',c:'Plataforma na nuvem coordena milhares de baterias/inversores como um único recurso, despachando setpoints em massa.'},
+     {f:'Papel de mercado',d:'BSP / BRP — qualificação junto ao operador.',c:'Qualificação junto ao operador (ONS/distribuidora no BR) para ofertar a capacidade agregada como recurso de balanceamento.'},
+     {f:'Serviços ancilares',d:'FCR, aFRR, mFRR, reserva, suporte de tensão.',c:'Resposta automática a desvio de frequência (droop) ou a sinal do operador (AGC), com tempo de resposta certificado.'},
+     {f:'Demand response',d:'Programas de resposta da demanda, capacity market.',c:'Em um evento, a plataforma desliga/desloca as cargas agregadas mediante incentivo ou contrato de capacidade.'},
+   ]},
+   {cap:'Trading / mercado de energia',tag:'receita',subs:[
+     {f:'Mercados',d:'Day-ahead, intraday, imbalance/balancing.',c:'Algoritmo de bidding posiciona a flexibilidade agregada nos mercados; arbitra entre autoconsumo e venda.'},
+     {f:'Interface comercial',d:'Conexão a comercializadoras/tradings, direct marketing.',c:'API para a comercializadora/trading que liquida a energia; direct marketing da geração.'},
+     {f:'BR',d:'CCEE, mercado livre (ACL), mercado de curto prazo.',c:'Integração com a CCEE (medição, contabilização, liquidação) e gestão de contratos no mercado livre.'},
+   ]},
+   {cap:'Desligamento remoto',tag:'controle',subs:[
+     {f:'Curtailment remoto',d:'Corte de geração/carga sob comando do operador/agregador.',c:'O comando do operador/agregador escreve o limite/zero no inversor; cada intervenção fica em trilha de auditoria.'},
+   ]},
+ ]},
+ {code:'06',id:'L06',name:'Plataforma, Nuvem & Dados',role:'a plataforma — onde o produto vira negócio escalável',color:'var(--violet)',caps:[
+   {cap:'App & portal',tag:'interface',subs:[
+     {f:'Aplicações',d:'App usuário · portal instalador · dashboard operador · tablet/web.',c:'Front-end web/mobile sobre a API; visões distintas por papel (consumo p/ dono, diagnóstico p/ instalador, frota p/ operador).'},
+     {f:'Papéis & permissões',d:'RBAC, multi-tenant, multi-site.',c:'Modelo de tenants isolados + RBAC; cada organização vê só seus ativos, com hierarquia de permissão.'},
+   ]},
+   {cap:'API & integração',star:1,tag:'★ abertura',subs:[
+     {f:'API aberta',d:'REST/GraphQL, webhooks, SDK.',c:'API documentada (OpenAPI) + webhooks de eventos + SDK para terceiros construírem integrações por cima.'},
+     {f:'White-label',d:'Marca do parceiro, multi-tenant, marketplace de módulos.',c:'Tematização (logo/cores/domínio) por tenant + marketplace de módulos; o parceiro entrega como produto próprio.'},
+     {f:'Cloud-to-cloud',d:'Home Assistant, Google Home, Alexa.',c:'Conectores OAuth para os ecossistemas (HA, Google Home, Alexa) — integra sem hardware adicional.'},
+   ]},
+   {cap:'Dados & analytics',tag:'dados',subs:[
+     {f:'Telemetria',d:'Tempo real + histórico (granularidade/retenção configurável).',c:'Time-series DB (ex.: Influx/Timescale) com retenção/granularidade configurável; streaming em tempo real via WebSocket.'},
+     {f:'Export & relatórios',d:'CSV/API de alta resolução, relatórios automáticos.',c:'Exportação de séries de alta resolução via API/CSV; relatórios (economia, geração) agendados automaticamente.'},
+     {f:'Pipeline de ML',d:'Data lake, treino de modelos, feature store.',c:'Data lake + pipeline de features/treino que alimenta os modelos de previsão e melhora com o agregado da frota.'},
+   ]},
+   {cap:'Comissionamento & O&M',tag:'operação',subs:[
+     {f:'Setup',d:'Web/app/QR · auto-config · sem-app opcional.',c:'QR no device abre o fluxo web; a auto-detecção de ativos no barramento reduz a configuração manual.'},
+     {f:'Diagnóstico remoto',d:'Troubleshooting remoto, alarmes, RMA.',c:'Logs/telemetria remotos + acesso remoto ao device para diagnóstico sem ir a campo; fluxo de RMA.'},
+     {f:'Fleet management',d:'Gestão de frota em escala, atualização em massa.',c:'Console que aplica config/firmware em lote a milhares de devices, com rollout em ondas e monitoramento de saúde.'},
+   ]},
+   {cap:'Monetização',tag:'modelo',subs:[
+     {f:'Modelos de receita',d:'Assinatura, licença, white-label, revenue-share, freemium.',c:'Cobrança recorrente por device/seat (assinatura), licença de plataforma, ou revenue-share da flexibilidade despachada.'},
+   ]},
+ ]},
+ {code:'07',id:'L07',name:'Conformidade, Segurança & Mercado',role:'a confiança — sem isto, não conecta na rede nem fatura',color:'var(--teal)',caps:[
+   {cap:'Conformidade elétrica / grid-code',star:1,tag:'★ BR',subs:[
+     {f:'Internacional',d:'CE, EN 18031, IEC 62368, grid codes locais.',c:'Ensaios de EMC e segurança em laboratório acreditado; conformidade com o grid code do mercado-alvo.'},
+     {f:'Brasil',d:'ANEEL/PRODIST, INMETRO, homologação de distribuidora, NBR.',c:'Homologação INMETRO da medição + aderência ao PRODIST (qualidade/conexão) + homologação junto à distribuidora.'},
+   ]},
+   {cap:'Certificação metrológica',tag:'billing',subs:[
+     {f:'Faturamento',d:'Selo metrológico p/ medição faturável.',c:'Aprovação de modelo INMETRO + verificação inicial/periódica para que a medição tenha valor fiscal/faturável.'},
+   ]},
+   {cap:'Segurança / cyber',tag:'trust',subs:[
+     {f:'Proteção de dados',d:'TLS, encriptação em repouso, LGPD/GDPR.',c:'TLS em trânsito + encriptação em repouso; tratamento de dados pessoais conforme a LGPD.'},
+     {f:'Hardening',d:'Assinatura de firmware, pen-testing, NIS2, BSI TR-03109.',c:'Secure boot + firmware assinado + pen-testing periódico + gestão de vulnerabilidades.'},
+   ]},
+   {cap:'Mercados homologados',tag:'alcance',subs:[
+     {f:'Geografias',d:'Onde é certificado e opera de fato.',c:'Matriz de certificações por país/distribuidora define onde o produto pode ser conectado legalmente.'},
+   ]},
+ ]},
+ {code:'08',id:'L08',name:'Hardware & Forma',role:'o corpo — onde há hardware (vs. software/nuvem puro)',color:'var(--amber)',caps:[
+   {cap:'Forma & instalação',tag:'físico',subs:[
+     {f:'Formato',d:'Gateway DIN-rail · medidor · módulo · plug.',c:'SKU por papel: gateway em trilho DIN (no quadro), medidor com TCs (retrofit), módulo ou plug (carga única).'},
+     {f:'Montagem',d:'Trilho DIN, parede, mesa · dimensões, peso.',c:'Trilho DIN 35mm no quadro ou fixação em parede; dimensões compactas para caber no QDC.'},
+   ]},
+   {cap:'Robustez ambiental',tag:'físico',subs:[
+     {f:'Proteção',d:'IP20 (indoor) → IP65 (outdoor abrigado).',c:'Gabinete vedado (IP65) para áreas externas abrigadas; IP20 onde fica em quadro interno.'},
+     {f:'Faixa térmica & consumo',d:'-30~+70°C · consumo baixo (<5–7W).',c:'Componentes grau industrial + projeto de baixo consumo (sem ventilação ativa).'},
+   ]},
+   {cap:'Interface local',tag:'UX no device',subs:[
+     {f:'Display & indicadores',d:'TFT / LED bar / e-paper · botões · status visual.',c:'Display TFT/e-paper mostra estado e QR de comissionamento; LED/RGB para status rápido; botões para ações locais.'},
+   ]},
+ ]},
+ {code:'09',id:'L09',name:'UX & Conveniência',role:'a experiência — simplicidade é capacidade de produto (a lição do Zerofy)',color:'var(--gold)',caps:[
+   {cap:'Onboarding sem fricção',star:1,tag:'★ UX',subs:[
+     {f:'Instalação',d:'Sem app (web/QR) · auto-detecção de ativos · plug-and-play.',c:'Comissionamento pelo navegador (sem baixar app) + auto-detecção de ativos; o instalador conclui em minutos.'},
+   ]},
+   {cap:'Operação autônoma',tag:'set-and-forget',subs:[
+     {f:'Autopilot',d:'Otimiza sozinho, sem intervenção do usuário.',c:'Modo padrão que aplica a melhor estratégia automaticamente; o usuário não precisa configurar regras.'},
+   ]},
+   {cap:'Engajamento',tag:'retenção',subs:[
+     {f:'Visualização de valor',d:'Economia em R$, CO₂ evitado, gamificação.',c:'O dashboard traduz kWh em R$ economizados e CO₂ evitado; metas/streaks aumentam a retenção.'},
+     {f:'Copilot / linguagem natural',d:'Pergunta e comanda em linguagem natural.',c:'Interface conversacional (LLM) sobre os dados e controles — "quanto economizei?" ou "carregue o carro até as 7h".'},
+   ]},
+   {cap:'Multi-residência',tag:'escala',subs:[
+     {f:'Multi-site',d:'Vários imóveis/clientes em uma conta.',c:'Uma conta agrega múltiplos sites com visão consolidada — para prosumidores e gestores.'},
+   ]},
+ ]},
+];
+const cni=[
+ {cap:'Medição & submedição em escala',tag:'C&I',subs:[
+   {f:'Multi-ponto',d:'Dezenas de pontos/circuitos, hierarquia, rateio por centro de custo.',c:'Rede de submedidores em barramento Modbus/RS485 (ou TCs por circuito), mapeados a centros de custo; o gateway concentra dezenas de pontos.'},
+   {f:'Qualidade de energia C&I',d:'Harmônicos, FP por ponto, registro de eventos.',c:'Analisador de qualidade por ponto registra harmônicos/FP/eventos para conformidade e diagnóstico de causa.'},
+ ]},
+ {cap:'Gestão de demanda contratada',tag:'C&I',subs:[
+   {f:'Demanda BR',d:'Demanda contratada, ultrapassagem, otimização de contrato.',c:'Monitora a demanda vs. a contratada; alerta e atua para evitar ultrapassagem (multa) e sugere ajuste do contrato.'},
+   {f:'Correção de FP em escala',d:'Banco de capacitores, controle de reativo industrial.',c:'Um controlador de banco de capacitores chaveia estágios para manter o FP ≥ 0,92 e evitar multa por reativo excedente.'},
+ ]},
+ {cap:'Portfólio & multi-site',tag:'C&I',subs:[
+   {f:'Energy management de portfólio',d:'Múltiplas plantas, benchmarking, metas.',c:'Consolida múltiplas plantas numa só visão; benchmarking entre sites e metas de redução.'},
+   {f:'Integração SCADA/BMS',d:'Building Management System, automação predial/industrial.',c:'Protocolos industriais (Modbus/BACnet/IEC) conectam ao BMS/SCADA predial-industrial já existente.'},
+ ]},
+ {cap:'Mercado livre (ACL)',tag:'C&I',subs:[
+   {f:'Gestão de portfólio de energia',d:'Contratos ACL, sazonalização, flexibilidade, CCEE.',c:'Modela contratos ACL, sazonalização e flexibilidade; integra à contabilização da CCEE.'},
+   {f:'Geração distribuída C&I',d:'Autoprodução, consórcio, geração compartilhada.',c:'Gestão de autoprodução/consórcio/geração compartilhada com rateio de créditos entre unidades.'},
+ ]},
+];
+const h30=[
+ {cap:'Operação AI-native',subs:[
+   {f:'Agent-fabric',d:'Agentes autônomos por persona operando o sistema.',c:'Agentes LLM por persona (gerador, agregador, consumidor), cada um com ferramentas (tools) que leem/escrevem nos ativos e mercados, operando sob políticas.'},
+   {f:'Linguagem natural end-to-end',d:'Configurar, diagnosticar e despachar por conversa.',c:'Um copilot operacional traduz a intenção em linguagem natural ("priorize o carro amanhã") em ações concretas nos sistemas.'},
+ ]},
+ {cap:'Mercados emergentes de energia',subs:[
+   {f:'P2P energy trading',d:'Negociação peer-to-peer (quando houver base legal BR).',c:'Uma plataforma casa ofertas de compra/venda entre prosumidores; a liquidação se dá por contrato/registro quando a regulação BR permitir.'},
+   {f:'Transactive energy',d:'Liquidação automática, settlement programável / blockchain.',c:'Settlement automático entre agentes (possivelmente sobre ledger) conforme as regras do mercado, sem conciliação manual.'},
+   {f:'CCEE-nativo + liquidação automática',d:'Integração e liquidação no mercado livre sem intermediário manual.',c:'Integração direta com a medição/contabilização/liquidação da CCEE — o ciclo de mercado fecha sem intermediário manual.'},
+ ]},
+ {cap:'Controle de rede avançado',subs:[
+   {f:'Dynamic Operating Envelopes (DOE)',d:'Envelopes operacionais dinâmicos por nó (emergente AU).',c:'Recebe da distribuidora um envelope (limite de import/export variável por nó/hora) e o respeita em tempo real no inversor.'},
+   {f:'Grid-forming orchestration',d:'Coordenação de inversores formadores de rede.',c:'Coordena inversores grid-forming para manter estabilidade de tensão/frequência em alta penetração de FV.'},
+ ]},
+ {cap:'Frota & ativos inteligentes',subs:[
+   {f:'V2G em escala',d:'Frota de VEs como armazenamento despachável.',c:'Agrega VEs bidirecionais como armazenamento despachável, respeitando a rotina e o SOC mínimo definido pelo dono.'},
+   {f:'Digital twin em tempo real',d:'Gêmeo digital do sistema para simulação e controle.',c:'Uma réplica em tempo real do sistema simula cenários ("e se?") e otimiza antes de atuar no físico.'},
+   {f:'Manutenção preditiva em frota',d:'ML prevê falha de inversor/bateria antes de ocorrer.',c:'ML sobre a telemetria da frota detecta a assinatura de falha iminente (inversor/bateria) e agenda a manutenção antes da parada.'},
+ ]},
+];
+
+function capBlock(c,extraCls,layerCode,ci){
+  const star=c.star?'<span class="star">★</span> ':'';
+  const badge=extraCls==='h30'?'<span class="h30badge">fronteira</span>':'';
+  const tag=c.tag?`<span class="captag">${c.tag}</span>`:'';
+  const capId=`${layerCode}.${ci+1}`;
+  let h=`<div class="cap ${extraCls||''}"><div class="caphd"><span class="capid">${capId}</span><span class="capname">${star}${c.cap}${badge}</span>${tag}</div><div class="subs">`;
+  c.subs.forEach((s,si)=>{
+    h+=`<div class="sub">
+        <div class="subL"><span class="subid">${capId}.${si+1}</span><span class="subname">${s.f}</span></div>
+        <div class="subR">
+          <div class="oq"><span class="lab">O QUE</span>${s.d}</div>
+          <div class="cm"><span class="lab">COMO</span>${s.c}</div>
+        </div>
+      </div>`;
+  });
+  return h+`</div></div>`;
+}
+let tree='';
+core.forEach(l=>{
+  tree+=`<section class="layer" id="${l.id}" style="--lc:${l.color}"><div class="lhead"><span class="lnum">${l.code}</span><h2>${l.name}</h2></div><div class="lrole">${l.role}</div>`;
+  l.caps.forEach((c,ci)=>tree+=capBlock(c,'',l.code,ci));
+  tree+=`</section>`;
+});
+document.getElementById('tree').innerHTML=tree;
+document.getElementById('cni').innerHTML=cni.map((c,ci)=>capBlock(c,'cni','C&I',ci)).join('');
+document.getElementById('h30').innerHTML=h30.map((c,ci)=>capBlock(c,'h30','2030',ci)).join('');
+
+const links=[...document.querySelectorAll('#navlist a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===id));}});},{rootMargin:'-20% 0px -70% 0px',threshold:0});
+secs.forEach(s=>s&&obs.observe(s));
+</script>
+</body>
+</html>

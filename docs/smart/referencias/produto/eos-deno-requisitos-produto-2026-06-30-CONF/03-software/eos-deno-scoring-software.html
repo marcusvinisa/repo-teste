@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOS-DENO · Scoring de Software (16 players)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500;700&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#241d15;--panel:#2f261c;--panel2:#3a3024;--soft:#2b2219;
+    --ink:#fbf7ef;--desc:#ebe1cf;--muted:#d0c4af;--faint:#ab9d84;
+    --line:#ffffff20;--line2:#ffffff38;
+    --amber:#ff9d54;--gold:#efc56b;--teal:#79c9b9;--violet:#ab9fe2;--rose:#e49ebd;
+    --s0:#2b2219;--s1:#6b5436;--s2:#b9783f;--s3:#ff9d54;--s4:#efc56b;
+    --radius:13px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1200px 700px at 88% -8%,#45301a 0%,transparent 55%),radial-gradient(900px 600px at -8% 105%,#1e3b36 0%,transparent 52%),var(--bg);color:var(--ink);font-family:'Schibsted Grotesk',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  header{padding:46px 0 24px;border-bottom:1px solid var(--line2)}
+  .kicker{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:15px}
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
+  h1{font-family:'Archivo';font-weight:900;font-size:clamp(26px,4.4vw,44px);line-height:1.0;letter-spacing:-.02em;text-transform:uppercase}
+  h1 .hl{color:var(--amber)} h1 .hl2{color:var(--teal)}
+  .lede{margin-top:13px;max-width:820px;font-size:14.5px;color:var(--desc)}
+  .lede b{color:var(--ink);font-weight:600}
+
+  .callouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+  .co{background:var(--soft);border:1px solid var(--line2);border-left:3px solid var(--cc);border-radius:11px;padding:13px 15px}
+  .co .ct{font-family:'JetBrains Mono';font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--cc);font-weight:700;margin-bottom:5px}
+  .co .cb{font-size:13px;color:var(--desc)} .co .cb b{color:var(--ink)}
+
+  .controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:26px 0 14px}
+  .lens{display:flex;gap:0;background:var(--soft);border:1px solid var(--line2);border-radius:9px;padding:3px}
+  .lens button{font-family:'JetBrains Mono';font-size:11.5px;font-weight:600;padding:7px 14px;border-radius:7px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:.15s}
+  .lens button.on{background:var(--amber);color:#241d15;font-weight:700}
+  .legend{display:flex;gap:5px;align-items:center;font-family:'JetBrains Mono';font-size:10px;color:var(--faint);margin-left:auto;flex-wrap:wrap}
+  .lg{display:flex;align-items:center;gap:4px} .sw{width:14px;height:14px;border-radius:3px;border:1px solid var(--line)}
+
+  /* heatmap */
+  .hm{overflow-x:auto;border:1px solid var(--line2);border-radius:12px;background:var(--panel)}
+  table.grid{border-collapse:collapse;width:100%;min-width:880px}
+  table.grid th,table.grid td{border:1px solid var(--line);text-align:center}
+  table.grid thead th{font-family:'JetBrains Mono';font-size:9.5px;font-weight:700;color:var(--muted);padding:9px 4px;background:var(--soft);position:sticky;top:0;cursor:help;white-space:nowrap}
+  table.grid thead th.pl{text-align:left;padding-left:13px;min-width:150px;position:sticky;left:0;z-index:3}
+  table.grid thead th .dn{font-size:11px;color:var(--ink);display:block}
+  .trow td.pl{text-align:left;padding:8px 13px;font-size:12.5px;background:var(--panel);position:sticky;left:0;z-index:2;cursor:pointer;border-left:3px solid var(--tc)}
+  .trow td.pl:hover{background:var(--panel2)}
+  .trow td.pl .pn{font-family:'Archivo';font-weight:800;font-size:13px;color:var(--ink)}
+  .trow td.pl .tt{font-family:'JetBrains Mono';font-size:8.5px;color:var(--tc);font-weight:700}
+  .cell{width:54px;height:40px;font-family:'JetBrains Mono';font-weight:700;font-size:13px;cursor:pointer;color:#241d15;transition:.1s;position:relative}
+  .cell:hover{outline:2px solid var(--ink);outline-offset:-2px;z-index:1}
+  .cell.s0{background:var(--s0);color:var(--faint)} .cell.s1{background:var(--s1);color:#e9dcc6}
+  .cell.s2{background:var(--s2)} .cell.s3{background:var(--s3)} .cell.s4{background:var(--s4)}
+  .cell.na{background:repeating-linear-gradient(45deg,#2b2219,#2b2219 4px,#332a1f 4px,#332a1f 8px);color:var(--faint);font-size:10px}
+  .tierdiv td{background:var(--bg);padding:5px 13px;text-align:left;font-family:'JetBrains Mono';font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);position:sticky;left:0}
+  .avgcol{background:var(--soft)!important;font-weight:700;color:var(--gold)!important;font-size:12px}
+  /* build-on lens highlight */
+  body.lens-bo .trow:not(.oss) td{opacity:.4}
+  body.lens-bo .trow.oss td.pl{border-left-width:4px}
+  .bobadge{display:inline-block;font-family:'JetBrains Mono';font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:5px}
+
+  /* detail panel */
+  .detail{margin-top:16px;background:var(--panel);border:1px solid var(--line2);border-radius:13px;padding:0;overflow:hidden;display:none}
+  .detail.show{display:block}
+  .dh{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--dc)18,transparent)}
+  .dh .dpn{font-family:'Archivo';font-weight:900;font-size:19px}
+  .dh .dtt{font-family:'JetBrains Mono';font-size:10px;font-weight:700;color:var(--dc);border:1px solid var(--dc);padding:2px 8px;border-radius:5px}
+  .dh .dbo{font-family:'JetBrains Mono';font-size:10px;margin-left:auto}
+  .dbody{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .dprofile{font-size:13.5px;color:var(--desc);line-height:1.55}
+  .dprofile .pl{font-family:'JetBrains Mono';font-size:9px;font-weight:700;color:var(--amber);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:5px}
+  .dbo-note{margin-top:12px;padding:10px 12px;background:var(--soft);border:1px solid var(--line);border-radius:9px;font-size:12.5px;color:var(--desc)}
+  .dbo-note .pl{color:var(--teal)}
+  .dscores{display:flex;flex-direction:column;gap:5px}
+  .dsrow{display:grid;grid-template-columns:120px 1fr 22px;align-items:center;gap:8px;font-size:11px}
+  .dsrow .dl{font-family:'JetBrains Mono';color:var(--muted);font-size:10px;text-align:right}
+  .dbar{height:9px;border-radius:5px;background:var(--soft);overflow:hidden}
+  .dbar i{display:block;height:100%;border-radius:5px}
+  .dsrow .dv{font-family:'JetBrains Mono';font-weight:700;font-size:11px;text-align:left}
+  .dhint{padding:0 18px 15px;font-size:11.5px;color:var(--faint)}
+
+  section.blk{padding:38px 0;border-bottom:1px solid var(--line)}
+  section.blk h2{font-family:'Archivo';font-weight:900;font-size:clamp(19px,3vw,26px);margin-bottom:5px}
+  section.blk h2 .n{font-family:'JetBrains Mono';font-size:13px;color:var(--rose);margin-right:10px}
+  section.blk .sub{color:var(--desc);font-size:13.5px;max-width:820px;margin-bottom:18px}
+  table.t{border-collapse:collapse;width:100%;font-size:12.5px}
+  table.t th,table.t td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.t th{font-family:'JetBrains Mono';font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);background:var(--soft)}
+  table.t td{color:var(--desc)} table.t td b{color:var(--ink)}
+  .verd{font-family:'JetBrains Mono';font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap}
+  .v-fork{background:#79c9b922;color:var(--teal);border:1px solid #79c9b955}
+  .v-build{background:#ff9d5422;color:var(--amber);border:1px solid #ff9d5455}
+  .v-buy{background:#ab9fe222;color:var(--violet);border:1px solid #ab9fe255}
+  .v-moat{background:#efc56b22;color:var(--gold);border:1px solid #efc56b66;font-weight:700}
+
+  .rank{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+  .rkrow{display:grid;grid-template-columns:26px 160px 1fr 42px;align-items:center;gap:11px;font-size:12px}
+  .rkrow .rkn{font-family:'JetBrains Mono';color:var(--faint);font-size:11px}
+  .rkrow .rkname{font-weight:600}.rkrow .rkname .tt{font-family:'JetBrains Mono';font-size:8.5px;color:var(--tc);margin-left:5px}
+  .rkbar{height:14px;border-radius:7px;background:var(--soft);overflow:hidden}
+  .rkbar i{display:block;height:100%;background:linear-gradient(90deg,var(--amber),var(--gold))}
+  .rkrow .rkv{font-family:'JetBrains Mono';font-weight:700;color:var(--gold);text-align:right}
+  .rknote{font-size:11.5px;color:var(--faint);margin-top:10px}
+
+  footer{padding:30px 0 64px;color:var(--faint);font-size:11.5px;line-height:1.7;font-family:'JetBrains Mono'}
+  footer b{color:var(--muted)}
+
+  @media(max-width:760px){
+    .callouts{grid-template-columns:1fr}
+    .dbody{grid-template-columns:1fr}
+    .legend{margin-left:0;width:100%}
+    .rkrow{grid-template-columns:22px 1fr 50px}.rkrow .rkbar{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker"><span class="dot"></span>EOS-DENO · scoring de software · 16 players</div>
+    <h1>Quem cobre <span class="hl">o quê</span> —<br>e onde <span class="hl2">construir sobre</span></h1>
+    <p class="lede">Cada player avaliado <b>0–4</b> por macro-domínio, com <b>dupla lente</b>: comparável competitivo <i>e</i> fundação de build-on. A média mede <b>largura</b> — penaliza OSS de nicho e apps, que são fortes só onde atuam. Clique numa célula ou num player para o detalhe.</p>
+    <div class="callouts">
+      <div class="co" style="--cc:var(--amber)"><div class="ct">Teto vazio · D7</div><div class="cb"><b>CCEE/BR: ninguém.</b> Nem o Kraken (o mais completo) tem. É o fosso brasileiro — build puro, moat regulatório.</div></div>
+      <div class="co" style="--cc:var(--gold)"><div class="ct">Teto vazio · D9</div><div class="cb"><b>Agent-fabric AI-native (LLM): ninguém.</b> Volttron tem o paradigma de agentes (clássicos, legado). Em LLM, fronteira aberta.</div></div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="lens" id="lens">
+      <button class="on" data-l="cmp">Lente comparável</button>
+      <button data-l="bo">Lente build-on (OSS)</button>
+    </div>
+    <div class="legend">
+      <span class="lg"><span class="sw" style="background:var(--s0)"></span>0</span>
+      <span class="lg"><span class="sw" style="background:var(--s1)"></span>1</span>
+      <span class="lg"><span class="sw" style="background:var(--s2)"></span>2</span>
+      <span class="lg"><span class="sw" style="background:var(--s3)"></span>3</span>
+      <span class="lg"><span class="sw" style="background:var(--s4)"></span>4</span>
+      <span class="lg"><span class="sw na" style="display:inline-block;width:14px;height:14px"></span>n/d</span>
+    </div>
+  </div>
+
+  <div class="hm">
+    <table class="grid" id="grid"></table>
+  </div>
+  <div class="detail" id="detail"></div>
+  <div class="dhint" id="globalhint" style="font-size:11.5px;color:var(--faint);margin-top:9px;font-family:'JetBrains Mono'">★ D7 e D9 são as colunas que ficam vazias no mercado — onde o EOS-DENO nasce à frente. Clique num cabeçalho de domínio (D1…D12) para ver o que é + como se faz. A coluna AVG é a média das 12.</div>
+
+  <section class="blk">
+    <h2><span class="n">RANK</span>Completude (largura de cobertura)</h2>
+    <p class="sub">Mede quantos domínios o player cobre com maturidade — <b>não</b> é ranking de "melhor". OSS de nicho aparece baixo aqui e alto como fundação (ver detalhe de cada um).</p>
+    <div class="rank" id="rank"></div>
+    <div class="rknote">Kraken lidera completude (é um OS de utility end-to-end). Os OSS no fim da lista são <b>altos como build-on</b> no seu domínio — a lente build-on inverte essa leitura.</div>
+  </section>
+
+  <section class="blk">
+    <h2><span class="n">OSS</span>Build vs. fork vs. buy — por domínio</h2>
+    <p class="sub">O ângulo central: onde o open-source é fundação real e onde é build puro. Forkar as commodities, construir os diferenciadores.</p>
+    <table class="t">
+      <thead><tr><th>Domínio</th><th>Melhor fundação OSS</th><th>Herda vs. constrói</th><th>Veredito</th></tr></thead>
+      <tbody id="bfb"></tbody>
+    </table>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const domains=[
+ {k:'D1',n:'Ingestão',full:'Ingestão & conectividade',what:'A porta de entrada: levar o dado do device à plataforma e o comando de volta.',how:'Gateways com conexões persistentes (MQTT/Modbus/REST) + biblioteca de drivers por fabricante + fila com store-and-forward no edge para tolerar queda de link.'},
+ {k:'D2',n:'Dados/Twin',full:'Dados & Digital Twin',what:'A memória e o modelo do que existe e em que estado.',how:'TSDB particionado para série temporal + event bus + data lake; modelo canônico de ativos e digital twin atualizado por event-sourcing.'},
+ {k:'D3',n:'Inteligência',full:'Forecasting + Otimização',what:'Olhar para frente e decidir o melhor despacho.',how:'Forecast físico+ML (solar/carga/preço) alimentando um otimizador MILP/MPC que resolve o plano ótimo em horizonte rolante.'},
+ {k:'D4',n:'EMS',full:'EMS / Controle',what:'Aplicar as estratégias com segurança, fechando a malha.',how:'Control loop que lê estado→consulta plano→escreve setpoint, com guardrails de proteção (anti-backfeed, SOC) e política distribuída ao edge.'},
+ {k:'D5',n:'DERMS',full:'DERMS / Frota',what:'Coordenar muitos ativos como um só.',how:'Fleet manager + controle de coorte com fan-out, tradução do sinal do DSO (RCR/§14a) em setpoints e curtailment com trilha auditável.'},
+ {k:'D6',n:'VPP/Merc',full:'VPP / Mercado / Trading',what:'Transformar a flexibilidade da frota em receita.',how:'Agregação do portfólio + otimização de oferta (bidding) + conectores de mercado + resposta a sinal ancilar (droop de frequência/AGC) medida contra baseline.'},
+ {k:'D7',n:'CCEE/BR',full:'CCEE / Liquidação / Billing BR ★ vazio',what:'Onde o mercado de energia brasileiro se fecha — o fosso.',how:'Integração CCEE (medição/contabilização/liquidação) + rateio de créditos de GD (Lei 14.300) + billing em reais. Sem base OSS, sem incumbente — build puro.'},
+ {k:'D8',n:'Multi-ten',full:'Multi-tenant / API / Ecossistema',what:'Servir N clientes/marcas no mesmo código e abrir a plataforma.',how:'Tenant-id propagado + isolamento de dados + RBAC + white-label por config; API gateway com rate-limit + webhooks assinados + SDK gerado do schema.'},
+ {k:'D9',n:'Agent-fab',full:'Agent-fabric AI-native ★ vazio',what:'Operar por agentes, não por telas — a fronteira.',how:'Runtime de agentes LLM (loop percepção→ação) + tool registry com escopo/auth + agentes por persona + guardrails com human-in-the-loop. Ninguém tem em LLM.'},
+ {k:'D10',n:'Apps/UX',full:'Apps & Experiência',what:'A face onde cada persona toca o produto.',how:'Front-ends próprios (app do dono, portal do integrador, dashboard do operador) sobre a API + engajamento por eventos; UX de autopilot no padrão Zerofy/Tibber.'},
+ {k:'D11',n:'Infra/Sec',full:'Infra / Sec / MLOps',what:'A fundação que sustenta escala, segurança e ML em produção.',how:'Kubernetes (runtime) + observabilidade (Prometheus/OTel) + MLOps (MLflow) + segurança (Vault, audit log imutável, LGPD/SOC2), tudo declarado como código.'},
+ {k:'D12',n:'Comercial',full:'Comercial / Monetização',what:'Capturar valor: assinatura, uso e partilha de receita.',how:'Billing recorrente por device/seat + usage metering (API/dispatch) + revenue-share por contrato (modelo asset-light) + CRM.'},
+];
+const tierColor={PLAT:'var(--amber)','VPP-OP':'var(--rose)',APP:'var(--teal)',OSS:'var(--gold)'};
+const boColor={alto:'var(--teal)','médio':'var(--gold)',pontual:'var(--amber)',zero:'var(--faint)'};
+const players=[
+ {n:'Octopus Kraken',t:'PLAT',s:[3,3,4,2,4,4,0,4,2,4,4,4],bo:'zero',boN:'Proprietário. É o benchmark de "produto inteiro" e a ameaça direta — mas zero BR e não AI-native (LLM).',pr:'OS de utility end-to-end (CRM+billing+trading+DERMS via Kraken Flex). #1 Guidehouse Grid-Edge DERMS. ~70M contas, 27 países. White-label per-account.'},
+ {n:'Kiwigrid (KiwiOS)',t:'PLAT',s:[3,3,3,3,4,4,0,4,2,3,4,3],bo:'zero',boN:'Proprietário. Referência de arquitetura de plataforma white-label multi-tenant + VPP.',pr:'Plataforma IoT-energia white-label; Matua AI; VPP via Energy Hub Alliance. DACH.'},
+ {n:'Eniris (SmartgridX)',t:'PLAT',s:[3,3,3,4,3,4,0,4,1,3,3,3],bo:'zero',boN:'Proprietário. Forte em EMS + VPP + Open API.',pr:'EMS+VPP agnóstico, Open API, mercados de balanceamento. BE.'},
+ {n:'gridX (XENON)',t:'PLAT',s:[3,3,4,3,3,3,0,4,1,3,3,3],bo:'zero',boN:'Proprietário. Referência de plataforma/API multi-tenant.',pr:'HEMS white-label agnóstico; forte plataforma/API. E.ON. UE.'},
+ {n:'AutoGrid (Uplight)',t:'PLAT',s:[3,3,4,2,4,4,0,3,2,2,3,2],bo:'zero',boN:'Proprietário. Referência de DERMS/VPP/DR utility-grade + IEEE 2030.5.',pr:'DERMS/VPP/DR AI-powered, líder histórico (Guidehouse #1). EcoStruxure. 8.300MW geridos.'},
+ {n:'Intellihub (DeX)',t:'PLAT',s:[4,3,2,2,4,3,0,3,1,2,3,3],bo:'zero',boN:'Proprietário. O paralelo mais próximo do EOS-DENO — valida a tese medidor+software, mas sem AI-native e sem CCEE.',pr:'Medidor + plataforma DeX de interoperabilidade DER/VPP (registro+controle CER, "many-to-many"). AU/NZ.'},
+ {n:'Next Kraftwerke (NEMOCS)',t:'VPP-OP',s:[3,3,3,2,4,4,0,3,1,2,3,3],bo:'zero',boN:'Proprietário (NEMOCS licenciável). Referência de VPP/mercado/ancilares reais.',pr:'Um dos maiores VPPs da Europa; trading spot/intraday/balanceamento + FCR/aFRR/mFRR. Shell.'},
+ {n:'Sympower',t:'VPP-OP',s:[2,2,3,2,3,4,0,2,1,2,2,3],bo:'zero',boN:'Proprietário. Referência de serviços ancilares/DR industrial.',pr:'Agregador de flexibilidade (DR industrial/comercial) p/ serviços ancilares na Europa.'},
+ {n:'Tibber',t:'APP',s:[2,2,3,2,0,1,0,3,1,4,2,3],bo:'zero',boN:'Proprietário, mas a API GraphQL aberta é o padrão de developer-experience a imitar.',pr:'Varejista digital + app + API aberta; preço dinâmico, smart charging. UX forte. Nórdicos.'},
+ {n:'Zerofy',t:'APP',s:[2,2,3,2,0,0,0,3,1,4,1,3],bo:'zero',boN:'Proprietário. Referência de UX/scheduling residencial (a lição do hardware se repete).',pr:'App HEMS agnóstico (800+ devices), scheduling por preço; UX líder, sem VPP. EE/CH.'},
+ {n:'Smappee',t:'APP',s:[3,2,2,2,1,0,0,2,0,3,2,2],bo:'zero',boN:'Proprietário. Monitoramento/NILM + EV.',pr:'Monitoramento (NILM) + EV + plataforma; behind-the-meter. BE.'},
+ {n:'OpenEMS (Fenecon)',t:'OSS',s:[3,2,2,4,2,1,0,2,0,2,2,0],bo:'alto',boN:'A fundação de EMS mais forte (Apache 2.0). Fork forte p/ D4 (EMS edge+backend) + ingestão. Corta meses de trabalho não-diferenciado.',pr:'EMS open-source edge+backend, agnóstico, modular. A base de EMS mais madura do OSS.'},
+ {n:'ThingsBoard',t:'OSS',s:[4,3,1,2,1,0,0,4,1,3,3,1],bo:'alto',boN:'Base de plataforma IoT multi-tenant: forte p/ D1 (ingestão), D8 (multi-tenant/API), D10 (dashboards). Não específica de energia.',pr:'Plataforma IoT open-source multi-tenant (ingestão, regras, dashboards). Genérica.'},
+ {n:'Home Assistant + EMHASS',t:'OSS',s:[3,2,3,3,0,0,0,1,1,3,1,0],bo:'alto',boN:'Build-on alto p/ a matemática de D3/D4: EMHASS dá otimização LP/MPC + forecast residencial. Escala doméstica, não frota.',pr:'Automação residencial (milhares de integrações) + EMHASS (otim. LP/MPC + forecast PVLib/ML).'},
+ {n:'Volttron (Eclipse/DOE)',t:'OSS',s:[3,2,2,3,2,2,0,1,3,1,1,0],bo:'médio',boN:'O análogo de agent-fabric: a maior nota D9 (agentes clássicos) + controle distribuído. Paradigma sim, arquitetura moderna (LLM, cloud-native) não.',pr:'Plataforma de agentes p/ controle distribuído da rede + transactive energy. Legado Python, foco building.'},
+ {n:'OpenADR / OpenLEADR',t:'OSS',s:[2,'-','-','-','-',3,0,'-','-','-','-','-'],bo:'pontual',boN:'Bloco de sinalização de Demand Response (não é plataforma). Build-on pontual p/ o componente DR de D6.',pr:'Padrão + implementação open-source (LF Energy) de sinalização de DR.'},
+];
+const bfb=[
+ ['D1 Ingestão','ThingsBoard / OpenEMS','Device mgmt, telemetria, drivers','fork','Fork/build-on'],
+ ['D2 Dados & Twin','infra: Timescale/Kafka','TSDB, streaming; modelo de ativo = build','fork','Build-on infra'],
+ ['D3 Inteligência','EMHASS+PVLib / PyPSA / OR-Tools','A matemática (LP/MPC, forecast); produtizar p/ frota = build','build','Build-on a matemática'],
+ ['D4 EMS/Controle','OpenEMS','EMS edge+backend, agnosticismo, modular','fork','Fork forte'],
+ ['D5 DERMS/Frota','OpenEMS Backend / Volttron','Agregação parcial, controle distribuído; DERMS de mercado = build','build','Build-on parcial'],
+ ['D6 VPP/Mercado','OpenADR/OpenLEADR','Sinalização de DR; bidding/mercado = build','build','Build'],
+ ['D7 CCEE/BR','nenhuma','Tudo','moat','Build puro — moat'],
+ ['D8 Multi-tenant/API','ThingsBoard + Keycloak + Kong','Multi-tenancy, identidade, API gateway','fork','Build-on infra'],
+ ['D9 Agent-fabric','Volttron + frameworks LLM','Paradigma de agentes; runtime LLM moderno = build','build','Build (inspirado)'],
+ ['D10 Apps/UX','Home Assistant (ref)','Padrão de UX/integrações; app próprio = build','build','Build (ref)'],
+ ['D11 Infra/Sec/MLOps','k8s / Prometheus / Vault / MLflow','Stack cloud-native inteiro','fork','Build-on (padrão)'],
+ ['D12 Comercial','—','Billing/CRM = build/buy','buy','Buy/build'],
+];
+const verdMap={fork:'v-fork',build:'v-build',buy:'v-buy',moat:'v-moat'};
+
+function avg(s){const v=s.filter(x=>typeof x==='number');return (v.reduce((a,b)=>a+b,0)/v.length);}
+function scls(v){return v==='-'?'na':'s'+v;}
+const scoreColor=['var(--s0)','var(--s1)','var(--s2)','var(--s3)','var(--s4)'];
+
+// build grid
+let head='<thead><tr><th class="pl">Player</th>';
+domains.forEach((d,di)=>head+=`<th title="clique p/ o que é + como se faz" data-dom="${di}" style="cursor:pointer">${d.k}<span class="dn">${d.n}</span></th>`);
+head+='<th title="Média das 12" class="avgcol">AVG</th></tr></thead>';
+let body='<tbody>';
+let lastTier='';
+players.forEach((p,i)=>{
+  if(p.t!==lastTier){const lbl={PLAT:'Plataforma utility-grade',['VPP-OP']:'Operadores de VPP (+ software)',APP:'Apps de consumidor',OSS:'Frameworks open-source'}[p.t];body+=`<tr class="tierdiv"><td colspan="14">${lbl}</td></tr>`;lastTier=p.t;}
+  const a=avg(p.s);
+  body+=`<tr class="trow ${p.t==='OSS'?'oss':''}" data-i="${i}">`;
+  body+=`<td class="pl" style="--tc:${tierColor[p.t]}"><span class="pn">${p.n}</span><br><span class="tt">${p.t}</span><span class="bobadge" style="background:${boColor[p.bo]}22;color:${boColor[p.bo]}">build-on: ${p.bo}</span></td>`;
+  p.s.forEach((v,di)=>{body+=`<td class="cell ${scls(v)}" data-i="${i}" data-d="${di}">${v}</td>`;});
+  body+=`<td class="cell avgcol">${a.toFixed(1)}</td></tr>`;
+});
+body+='</tbody>';
+document.getElementById('grid').innerHTML=head+body;
+
+// detail panel
+const detail=document.getElementById('detail');
+function showDetail(i,dHi){
+  const p=players[i];const a=avg(p.s);
+  let scores='';
+  p.s.forEach((v,di)=>{
+    const w=v==='-'?0:(v/4*100);
+    const col=v==='-'?'var(--faint)':scoreColor[v];
+    const hl=di===dHi?'style="background:var(--panel2);border-radius:5px;padding:2px 4px;margin:-2px -4px"':'';
+    scores+=`<div class="dsrow" ${hl}><div class="dl">${domains[di].k} ${domains[di].n}</div><div class="dbar"><i style="width:${w}%;background:${col}"></i></div><div class="dv" style="color:${col}">${v}</div></div>`;
+  });
+  detail.innerHTML=`<div class="dh" style="--dc:${tierColor[p.t]}">
+      <span class="dpn">${p.n}</span><span class="dtt">${p.t}</span>
+      <span class="dbo" style="color:${boColor[p.bo]}">build-on: <b>${p.bo}</b></span></div>
+    <div class="dbody">
+      <div><div class="dprofile"><span class="pl">Perfil</span>${p.pr}</div>
+        <div class="dbo-note"><span class="pl" style="font-family:'JetBrains Mono';font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px">Valor de build-on</span>${p.boN}</div></div>
+      <div class="dscores">${scores}<div style="margin-top:6px;font-family:'JetBrains Mono';font-size:11px;color:var(--gold);text-align:right">média 12 domínios: <b>${a.toFixed(2)}</b></div></div>
+    </div>`;
+  detail.classList.add('show');
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+document.getElementById('grid').addEventListener('click',e=>{
+  const th=e.target.closest('[data-dom]');
+  if(th){showDomain(+th.dataset.dom);return;}
+  const c=e.target.closest('[data-i]');if(!c)return;
+  showDetail(+c.dataset.i, c.dataset.d!==undefined?+c.dataset.d:-1);
+});
+
+// domain detail (o que é + como se faz)
+function showDomain(di){
+  const d=domains[di];
+  // ranking de quem mais pontua nesse domínio
+  const top=players.map(p=>({n:p.n,t:p.t,v:p.s[di]})).filter(x=>typeof x.v==='number').sort((a,b)=>b.v-a.v).slice(0,3);
+  const topHtml=top.map(x=>`<span style="color:${scoreColor[x.v]||'var(--faint)'}">${x.n} <b>${x.v}</b></span>`).join(' · ');
+  const empty=(d.k==='D7'||d.k==='D9');
+  detail.innerHTML=`<div class="dh" style="--dc:${empty?'var(--gold)':'var(--violet)'}">
+      <span class="dpn">${d.k} · ${d.full.replace(' ★ vazio','')}</span>
+      ${empty?'<span class="dtt" style="--dc:var(--gold)">teto vazio</span>':'<span class="dtt" style="--dc:var(--violet)">domínio</span>'}</div>
+    <div class="dbody" style="grid-template-columns:1fr">
+      <div class="dprofile"><span class="pl">O que é</span>${d.what}</div>
+      <div class="dbo-note"><span class="pl" style="font-family:'JetBrains Mono';font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;color:var(--amber)">Como se faz (mecanismo)</span>${d.how}</div>
+      <div style="font-family:'JetBrains Mono';font-size:11.5px;color:var(--muted)">quem mais cobre: ${topHtml||'—'}</div>
+    </div>`;
+  detail.classList.add('show');
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// lens toggle
+document.getElementById('lens').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  [...e.currentTarget.children].forEach(x=>x.classList.toggle('on',x===b));
+  document.body.classList.toggle('lens-bo',b.dataset.l==='bo');
+  document.getElementById('globalhint').textContent = b.dataset.l==='bo'
+    ? 'Lente build-on: só os 4 frameworks OSS ficam em destaque — OpenEMS (EMS, alto), ThingsBoard (IoT/multi-tenant, alto), HA+EMHASS (otimização residencial, alto), Volttron (agentes, médio), OpenADR (DR, pontual). O proprietário tem build-on zero.'
+    : '★ D7 e D9 são as colunas que ficam vazias no mercado — onde o EOS-DENO nasce à frente. Clique num cabeçalho de domínio (D1…D12) para ver o que é + como se faz. A coluna AVG é a média das 12.';
+});
+
+// ranking
+const ranked=[...players].map((p,i)=>({...p,a:avg(p.s),i})).filter(p=>p.t!=='OSS'||p.n.indexOf('OpenADR')<0).sort((a,b)=>b.a-a.a);
+document.getElementById('rank').innerHTML=ranked.map((p,r)=>
+  `<div class="rkrow" data-i="${p.i}" style="cursor:pointer"><span class="rkn">${String(r+1).padStart(2,'0')}</span><span class="rkname" style="--tc:${tierColor[p.t]}">${p.n}<span class="tt">${p.t}</span></span><div class="rkbar"><i style="width:${p.a/4*100}%"></i></div><span class="rkv">${p.a.toFixed(2)}</span></div>`).join('');
+document.getElementById('rank').addEventListener('click',e=>{const r=e.target.closest('[data-i]');if(r)showDetail(+r.dataset.i,-1);});
+
+// bfb table
+document.getElementById('bfb').innerHTML=bfb.map(r=>
+  `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td><span class="verd ${verdMap[r[3]]}">${r[4]}</span></td></tr>`).join('');
+
+document.getElementById('foot').innerHTML=`<b>Scoring de software · 16 players · dupla lente (comparável + build-on) · 0–4 por macro-domínio · “-” = não documentado.</b><br>Tiers tagueados (banana-com-banana). Fontes oficiais (Kraken, AutoGrid, Volttron, Intellihub, EMHASS pesquisados; demais por conhecimento + pesquisa do hardware).<br>Projeto EOS-DENO · clique em qualquer célula, player ou linha do ranking para o detalhe.`;
+</script>
+</body>
+</html>
